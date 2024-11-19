@@ -180,6 +180,7 @@ namespace XCraft {
         private XCraftLib.Graphics xlib_graphics;
         private XCraftLib.GUI xlib_gui;
         private XCraftLib.Audio xlib_audio;
+        private XCraftLib.Network network;
         private GameAccess game_access;
         private Gameplay gameplay;
         private Zoom zoom;
@@ -280,6 +281,7 @@ namespace XCraft {
             zoom = new Zoom();
             game_access.Add("zoom", zoom);
             gameplay = new Gameplay(this);
+            network = new XCraftLib.Network(game_access, XCraftLib.NetworkType.CLIENT);
             
 
             
