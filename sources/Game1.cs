@@ -312,25 +312,29 @@ namespace XCraft {
             xlib_gui.NewButton("play", new XCraftLib.ButtonSettings(100, 100, -1, -1, 
                 "button_play_normal",
                 "button_play_hover",
-                "button_play_clicked"
+                "button_play_clicked",
+                new XCraftLib.ActionOnClick()
             ));
 
-            xlib_gui.NewButton("settings", new XCraftLib.ButtonSettings(100, 100, -1, -1, 
+            xlib_gui.NewButton("settings", new XCraftLib.ButtonSettings(100, 100+50*1, -1, -1, 
                 "button_settings_normal",
                 "button_settings_hover",
-                "button_settings_clicked"
+                "button_settings_clicked",
+                new XCraftLib.ActionOnClick()
             ));
 
-            xlib_gui.NewButton("credits", new XCraftLib.ButtonSettings(100, 100, -1, -1, 
+            xlib_gui.NewButton("credits", new XCraftLib.ButtonSettings(100, 100+50*2, -1, -1, 
                 "button_credits_normal",
                 "button_credits_hover",
-                "button_credits_clicked"
+                "button_credits_clicked",
+                new XCraftLib.ActionOnClick()
             ));
 
-            xlib_gui.NewButton("exit", new XCraftLib.ButtonSettings(100, 100, -1, -1, 
+            xlib_gui.NewButton("exit", new XCraftLib.ButtonSettings(100, 100+50*3, -1, -1, 
                 "button_exit_normal",
                 "button_exit_hover",
-                "button_exit_clicked"
+                "button_exit_clicked",
+                new XCraftLib.ActionOnClick()
             ));
             
             // TODO: use this.Content to load your game content here
@@ -347,6 +351,8 @@ namespace XCraft {
 
             // TODO: Add your update logic here
 
+            Draw(gameTime);
+
             base.Update(gameTime);
         }
 
@@ -355,9 +361,10 @@ namespace XCraft {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-
+            _spriteBatch.Begin();
             xlib_gui.Tick();
-
+            _spriteBatch.End();
+            
             base.Draw(gameTime);
         }
     }
