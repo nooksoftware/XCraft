@@ -9,7 +9,7 @@ using LiteNetLib.Utils;
 using System.Numerics;
 //using FastNoiseLite;
 
-namespace vgCSh {
+namespace XCraft {
     public class Vec2iKey : IEquatable<Vec2iKey> {
         public int X { get; }
         public int Y { get; }

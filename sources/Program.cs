@@ -1,3 +1,2 @@
-
-using var game = new vgCSh.Game1();
+﻿using var game = new XCraft.Game1();
 game.Run();

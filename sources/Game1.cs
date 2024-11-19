@@ -1,15 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Timers;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using LiteNetLib;
-using LiteNetLib.Utils;
-using System.Numerics;
-//using FastNoiseLite;
 
-namespace vgCSh {
+
+namespace XCraft {
     public enum ZoomState {
         ZS_1_0 = 0,
         ZS_2_0,
@@ -26,8 +20,7 @@ namespace vgCSh {
         static public float _acc = 1.0f;
         static public float _deacceleration = 0.7f;
         static protected bool _centered = true;
-
-        static public int CameraXi {
+    static public int CameraXi {
             get {return (int)(_cameraX);}
             // System.Convert.ToInt32(
         }
@@ -104,161 +97,204 @@ namespace vgCSh {
             _centered = false;
         }
     };
-    public class Game1 : Game {
-        public Access access;
+    public class GameAccess : XCraftLib.IAccess {
+        public GameAccess() {
 
-        public GUISystem gui;
-        public GraphicsSystem graphics;
-        public AudioSystem audio;
-        public NetworkSystem network;
-        public GameplaySystem gameplay;
-        public Zoom zoom;
-
-        public Texture2D tp;
-        public GraphicsDeviceManager graphics_device_manager;
-        public SpriteBatch sprite_batch; 
-
-        public Game1() {
-            InitializeSystems();   
-
-            graphics_device_manager = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            SetWindowSize(1280, 720);
         }
-        private void InitializeSystems() {
-            access = Access.A;
-            gui = new GUISystem();
-            graphics = new GraphicsSystem();
-            audio = new AudioSystem();
-            network = new NetworkSystem();
-            gameplay = new GameplaySystem();
-            zoom = new Zoom();
-            
-            graphics.InitializeTPPositions();
-
-            access.gui = gui;
-            access.graphics = graphics; 
-            /*-*/ 
-            access.tp_positions = graphics.tp_positions;
-            access.audio = audio;
-            access.network = network;
-            access.gameplay = gameplay;
-            access.zoom = zoom;
-            
+        public static GameAccess GetInstance()
+        {
+            if (_instance == null)
+            {
+                _instance = new GameAccess();
+            }
+            return _instance;
         }
-        private void SetWindowSize(int w, int h) {
-            graphics_device_manager.PreferredBackBufferWidth = w;
-            graphics_device_manager.PreferredBackBufferHeight = h;
-            graphics_device_manager.ApplyChanges();
-        }
-        protected override void Initialize() {
-            base.Initialize();
-        }
-        protected override void LoadContent() {
-            sprite_batch = new SpriteBatch(GraphicsDevice);
-            access.sprite_batch = sprite_batch;
-
-            LoadTextures();
-            LoadDefaultMap();
-
-            access.game_running = true;
-        }
-        private void LoadTextures() {
-            tp = Content.Load<Texture2D>("tp");
-            graphics.texture_pack = tp;
-        }
-        private void LoadDefaultMap() {
-            gameplay.NewDefaultMap();
-            access.current_map = gameplay.current_map;
-        }
-        protected bool IsZoomActive() {
+       public static GameAccess A {
+            get {return GetInstance();}
+       }
+        public override bool IsClientAccess() {
             return true;
+        }   
+        public override bool IsServerAccess() {
+            return false;
         }
-        protected void OnLeftKey() {
-            if (IsGameRunning()) {
-                if (IsZoomActive()) {Zoom.Acc(-Zoom._acc, 0.0f);}
-            }
+        public Dictionary<TileType, Vec2i> TexturePackPositions() {
+            return Get<Dictionary<TileType, Vec2i>>("tp_pos");
         }
-        protected void OnRightKey() {
-            if (IsGameRunning()) {
-                if (IsZoomActive()) {Zoom.Acc(Zoom._acc, 0.0f);}
-            }
+        public Vec2i TexturePackPos(TileType type) {
+            Dictionary<TileType, Vec2i> tp_pos = TexturePackPositions();
+            return tp_pos[type];
         }
-        protected void OnUpKey() {
-            if (IsGameRunning()) {
-                if (IsZoomActive()) {Zoom.Acc(0.0f, -Zoom._acc);}
-            }
+        public int TileSize() {
+            return 32;
         }
-        protected void OnDownKey() {
-            if (IsGameRunning()) {
-                if (IsZoomActive()) {Zoom.Acc(0.0f, Zoom._acc);}
-            }
+        public Texture2D TexturePack() {
+            return Get<Texture2D>("tp");
         }
-        protected void ThisPlayerMovement() {
-            gameplay.GetThisPlayer();
+        public Texture2D GUITexturePack() {
+            return Get<Texture2D>("gui");
         }
-        protected void CameraAndZoom() {
-            Zoom.Update();
-        }
-        protected void KeyboardArrowsAndWASD() {
-            if (Keyboard.GetState().IsKeyDown(Keys.A) || Keyboard.GetState().IsKeyDown(Keys.Left)) {
-                OnLeftKey();
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.D) || Keyboard.GetState().IsKeyDown(Keys.Right)) {
-                OnRightKey();
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.W) || Keyboard.GetState().IsKeyDown(Keys.Up)) {
-                OnUpKey();
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.S) || Keyboard.GetState().IsKeyDown(Keys.Down)) {
-                OnDownKey();
-            }
-        }
-        protected void GameUpdate(GameTime gameTime) {
-
-        }
-        protected bool IsGameRunning() {
-            return access.game_running;
-        }
-        protected bool IsMenuRunning() {
-            return access.menu_running;
-        }
-        protected override void Update(GameTime gameTime) {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            {Exit();}
-
-            KeyboardArrowsAndWASD();
-            
-            if (IsGameRunning()) {
-                ThisPlayerMovement();
-                CameraAndZoom();
-            }
-            if (access.game_running) {
-                GameUpdate(gameTime);
-            }
-
-            Draw(gameTime);
-            base.Update(gameTime);
-        }
-        protected void GameRender(GameTime gameTime) {
-            gameplay.current_map.Draw(gameTime);
-            //gameplay.current_map.Activity(gameTime);
-        }
-        protected void MenuRender(GameTime gameTime) {
-
-        }
-        protected override void Draw(GameTime gameTime) {
-            GraphicsDevice.Clear(Color.White);
-            sprite_batch.Begin();
-            if (IsGameRunning()) {
-                GameRender(gameTime);
-            } else if (IsMenuRunning()) {
-                MenuRender(gameTime);
-            }
-            //gameplay.current_map.Draw(gameTime);
-            //gameplay.current_map.Activity(gameTime);
-            sprite_batch.End();
-            base.Draw(gameTime);
+        public SpriteBatch SpriteBatch() {
+            return Get<SpriteBatch>("sprite_batch");
         }
     };
+    public enum GameModeType {
+        SKIRMISH = 1
+    };
+    public class Gameplay {
+        public Gameplay() {
+
+        }
+        protected bool _ready= false;
+        public bool Ready {
+            get {return _ready;}
+        }
+        public Map current_map;
+        public void NewDefaultmap() {
+            current_map = new Map();
+            current_map.LoadAsDefaultMap();
+            current_map.LoadEntities();
+            _ready = true;
+        }
+        public Player GetThisPlayer() {
+            return current_map.GetThisPlayer();
+        }
+    };
+    public class Game1 : Game
+    {
+        private GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
+
+        private XCraftLib.Graphics xlib_graphics;
+        private XCraftLib.GUI xlib_gui;
+        private XCraftLib.Audio xlib_audio;
+        private GameAccess game_access;
+        private Gameplay gameplay;
+        private Zoom zoom;
+        private Map current_map;
+
+        public Game1()
+        {
+            
+            game_access = GameAccess.GetInstance();
+
+            _graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
+            IsMouseVisible = true;
+
+            game_access.Add("graphics_device_manager", _graphics);
+        }
+        protected void LoadGraphicsTextures() {
+            Dictionary<string, Texture2D> textures = 
+                xlib_graphics._textures;
+
+            textures.Add("tp", Content.Load<Texture2D>("tp"));
+            textures.Add("gui", Content.Load<Texture2D>("gui"));
+            xlib_graphics.gui_texture = textures["gui"];
+            xlib_graphics.gui_texture_label="gui";
+            tp_label.tp_label = textures["tp"];
+            tp_texture.tp_texture = "tp";
+        }
+
+        protected override void Initialize()
+        {
+            // TODO: Add your initialization logic here
+
+            base.Initialize();
+        }
+
+        protected void AddTPP(Dictionary<TileType, Vec2i> tp_pos, TileType t, int x, int y) {
+            tp_pos.Add(t, new Vec2i(x,y));
+        }
+        protected void LoadTPPos() {
+            Dictionary<TileType, Vec2i> tp_pos = game_access.Get<new Dictionary<TileType, Vec2i>>("tp_pos");
+        
+            AddTPP(tp_pos, TileType.DIRT, 0, 0);
+            AddTPP(tp_pos, TileType.GRASS, 0, 1);
+            AddTPP(tp_pos, TileType.STONE, 0, 2);
+            AddTPP(tp_pos, TileType.BEDROCK, 0, 3);
+            AddTPP(tp_pos, TileType.SAND, 0, 4);
+            AddTPP(tp_pos, TileType.CLAY, 0, 5);
+            AddTPP(tp_pos, TileType.WATER, 0, 6);
+            AddTPP(tp_pos, TileType.MUD, 0, 7);
+
+            AddTPP(tp_pos, TileType.LOG1, 1, 0);
+            AddTPP(tp_pos, TileType.LOG2, 1, 1);
+            AddTPP(tp_pos, TileType.LOG3, 1, 2);
+            AddTPP(tp_pos, TileType.LEAVES1, 1, 3);
+            AddTPP(tp_pos, TileType.LEAVES2, 1, 4);
+            AddTPP(tp_pos, TileType.LEAVES3, 1, 5);
+
+            AddTPP(tp_pos, TileType.WOODEN_PL1, 2, 0);
+            AddTPP(tp_pos, TileType.WOODEN_PL2, 2, 1);
+            AddTPP(tp_pos, TileType.WOODEN_PL3, 2, 2);
+            AddTPP(tp_pos, TileType.WOOD1, 2, 3);
+            AddTPP(tp_pos, TileType.WOOD2, 2, 4);
+            AddTPP(tp_pos, TileType.WOOD3, 2, 5);
+
+            AddTPP(tp_pos, TileType.BRICKS, 2, 0);
+            AddTPP(tp_pos, TileType.CONCRETE, 2, 1);
+            AddTPP(tp_pos, TileType.STONE_BRICKS, 2, 2);
+            AddTPP(tp_pos, TileType.METAL, 2, 3);
+            AddTPP(tp_pos, TileType.WOODEN_BOX, 2, 4);
+            AddTPP(tp_pos, TileType.METAL_BOX, 2, 5);
+        }
+        protected override void LoadContent()
+        {
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            game_access.Add("sprite_batch", _spriteBatch);
+
+            game_access.Add("window_width", 1280);
+            game_access.Add("window_height", 720);
+            int w = game_access.Get('window_width');
+            int h = game_access.Get('window_height');
+            SetWindowSize(w,h);
+            game_access.Add("tile_size", 32);
+            game_access.Add("current_map", current_map);
+
+            game_access.Add("tp_pos", new Dictionary<TileType, Vec2i>());
+            LoadTPPos();
+
+            xlib_graphics = new XCraftLib.Graphics(
+                _spriteBatch
+            );
+            
+        
+            LoadGraphicsTextures();
+            xlib_gui = new XCraftLib.GUI(game_access, xlib_graphics);
+            xlib_audio = new XCraftLib.Audio();
+
+            zoom = new Zoom();
+            gameplay = new Gameplay(this);
+            
+
+            
+            // TODO: use this.Content to load your game content here
+        }
+        public void SetWindowSize(int w, int h) {
+            _graphics.PreferredBackBufferWidth = w;
+            _graphics.PreferredBackBufferHeight = h;
+            _graphics.ApplyChanges();
+        }
+        protected override void Update(GameTime gameTime)
+        {
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
+
+            // TODO: Add your update logic here
+
+            base.Update(gameTime);
+        }
+
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            // TODO: Add your drawing code here
+
+            gui_system.Tick();
+
+            base.Draw(gameTime);
+        }
+    }
 }
