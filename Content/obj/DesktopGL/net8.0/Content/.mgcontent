@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Profile>Reach</Profile>
+  <Platform>DesktopGL</Platform>
+  <Config />
+  <SourceFiles>
+    <File>/home/dj/Dev/XCraft/Content/button_credits_clicked.png</File>
+    <File>/home/dj/Dev/XCraft/Content/button_credits_hover.png</File>
+    <File>/home/dj/Dev/XCraft/Content/button_credits_normal.png</File>
+    <File>/home/dj/Dev/XCraft/Content/button_exit_clicked.png</File>
+    <File>/home/dj/Dev/XCraft/Content/button_exit_hover.png</File>
+    <File>/home/dj/Dev/XCraft/Content/button_exit_normal.png</File>
+    <File>/home/dj/Dev/XCraft/Content/button_multiplayer_cliked.png</File>
+    <File>/home/dj/Dev/XCraft/Content/button_multiplayer_hover.png</File>
+    <File>/home/dj/Dev/XCraft/Content/button_multiplayer_normal.png</File>
+    <File>/home/dj/Dev/XCraft/Content/button_play_clicked.png</File>
+    <File>/home/dj/Dev/XCraft/Content/button_play_hover.png</File>
+    <File>/home/dj/Dev/XCraft/Content/button_play_normal.png</File>
+    <File>/home/dj/Dev/XCraft/Content/button_settings_clicked.png</File>
+    <File>/home/dj/Dev/XCraft/Content/button_settings_hover.png</File>
+    <File>/home/dj/Dev/XCraft/Content/button_settings_normal.png</File>
+    <File>/home/dj/Dev/XCraft/Content/button_singleplayer_clicked.png</File>
+    <File>/home/dj/Dev/XCraft/Content/button_singleplayer_hover.png</File>
+    <File>/home/dj/Dev/XCraft/Content/button_singleplayer_normal.png</File>
+    <File>/home/dj/Dev/XCraft/Content/gui.png</File>
+    <File>/home/dj/Dev/XCraft/Content/inventory_grid.png</File>
+    <File>/home/dj/Dev/XCraft/Content/logo.png</File>
+    <File>/home/dj/Dev/XCraft/Content/tp.png</File>
+  </SourceFiles>
+  <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+  </DestFiles>
+</SourceFileCollection>
