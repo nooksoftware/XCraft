@@ -1,7 +1,14 @@
-﻿using Microsoft.Xna.Framework;
+﻿
+using System;
+using System.Collections.Generic;
+using System.Timers;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+using LiteNetLib;
+using LiteNetLib.Utils;
+using System.Numerics;
+//using FastNoiseLite;
 
 namespace XCraft {
     public enum ZoomState {
@@ -135,7 +142,7 @@ namespace XCraft {
             return Get<Texture2D>("gui");
         }
         public SpriteBatch SpriteBatch() {
-            return Get<SpriteBatch>("sprite_batch");
+            return Get<SpriteBatch>("sprite_batch")
         }
     };
     public enum GameModeType {
