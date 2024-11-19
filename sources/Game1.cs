@@ -308,35 +308,39 @@ namespace XCraft {
             network = new XCraftLib.Network(game_access, XCraftLib.NetworkType.CLIENT);
             
 
-
-            xlib_gui.NewButton("play", new XCraftLib.ButtonSettings(100, 100, -1, -1, 
+            int begin_y_offset = 44*4;
+                        
+            XCraftLib.Button play_button = xlib_gui.NewButton("play", new XCraftLib.ButtonSettings(w/2, h/2-begin_y_offset, -1, -1, 
                 "button_play_normal",
                 "button_play_hover",
                 "button_play_clicked",
                 new XCraftLib.ActionOnClick()
             ));
-
-            xlib_gui.NewButton("settings", new XCraftLib.ButtonSettings(100, 100+50*1, -1, -1, 
+            play_button.SetMidOrigin();
+                
+            XCraftLib.Button settings_button = xlib_gui.NewButton("settings", new XCraftLib.ButtonSettings(w/2, h/2-begin_y_offset+44*1, -1, -1, 
                 "button_settings_normal",
                 "button_settings_hover",
                 "button_settings_clicked",
                 new XCraftLib.ActionOnClick()
             ));
-
-            xlib_gui.NewButton("credits", new XCraftLib.ButtonSettings(100, 100+50*2, -1, -1, 
+            settings_button.SetMidOrigin();
+                
+            XCraftLib.Button credits_button = xlib_gui.NewButton("credits", new XCraftLib.ButtonSettings(w/2, h/2-begin_y_offset+44*2, -1, -1, 
                 "button_credits_normal",
                 "button_credits_hover",
                 "button_credits_clicked",
                 new XCraftLib.ActionOnClick()
             ));
-
-            xlib_gui.NewButton("exit", new XCraftLib.ButtonSettings(100, 100+50*3, -1, -1, 
+            credits_button.SetMidOrigin();
+                
+            XCraftLib.Button exit_button = xlib_gui.NewButton("exit", new XCraftLib.ButtonSettings(w/2, h/2-begin_y_offset+44*3, -1, -1, 
                 "button_exit_normal",
                 "button_exit_hover",
                 "button_exit_clicked",
                 new XCraftLib.ActionOnClick()
             ));
-            
+            exit_button.SetMidOrigin();
             // TODO: use this.Content to load your game content here
         }
         public void SetWindowSize(int w, int h) {
