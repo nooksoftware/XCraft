@@ -188,6 +188,7 @@ namespace XCraft {
 
         public Game1()
         {
+            Console.ForegroundColor = System.ConsoleColor.White;
             
             game_access = GameAccess.GetInstance();
 
@@ -207,6 +208,29 @@ namespace XCraft {
             xlib_graphics.gui_texture_label="gui";
             xlib_graphics.tp_texture = textures["tp"];
             xlib_graphics.tp_label = "tp";
+
+            textures.Add("logo", Content.Load<Texture2D>("logo"));
+
+            LoadGUITextures();
+        }
+        protected void LoadGUITextures() {
+            Dictionary<string, Texture2D> textures = 
+                xlib_graphics._textures;
+
+            textures.Add("button_play_normal", Content.Load<Texture2D>("button_play_normal"));
+            textures.Add("button_play_hover", Content.Load<Texture2D>("button_play_hover"));
+            textures.Add("button_play_clicked", Content.Load<Texture2D>("button_play_clicked"));
+            textures.Add("button_settings_normal", Content.Load<Texture2D>("button_settings_normal"));
+            textures.Add("button_settings_hover", Content.Load<Texture2D>("button_settings_hover"));
+            textures.Add("button_settings_clicked", Content.Load<Texture2D>("button_settings_clicked"));
+            textures.Add("button_credits_normal", Content.Load<Texture2D>("button_credits_normal"));
+            textures.Add("button_credits_hover", Content.Load<Texture2D>("button_credits_hover"));
+            textures.Add("button_credits_clicked", Content.Load<Texture2D>("button_credits_clicked"));
+            textures.Add("button_exit_normal", Content.Load<Texture2D>("button_exit_normal"));
+            textures.Add("button_exit_hover", Content.Load<Texture2D>("button_exit_hover"));
+            textures.Add("button_exit_clicked", Content.Load<Texture2D>("button_exit_clicked"));
+
+            //todo
         }
 
         protected override void Initialize()
@@ -284,6 +308,30 @@ namespace XCraft {
             network = new XCraftLib.Network(game_access, XCraftLib.NetworkType.CLIENT);
             
 
+
+            xlib_gui.NewButton("play", new XCraftLib.ButtonSettings(100, 100, -1, -1, 
+                "button_play_normal",
+                "button_play_hover",
+                "button_play_clicked"
+            ));
+
+            xlib_gui.NewButton("settings", new XCraftLib.ButtonSettings(100, 100, -1, -1, 
+                "button_settings_normal",
+                "button_settings_hover",
+                "button_settings_clicked"
+            ));
+
+            xlib_gui.NewButton("credits", new XCraftLib.ButtonSettings(100, 100, -1, -1, 
+                "button_credits_normal",
+                "button_credits_hover",
+                "button_credits_clicked"
+            ));
+
+            xlib_gui.NewButton("exit", new XCraftLib.ButtonSettings(100, 100, -1, -1, 
+                "button_exit_normal",
+                "button_exit_hover",
+                "button_exit_clicked"
+            ));
             
             // TODO: use this.Content to load your game content here
         }
