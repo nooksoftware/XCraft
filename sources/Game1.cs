@@ -364,7 +364,7 @@ namespace XCraft {
             _spriteBatch.Begin();
             xlib_gui.Tick();
             _spriteBatch.End();
-            
+
             base.Draw(gameTime);
         }
     }
