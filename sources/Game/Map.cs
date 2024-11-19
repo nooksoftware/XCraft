@@ -51,15 +51,18 @@ namespace XCraft {
         public int _diamond_ore_frequency = 3500;
 
         public ThisGenMapLoadSettings(
-            int map_tile_width,
-            int map_tile_height,
-            string map_title
+            int width,
+            int height,
+            string title
         ) {
-            this.map_tile_width = map_tile_width;            
-            this.map_tile_height = map_tile_height;                
-            this.map_title = map_title;        
+            this.width = width;            
+            this.height = height;                
+            this.title = title;        
 
             LoadDefaultGenMapSettings();
+        }
+        protected void LoadDefaultGenMapSettings() {
+
         }
     };
     public class FileMapLoadSettings : MapLoadSettings {
@@ -75,10 +78,99 @@ namespace XCraft {
     public class Noise {
 
     };
-    public class MapGenerator {
+    public class MapGeneratorNoiseGen {
 
     };
-    public class MApAccess {
+    public class MapGenerator {
+        private MapData _map_data;
+        private MapAccess _map_access;
+        private Map _map;
+        private MapGeneratorNoiseGen _noise_gen;
+
+        protected Random ore_random;
+
+        public MapGenerationType GenType {
+            get {return _gen_type;}
+        }
+        protected MapGenerationType _gen_type = MapGenerationType.GEN_MAP;
+        protected ThisGenMapLoadSettings gen_map;
+
+        public MapGenerator(ThisGenMapLoadSettings gen_map) {
+            this.gen_map = gen_map;
+            _gen_type = MapGenerationType.GEN_MAP;
+        }
+        public bool Generate(Map map) {
+            Console.WriteLine("Pre-generation stage");
+
+            ThisGenMapLoadSettings s = this.gen_map;
+            
+            MapData map_data = map.map_data;
+            MapAccess map_access = map_data.map_access;
+        
+            _map_data = map_data;
+            _map_access = map_access;
+            _map = map;
+
+            MapGeneratorNoiseGen noise_gen = new MapGeneratorNoiseGen();
+            this._noise_gen = noise_gen;
+
+            Console.WriteLine("Generating new map ("+map.map_settings.title+")");
+            Console.WriteLine("---- Generating blank tile matrix");
+            map_data.InitializeClearTilesMapFromMapSize(s.width, s.height);
+
+
+            //Step: Generate basic terrain
+            Console.WriteLine("---- Generating terrain");
+            GenerateBasicTerrain();
+
+            
+            //Step: Generate Ores
+            Console.WriteLine("---- Generating ores");
+            GenerateOres();
+            Console.WriteLine("Success!");
+            return true;
+        }
+        public bool GenerateBasicTerrain() {
+            //todo
+            return true;
+        }
+
+        protected void GenerateOreArea(OreType[,] map, Vec2iKey pos, OreType ore, int amount) {
+            //todo
+        }
+
+        protected void GenerateOre(OreType[,] map, OreType ore, int min, int max, int frequency, int width, int height) {
+            //todo
+        }
+
+        public bool GenerateOres() {
+            //todo
+            return true;
+        }
+
+    };
+    public class MapSettings {
+        public MapSettings() {
+
+        }
+        public void LoadDefaultMapSettings() {
+            width = 512;
+            height = 128+64;
+            load_settings = new ThisGenMapLoadSettings(width, height, "The_Defalt_Map");
+
+            _ready = true;
+        }
+        protected bool _ready = false;
+        public bool Ready {
+            get {return _ready;}
+        }
+        public string title;
+        public int width = 512;
+        public int height = 128+64;
+
+        public MapLoadSettings load_settings;
+    }
+    public class MapAccess {
         public MapAccess(MapData mapdata) {
             this.mapdata = mapdata;
         }
@@ -159,9 +251,9 @@ namespace XCraft {
             map_settings.LoadDefaultMapSettings();
             ThisGenMapLoadSettings load_settings 
                 = new ThisGenMapLoadSettings(
-                    map_settings.map_tile_width, 
-                    map_settings.map_tile_height, 
-                    map_settings.map_title
+                    map_settings.width, 
+                    map_settings.height, 
+                    map_settings.title
                 );
             map_generator = new MapGenerator(load_settings);
             map_generator.Generate(this);
@@ -208,20 +300,20 @@ namespace XCraft {
             //if (y_end_tile_render < 0 ) {
 //                y_end_tile_render = 0;
             //}
-            //if (x_begin_tile_render > map_settings.map_tile_width) {
-//                x_begin_tile_render = map_settings.map_tile_width;
+            //if (x_begin_tile_render > map_settings.width) {
+//                x_begin_tile_render = map_settings.width;
             //}
-            //if (y_begin_tile_render > map_settings.map_tile_height ) {
-//                y_begin_tile_render = map_settings.map_tile_height;
+            //if (y_begin_tile_render > map_settings.height ) {
+//                y_begin_tile_render = map_settings.height;
             //}
-            //if (x_end_tile_render > map_settings.map_tile_width) {
-//                x_end_tile_render = map_settings.map_tile_width;
+            //if (x_end_tile_render > map_settings.width) {
+//                x_end_tile_render = map_settings.width;
             //}
-            //if (y_end_tile_render > map_settings.map_tile_height ) {
-//                y_end_tile_render = map_settings.map_tile_height;
+            //if (y_end_tile_render > map_settings.height ) {
+//                y_end_tile_render = map_settings.height;
             //}
         }
-        public void DrawTitles(GameTime gameTime) {
+        public void DrawTiles(GameTime gameTime) {
             GameAccess gameaccess = GameAccess.A;
             Tile[,] tiles = map_data.tiles;
 
@@ -236,8 +328,8 @@ namespace XCraft {
             GameAccess gameaccess = GameAccess.A;
             Tile[,] tiles = map_data.tiles;
 
-            for (int x = 0; x < map_settings.map_tile_width; x++) {
-                for (int y = 0; y < map_settings.map_tile_height; y++) {
+            for (int x = 0; x < map_settings.width; x++) {
+                for (int y = 0; y < map_settings.height; y++) {
                     Tile tile = tiles[x,y];
                     tile.Activity();
                 }

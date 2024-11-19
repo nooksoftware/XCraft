@@ -12,22 +12,30 @@ using System.Numerics;
 
 namespace XCraft {
     public static class EntityIDDeterminer {
-        public Dictonary<int, bool> _AllocatedIDS;
-        public int last_id = 0;
+        public static Dictionary<int, bool> _AllocatedIDS;
+        public static int last_id = 0;
 
-        public int DetermineID() {
+        public static void Initialize() {
+            _AllocatedIDS = new Dictionary<int, bool>();
+        }
+        public static int DetermineID() {
+            if (_AllocatedIDS == null) {
+                Initialize();
+            }
             foreach (var v in _AllocatedIDS) {
                 if (!v.Value) {
-                    v.Value = true;
+                    _AllocatedIDS[v.Key] = true;
                     return v.Key;
                 }
             }
             last_id++;
-            v.Add(last_id, true);
+            _AllocatedIDS.Add(last_id, true);
             return last_id;
         }
-        public void FreeID(int id) {
-            _AllocatedIDS[id] = false;
+        public static void FreeID(int id) {
+            if (_AllocatedIDS != null) {
+                _AllocatedIDS[id] = false;
+            }
         }
     }
     public class Player : Entity {
@@ -40,10 +48,10 @@ namespace XCraft {
         public string label;
 
         public Entity() {
-            DetermineID();
+            EntityIDDeterminer.DetermineID();
         }
         ~Entity() {
-            FreeID(id);
+            EntityIDDeterminer.FreeID(id);
         }
         protected void DetermineID() {
             id = 0;

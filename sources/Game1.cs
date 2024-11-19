@@ -27,7 +27,7 @@ namespace XCraft {
         static public float _acc = 1.0f;
         static public float _deacceleration = 0.7f;
         static protected bool _centered = true;
-    static public int CameraXi {
+        static public int CameraXi {
             get {return (int)(_cameraX);}
             // System.Convert.ToInt32(
         }
@@ -105,6 +105,7 @@ namespace XCraft {
         }
     };
     public class GameAccess : XCraftLib.IAccess {
+        public static GameAccess _instance;
         public GameAccess() {
 
         }
@@ -142,15 +143,19 @@ namespace XCraft {
             return Get<Texture2D>("gui");
         }
         public SpriteBatch SpriteBatch() {
-            return Get<SpriteBatch>("sprite_batch")
+            return Get<SpriteBatch>("sprite_batch");
+        }
+        public Zoom Zoom() {
+            return Get<Zoom>("zoom");
         }
     };
     public enum GameModeType {
         SKIRMISH = 1
     };
     public class Gameplay {
-        public Gameplay() {
-
+        protected Game1 parent;
+        public Gameplay(Game1 parent) {
+            this.parent = parent;
         }
         protected bool _ready= false;
         public bool Ready {
@@ -199,8 +204,8 @@ namespace XCraft {
             textures.Add("gui", Content.Load<Texture2D>("gui"));
             xlib_graphics.gui_texture = textures["gui"];
             xlib_graphics.gui_texture_label="gui";
-            tp_label.tp_label = textures["tp"];
-            tp_texture.tp_texture = "tp";
+            xlib_graphics.tp_texture = textures["tp"];
+            xlib_graphics.tp_label = "tp";
         }
 
         protected override void Initialize()
@@ -214,7 +219,7 @@ namespace XCraft {
             tp_pos.Add(t, new Vec2i(x,y));
         }
         protected void LoadTPPos() {
-            Dictionary<TileType, Vec2i> tp_pos = game_access.Get<new Dictionary<TileType, Vec2i>>("tp_pos");
+            Dictionary<TileType, Vec2i> tp_pos = game_access.Get<Dictionary<TileType, Vec2i>>("tp_pos");
         
             AddTPP(tp_pos, TileType.DIRT, 0, 0);
             AddTPP(tp_pos, TileType.GRASS, 0, 1);
@@ -253,16 +258,17 @@ namespace XCraft {
 
             game_access.Add("window_width", 1280);
             game_access.Add("window_height", 720);
-            int w = game_access.Get('window_width');
-            int h = game_access.Get('window_height');
+            int w = game_access.Get<int>("window_width");
+            int h = game_access.Get<int>("window_height");
             SetWindowSize(w,h);
-            game_access.Add("tile_size", 32);
-            game_access.Add("current_map", current_map);
+            game_access.Add<int>("tile_size", 32);
+            game_access.Add<Map>("current_map", current_map);
 
             game_access.Add("tp_pos", new Dictionary<TileType, Vec2i>());
             LoadTPPos();
 
             xlib_graphics = new XCraftLib.Graphics(
+                game_access,
                 _spriteBatch
             );
             
@@ -272,6 +278,7 @@ namespace XCraft {
             xlib_audio = new XCraftLib.Audio();
 
             zoom = new Zoom();
+            game_access.Add("zoom", zoom);
             gameplay = new Gameplay(this);
             
 
@@ -299,7 +306,7 @@ namespace XCraft {
 
             // TODO: Add your drawing code here
 
-            gui_system.Tick();
+            xlib_gui.Tick();
 
             base.Draw(gameTime);
         }

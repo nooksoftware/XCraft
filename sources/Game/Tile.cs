@@ -11,6 +11,14 @@ using System.Numerics;
 //using FastNoiseLite;
 
 namespace XCraft {
+    public static class A{
+        public static Rectangle Copy(Rectangle b) {
+            return new Rectangle(b.X, b.Y, b.Width, b.Height);
+        }
+        public static Vec2i Copy(Vec2i b) {
+            return new Vec2i(b._x, b._y);
+        }
+    };
     public enum TileType {
         AIR = 256,
         DIRT = 0, GRASS, STONE, COBBLESTONE, SAND, CLAY, WATER, MUD,
@@ -38,10 +46,10 @@ namespace XCraft {
                 if (tp_pos == null) {
                     Console.WriteLine("tp_pos nullptr");
                 }
-                if (Access.A.graphics.tp_positions == null) {
+                if (GameAccess.A.TexturePackPositions() == null) {
                     Console.WriteLine("tp_positions nullptr");
                 }
-                tp_pos = new Vec2i(
+                tp_pos = A.Copy(
                     GameAccess.A.TexturePackPos(tiletype)
                 );
                 int tile_size = GameAccess.A.TileSize();
@@ -57,20 +65,22 @@ namespace XCraft {
             if (tiletype == TileType.AIR) {
                 return;
             }
-            GameAccess gameaccess = GameAccess.a;
+            GameAccess gameaccess = GameAccess.A;
             Texture2D tp = gameaccess.TexturePack();
 
-            int screen_x = -zoom._cameraX + map_pos._x + gameaccess.TileSize();
-            int screen_y = -zoom._cameraY + map_pos._y + gameaccess.TileSize();
+            Zoom zoom = gameaccess.Zoom();
+
+            int screen_x = (int)(-Zoom._cameraX + map_pos._x + gameaccess.TileSize());
+            int screen_y = (int)(-Zoom._cameraY + map_pos._y + gameaccess.TileSize());
         
+            int screen_w = gameaccess.TileSize();
             int screen_h = gameaccess.TileSize();
-            int screen_y = gameaccess.TileSize();
 
             Rectangle d_rect = new Rectangle(
                 screen_x,
                 screen_y,
-                screen_h,
-                screen_y
+                screen_w,
+                screen_h
             );
 
             SpriteBatch sprite_batch = gameaccess.SpriteBatch();
@@ -78,8 +88,8 @@ namespace XCraft {
             sprite_batch.Draw(tp, d_rect, origin_rect, Color.White);
 
         }
-        public void Activity() [
-            
-        ]
+        public void Activity() {
+
+        }
     };
 }
