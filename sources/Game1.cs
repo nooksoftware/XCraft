@@ -8,9 +8,19 @@ using Microsoft.Xna.Framework.Input;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using System.Numerics;
+using XCraftLib;
 //using FastNoiseLite;
 
 namespace XCraft {
+    public enum Switch {
+        InventorySwitch = 1,
+        MinimapExpandSwitch,
+        MinimapHideSwitch,
+    };
+    public enum Value {
+        InventoryItemSelected = 1,
+        SelectedItem = 2
+    };
     public enum ZoomState {
         ZS_1_0 = 0,
         ZS_2_0,
@@ -299,7 +309,21 @@ namespace XCraft {
             
         
             LoadGraphicsTextures();
-            xlib_gui = new XCraftLib.GUI(game_access, xlib_graphics);
+            xlib_gui = new XCraftLib.GUI(game_access, xlib_graphics, new GUIActivityAndRenderRules());
+            xlib_gui.AddMenu(0, "main_menu");
+            xlib_gui.AddMenu(1, "main_menu_single_multiplayer");
+            xlib_gui.AddMenu(2, "main_menu_settings");
+            xlib_gui.AddMenu(3, "main_menu_credits");
+            xlib_gui.AddMenu(4, "singleplayer_menu");
+            xlib_gui.AddMenu(5, "multiplayer_menu");
+
+            xlib_gui.AddMenu(6, "game_menu");
+            xlib_gui.SetSwitch("game_menu", (int)Switch.InventorySwitch, false);
+            xlib_gui.SetSwitch("game_menu", (int)Switch.MinimapExpandSwitch, false);
+            xlib_gui.SetSwitch("game_menu", (int)Switch.MinimapHideSwitch, false);
+            xlib_gui.SetValue("game_menu", (int)Value.InventoryItemSelected, 1);
+
+
             xlib_audio = new XCraftLib.Audio();
 
             zoom = new Zoom();
@@ -318,32 +342,28 @@ namespace XCraft {
             XCraftLib.Button play_button = xlib_gui.NewButton("play", new XCraftLib.ButtonSettings(w/2, h/2-(int)(begin_y_offset*0.5), -1, -1, 
                 "button_play_normal",
                 "button_play_hover",
-                "button_play_clicked",
-                new XCraftLib.ActionOnClick()
+                "button_play_clicked"
             ));
             play_button.SetMidOrigin();
                 
             XCraftLib.Button settings_button = xlib_gui.NewButton("settings", new XCraftLib.ButtonSettings(w/2, h/2-(int)(begin_y_offset*0.25), -1, -1, 
                 "button_settings_normal",
                 "button_settings_hover",
-                "button_settings_clicked",
-                new XCraftLib.ActionOnClick()
+                "button_settings_clicked"
             ));
             settings_button.SetMidOrigin();
                 
             XCraftLib.Button credits_button = xlib_gui.NewButton("credits", new XCraftLib.ButtonSettings(w/2, h/2, -1, -1, 
                 "button_credits_normal",
                 "button_credits_hover",
-                "button_credits_clicked",
-                new XCraftLib.ActionOnClick()
+                "button_credits_clicked"
             ));
             credits_button.SetMidOrigin();
                 
             XCraftLib.Button exit_button = xlib_gui.NewButton("exit", new XCraftLib.ButtonSettings(w/2, h/2+(int)(begin_y_offset*0.25), -1, -1, 
                 "button_exit_normal",
                 "button_exit_hover",
-                "button_exit_clicked",
-                new XCraftLib.ActionOnClick()
+                "button_exit_clicked"
             ));
             exit_button.SetMidOrigin();
             // TODO: use this.Content to load your game content here
@@ -371,10 +391,24 @@ namespace XCraft {
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
-            xlib_gui.Tick();
+            xlib_gui.Activity();
+            xlib_gui.Render();
             _spriteBatch.End();
 
             base.Draw(gameTime);
         }
     }
+
+    public class GUIActivityAndRenderRules : XCraftLib.GUIActivityAndRenderRules {
+        public GUIActivityAndRenderRules() {
+
+        }
+        public override void Render() {
+
+        }
+        public override void Activity()
+        {
+            
+        }
+    };
 }
