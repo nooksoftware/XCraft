@@ -356,6 +356,25 @@ namespace XCraft {
             XCraftLib.GUIMenu main_menu = xlib_gui.NewGUIMenu("main_menu", new GUIMenuSettings(0,0,1280,720));
             XCraftLib.GUIMenu main_menu_main_menu = xlib_gui.NewGUIMenu("main_menu/main", new GUIMenuSettings(0,0,1280,720));
             XCraftLib.GUIMenu main_menu_singleplayer_multiplayer_menu = xlib_gui.NewGUIMenu("main_menu/singleplayer_multiplayer_menu", new GUIMenuSettings(0,0,1280,720));
+            XCraftLib.GUIMenu main_menu_singleplayer_start_menu = xlib_gui.NewGUIMenu("main_menu/singleplayer_start_menu", new GUIMenuSettings(0,0,1280,720));
+            XCraftLib.GUIMenu main_menu_multiplayer_start_menu = xlib_gui.NewGUIMenu("main_menu/multiplayer_start_menu", new GUIMenuSettings(0,0,1280,720));
+
+            XCraftLib.GUIMenu main_menu_settings_menu = xlib_gui.NewGUIMenu("main_menu/settings", new GUIMenuSettings(0,0,1280,720));
+            XCraftLib.GUIMenu main_menu_credits_menu = xlib_gui.NewGUIMenu("main_menu/credits", new GUIMenuSettings(0,0,1280,720));
+            
+            
+            XCraftLib.GUIMenu game_menu = xlib_gui.NewGUIMenu("game_menu", new GUIMenuSettings(0,0,1280,720));
+            XCraftLib.GUIMenu game_menu_settings = xlib_gui.NewGUIMenu("game_menu/settings", new GUIMenuSettings(0,0,1280,720));
+            XCraftLib.GUIMenu inventory_menu = xlib_gui.NewGUIMenu("game_menu/inventory_menu", new GUIMenuSettings(0,0,1280,720));
+            XCraftLib.GUIMenu inventory_menu_inventory_menu = xlib_gui.NewGUIMenu("game_menu/inventory_menu/inventory", new GUIMenuSettings(0,0,1280,720));
+            XCraftLib.GUIMenu inventory_menu_role_inventory_menu = xlib_gui.NewGUIMenu("game_menu/inventory_menu/role", new GUIMenuSettings(0,0,1280,720));
+            XCraftLib.GUIMenu inventory_menu_shop_inventory_menu = xlib_gui.NewGUIMenu("game_menu/inventory_menu/shop", new GUIMenuSettings(0,0,1280,720));
+            XCraftLib.GUIMenu inventory_menu_assembly_inventory_menu = xlib_gui.NewGUIMenu("game_menu/inventory_menu/assembly", new GUIMenuSettings(0,0,1280,720));
+            XCraftLib.GUIMenu inventory_menu_miner_inventory_menu = xlib_gui.NewGUIMenu("game_menu/inventory_menu/miner", new GUIMenuSettings(0,0,1280,720));
+            XCraftLib.GUIMenu inventory_menu_outpust_inventory_menu = xlib_gui.NewGUIMenu("game_menu/inventory_menu/outpust", new GUIMenuSettings(0,0,1280,720));
+            XCraftLib.GUIMenu inventory_menu_mini_outpust_inventory_menu = xlib_gui.NewGUIMenu("game_menu/inventory_menu/mini_outpust", new GUIMenuSettings(0,0,1280,720));
+            XCraftLib.GUIMenu minimap_menu = xlib_gui.NewGUIMenu("game_menu/minimap", new GUIMenuSettings(0,0,1280,720));
+
 
             XCraftLib.GUISprite logo_sprite = xlib_gui.NewGUISprite("main_menu/main/logo", new XCraftLib.GUISpriteSettings(w/2, 150, -1, -1,
                 "logo"
@@ -458,10 +477,10 @@ namespace XCraft {
             //menu
             if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.mainMenu) {RenderMainMenu();}
             else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.singleplayerMultiplayerMenu) {RenderSingleplayerMultiplayerMenu();}
-            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.singleplayerStartMenu) {}
-            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.multiplayerStartMenu) {}
-            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.settingsMenu) {}
-            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.creditsMenu) {}
+            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.singleplayerStartMenu) {RenderSingleplayerStartMenu();}
+            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.multiplayerStartMenu) {RenderMultiplayerStartMenu();}
+            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.settingsMenu) {RenderSettingsMenu();}
+            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.creditsMenu) {RenderCreditsMenu();}
             else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.gameSettingsMenu) {}
             //game menu
             else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.gameMenu) {
@@ -472,18 +491,18 @@ namespace XCraft {
                 } 
                 //inventory
                 if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.nonselected) {} 
-                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.inventory) {}
-                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.roleMenu) {}
-                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.shopMenu) {}
-                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.assemblyMenu) {}
-                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.minerMenu) {}
-                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.outpustMenu) {}
-                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.miniOutpustMenu) {}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.inventory) {RenderGameMenuInventory();}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.roleMenu) {RenderGameMenuRoleMenuInventory();}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.shopMenu) {RenderGameMenuShopMenuInventory();}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.assemblyMenu) {RenderGameMenuAssemblyMenuInventory();}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.minerMenu) {RenderGameMenuMinerMenuInventory();}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.outpustMenu) {RenderGameMenuOutpustMenuInventory();}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.miniOutpustMenu) {RenderGameMenuMiniOutpustMenuInventory();}
                 //minimap
-                if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.standardMinimap)  {}
-                else if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.hiddenMinimap)  {}
-                else if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.expandedMinimap)  {}
-                else if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.invisibleMinimap)  {}
+                if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.standardMinimap)  {RenderGameMenuStandardMinimap();}
+                else if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.hiddenMinimap)  {RenderGameMenuHiddenMinimap();}
+                else if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.expandedMinimap)  {RenderGameMenuExpandedMinimap();}
+                else if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.invisibleMinimap)  {RenderGameMenuInvisibleMinimap();}
             }
         }
         public override void Activity()
@@ -491,10 +510,10 @@ namespace XCraft {
             //menu
             if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.mainMenu) {ActivityMainMenu();}
             else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.singleplayerMultiplayerMenu) {ActivitySingleplayerMultiplayerMenu();}
-            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.singleplayerStartMenu) {}
-            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.multiplayerStartMenu) {}
-            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.settingsMenu) {}
-            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.creditsMenu) {}
+            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.singleplayerStartMenu) {ActivitySingleplayerStartMenu();}
+            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.multiplayerStartMenu) {ActivityMultiplayerStartMenu();}
+            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.settingsMenu) {ActivitySettingsMenu();}
+            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.creditsMenu) {ActivityCreditsMenu();}
             else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.gameSettingsMenu) {}
             //game menu
             else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.gameMenu) {
@@ -505,18 +524,18 @@ namespace XCraft {
                 } 
                 //inventory
                 if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.nonselected) {} 
-                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.inventory) {}
-                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.roleMenu) {}
-                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.shopMenu) {}
-                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.assemblyMenu) {}
-                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.minerMenu) {}
-                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.outpustMenu) {}
-                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.miniOutpustMenu) {}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.inventory) {ActivityGameMenuInventory();}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.roleMenu) {ActivityGameMenuRoleMenuInventory();}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.shopMenu) {ActivityGameMenuShopMenuInventory();}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.assemblyMenu) {ActivityGameMenuAssemblyMenuInventory();}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.minerMenu) {ActivityGameMenuMinerMenuInventory();}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.outpustMenu) {ActivityGameMenuOutpustMenuInventory();}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.miniOutpustMenu) {ActivityGameMenuMiniOutpustMenuInventory();}
                 //minimap
-                if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.standardMinimap)  {}
-                else if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.hiddenMinimap)  {}
-                else if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.expandedMinimap)  {}
-                else if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.invisibleMinimap)  {}
+                if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.standardMinimap)  {ActivityGameMenuStandardMinimap();}
+                else if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.hiddenMinimap)  {ActivityGameMenuHiddenMinimap();}
+                else if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.expandedMinimap)  {ActivityGameMenuExpandedMinimap();}
+                else if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.invisibleMinimap)  {ActivityGameMenuInvisibleMinimap();}
             }
         }
 
@@ -532,6 +551,106 @@ namespace XCraft {
         }
         protected void ActivitySingleplayerMultiplayerMenu() {
             this.gui.Activity("main_menu/singleplayer_multiplayer_menu"); 
+        }
+
+
+        protected void RenderSingleplayerStartMenu() {
+            this.gui.Render("main_menu/singleplayer_start_menu");
+        }
+        protected void RenderMultiplayerStartMenu() {
+            this.gui.Render("main_menu/multiplayer_start_menu");
+        }
+        protected void RenderSettingsMenu() {
+            this.gui.Render("main_menu/settings");
+        }
+        protected void RenderCreditsMenu() {
+            this.gui.Render("main_menu/credits");
+        }
+        protected void ActivitySingleplayerStartMenu() {
+            this.gui.Activity("main_menu/singleplayer_start_menu");
+        }
+        protected void ActivityMultiplayerStartMenu() {
+            this.gui.Activity("main_menu/multiplayer_start_menu");
+        }
+        protected void ActivitySettingsMenu() {
+            this.gui.Activity("main_menu/settings");
+        }
+        protected void ActivityCreditsMenu() {
+            this.gui.Activity("main_menu/credits");
+        }
+
+        protected void RenderGameSettingsMenu() {
+            this.gui.Render("game_menu/settings");
+        }
+        protected void RenderGameMenuInventory() {
+            this.gui.Render("game_menu/inventory_menu/inventory");
+        }
+        protected void RenderGameMenuRoleMenuInventory() {
+            this.gui.Render("game_menu/inventory_menu/role");
+        }
+        protected void RenderGameMenuShopMenuInventory() {
+            this.gui.Render("game_menu/inventory_menu/shop");
+        }
+        protected void RenderGameMenuAssemblyMenuInventory() {
+            this.gui.Render("game_menu/inventory_menu/assembly");
+        }
+        protected void RenderGameMenuMinerMenuInventory() {
+            this.gui.Render("game_menu/inventory_menu/miner");
+        }
+        protected void RenderGameMenuOutpustMenuInventory() {
+            this.gui.Render("game_menu/inventory_menu/outpust");
+        }
+        protected void RenderGameMenuMiniOutpustMenuInventory() {
+            this.gui.Render("game_menu/inventory_menu/mini_outpust");
+        }
+        protected void RenderGameMenuStandardMinimap() {
+            this.gui.Render("game_menu/minimap");
+        }
+        protected void RenderGameMenuHiddenMinimap() {
+            this.gui.Render("game_menu/minimap");
+        }
+        protected void RenderGameMenuExpandedMinimap() {
+            this.gui.Render("game_menu/minimap");
+        }
+        protected void RenderGameMenuInvisibleMinimap() {
+            this.gui.Render("game_menu/minimap");
+        }
+
+        protected void ActivityGameSettingsMenu() {
+            this.gui.Activity("game_menu/settings");
+        }
+        protected void ActivityGameMenuInventory() {
+            this.gui.Activity("game_menu/inventory_menu/inventory");
+        }
+        protected void ActivityGameMenuRoleMenuInventory() {
+            this.gui.Activity("game_menu/inventory_menu/role");
+        }
+        protected void ActivityGameMenuShopMenuInventory() {
+            this.gui.Activity("game_menu/inventory_menu/shop");
+        }
+        protected void ActivityGameMenuAssemblyMenuInventory() {
+            this.gui.Activity("game_menu/inventory_menu/assembly");
+        }
+        protected void ActivityGameMenuMinerMenuInventory() {
+            this.gui.Activity("game_menu/inventory_menu/miner");
+        }
+        protected void ActivityGameMenuOutpustMenuInventory() {
+            this.gui.Activity("game_menu/inventory_menu/outpust");
+        }
+        protected void ActivityGameMenuMiniOutpustMenuInventory() {
+            this.gui.Activity("game_menu/inventory_menu/mini_outpust");
+        }
+        protected void ActivityGameMenuStandardMinimap() {
+            this.gui.Activity("game_menu/minimap");
+        }
+        protected void ActivityGameMenuHiddenMinimap() {
+            this.gui.Activity("game_menu/minimap");
+        }
+        protected void ActivityGameMenuExpandedMinimap() {
+            this.gui.Activity("game_menu/minimap");
+        }
+        protected void ActivityGameMenuInvisibleMinimap() {
+            this.gui.Activity("game_menu/minimap");
         }
 
         protected GameAccess access;
