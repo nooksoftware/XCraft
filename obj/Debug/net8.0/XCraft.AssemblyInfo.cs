@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("XCraft")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+beb600ff1e8e3fa4cbbff36b748acc231422e52f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e820e3ff332df2caa532045ce381f18878f4d0e0")]
 [assembly: System.Reflection.AssemblyProductAttribute("XCraft")]
 [assembly: System.Reflection.AssemblyTitleAttribute("XCraft")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
