@@ -85,7 +85,7 @@
 /processorParam:TextureFormat=Color
 /build:button_exit_normal.png
 
-#begin button_multiplayer_cliked.png
+#begin button_multiplayer_clicked.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -95,7 +95,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:button_multiplayer_cliked.png
+/build:button_multiplayer_clicked.png
 
 #begin button_multiplayer_hover.png
 /importer:TextureImporter

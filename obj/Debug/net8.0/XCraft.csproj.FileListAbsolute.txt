@@ -31,7 +31,6 @@
 /home/dj/Dev/XCraft/bin/Debug/net8.0/Content/button_exit_clicked.xnb
 /home/dj/Dev/XCraft/bin/Debug/net8.0/Content/button_exit_hover.xnb
 /home/dj/Dev/XCraft/bin/Debug/net8.0/Content/button_exit_normal.xnb
-/home/dj/Dev/XCraft/bin/Debug/net8.0/Content/button_multiplayer_cliked.xnb
 /home/dj/Dev/XCraft/bin/Debug/net8.0/Content/button_multiplayer_hover.xnb
 /home/dj/Dev/XCraft/bin/Debug/net8.0/Content/button_multiplayer_normal.xnb
 /home/dj/Dev/XCraft/bin/Debug/net8.0/Content/button_play_clicked.xnb
@@ -47,3 +46,4 @@
 /home/dj/Dev/XCraft/bin/Debug/net8.0/Content/inventory_grid.xnb
 /home/dj/Dev/XCraft/bin/Debug/net8.0/Content/logo.xnb
 /home/dj/Dev/XCraft/bin/Debug/net8.0/Content/tp.xnb
+/home/dj/Dev/XCraft/bin/Debug/net8.0/Content/button_multiplayer_clicked.xnb

@@ -115,20 +115,19 @@ namespace XCraft {
         }
     };
     public class GameAccess : XCraftLib.IAccess {
-        public static GameAccess _instance;
         public GameAccess() {
 
         }
-        public static GameAccess GetInstance()
+        public static GameAccess GetCInstance()
         {
-            if (_instance == null)
+            if (_iaccess == null)
             {
-                _instance = new GameAccess();
+                _iaccess = new GameAccess();
             }
-            return _instance;
+            return _iaccess as GameAccess;
         }
        public static GameAccess A {
-            get {return GetInstance();}
+            get {return GetCInstance();}
        }
         public override bool IsClientAccess() {
             return true;
@@ -196,11 +195,15 @@ namespace XCraft {
         private Zoom zoom;
         private Map current_map;
 
+        public GameAccess GameAccess {
+            get {return game_access;}
+        }
+
         public Game1()
         {
             Console.ForegroundColor = System.ConsoleColor.White;
             
-            game_access = GameAccess.GetInstance();
+            game_access = GameAccess.GetCInstance();
 
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -239,6 +242,13 @@ namespace XCraft {
             textures.Add("button_exit_normal", Content.Load<Texture2D>("button_exit_normal"));
             textures.Add("button_exit_hover", Content.Load<Texture2D>("button_exit_hover"));
             textures.Add("button_exit_clicked", Content.Load<Texture2D>("button_exit_clicked"));
+
+            textures.Add("button_singleplayer_normal", Content.Load<Texture2D>("button_singleplayer_normal"));
+            textures.Add("button_singleplayer_hover", Content.Load<Texture2D>("button_singleplayer_hover"));
+            textures.Add("button_singleplayer_clicked", Content.Load<Texture2D>("button_singleplayer_clicked"));
+            textures.Add("button_multiplayer_normal", Content.Load<Texture2D>("button_multiplayer_normal"));
+            textures.Add("button_multiplayer_hover", Content.Load<Texture2D>("button_multiplayer_hover"));
+            textures.Add("button_multiplayer_clicked", Content.Load<Texture2D>("button_multiplayer_clicked"));
 
             //todo
         }
@@ -309,19 +319,19 @@ namespace XCraft {
             
         
             LoadGraphicsTextures();
-            xlib_gui = new XCraftLib.GUI(game_access, xlib_graphics, new GUIActivityAndRenderRules());
-            xlib_gui.AddMenu(0, "main_menu");
-            xlib_gui.AddMenu(1, "main_menu_single_multiplayer");
-            xlib_gui.AddMenu(2, "main_menu_settings");
-            xlib_gui.AddMenu(3, "main_menu_credits");
-            xlib_gui.AddMenu(4, "singleplayer_menu");
-            xlib_gui.AddMenu(5, "multiplayer_menu");
+            xlib_gui = new XCraftLib.GUI(game_access, xlib_graphics, new GUIActivityAndRenderRules(this));
+            //xlib_gui.AddMenu(0, "main_menu");
+            //xlib_gui.AddMenu(1, "main_menu_single_multiplayer");
+            //xlib_gui.AddMenu(2, "main_menu_settings");
+            //xlib_gui.AddMenu(3, "main_menu_credits");
+            //xlib_gui.AddMenu(4, "singleplayer_menu");
+            //xlib_gui.AddMenu(5, "multiplayer_menu");
 
-            xlib_gui.AddMenu(6, "game_menu");
-            xlib_gui.SetSwitch("game_menu", (int)Switch.InventorySwitch, false);
-            xlib_gui.SetSwitch("game_menu", (int)Switch.MinimapExpandSwitch, false);
-            xlib_gui.SetSwitch("game_menu", (int)Switch.MinimapHideSwitch, false);
-            xlib_gui.SetValue("game_menu", (int)Value.InventoryItemSelected, 1);
+            //xlib_gui.AddMenu(6, "game_menu");
+            //xlib_gui.SetSwitch("game_menu", (int)Switch.InventorySwitch, false);
+            //xlib_gui.SetSwitch("game_menu", (int)Switch.MinimapExpandSwitch, false);
+            //xlib_gui.SetSwitch("game_menu", (int)Switch.MinimapHideSwitch, false);
+            //xlib_gui.SetValue("game_menu", (int)Value.InventoryItemSelected, 1);
 
 
             xlib_audio = new XCraftLib.Audio();
@@ -332,41 +342,81 @@ namespace XCraft {
             network = new XCraftLib.Network(game_access, XCraftLib.NetworkType.CLIENT);
             
 
+            LoadGUI();
+
+            this.GameAccess.clientMenuSelected = XCraftLib.ClientMenuSelected.mainMenu;
+            //this.GameAccess.gameMenuSelected = XCraftLib.GameMenuSelected;
+            // TODO: use this.Content to load your game content here
+        }
+        protected void LoadGUI() {
             int begin_y_offset = 44*4;
+            int w = game_access.Get<int>("window_width");
+            int h = game_access.Get<int>("window_height");
                         
-            XCraftLib.GUISprite logo_sprite = xlib_gui.NewGUISprite("logo", new XCraftLib.GUISpriteSettings(w/2, 150, -1, -1,
+            XCraftLib.GUIMenu main_menu = xlib_gui.NewGUIMenu("main_menu", new GUIMenuSettings(0,0,1280,720));
+            XCraftLib.GUIMenu main_menu_main_menu = xlib_gui.NewGUIMenu("main_menu/main", new GUIMenuSettings(0,0,1280,720));
+            XCraftLib.GUIMenu main_menu_singleplayer_multiplayer_menu = xlib_gui.NewGUIMenu("main_menu/singleplayer_multiplayer_menu", new GUIMenuSettings(0,0,1280,720));
+
+            XCraftLib.GUISprite logo_sprite = xlib_gui.NewGUISprite("main_menu/main/logo", new XCraftLib.GUISpriteSettings(w/2, 150, -1, -1,
                 "logo"
             ));
             logo_sprite.SetMidOrigin();
 
-            XCraftLib.Button play_button = xlib_gui.NewButton("play", new XCraftLib.ButtonSettings(w/2, h/2-(int)(begin_y_offset*0.5), -1, -1, 
+            XCraftLib.Button play_button = xlib_gui.NewButton("main_menu/main/play", new XCraftLib.ButtonSettings(w/2, h/2-(int)(begin_y_offset*0.5), -1, -1, 
                 "button_play_normal",
                 "button_play_hover",
-                "button_play_clicked"
+                "button_play_clicked",
+                new GUIEventChange()
             ));
             play_button.SetMidOrigin();
+            play_button.on_clicked_change.clientMenuSelectedChange = XCraftLib.ClientMenuSelected.singleplayerMultiplayerMenu;
                 
-            XCraftLib.Button settings_button = xlib_gui.NewButton("settings", new XCraftLib.ButtonSettings(w/2, h/2-(int)(begin_y_offset*0.25), -1, -1, 
+            XCraftLib.Button settings_button = xlib_gui.NewButton("main_menu/main/settings", new XCraftLib.ButtonSettings(w/2, h/2-(int)(begin_y_offset*0.25), -1, -1, 
                 "button_settings_normal",
                 "button_settings_hover",
-                "button_settings_clicked"
+                "button_settings_clicked",
+                new GUIEventChange()
             ));
             settings_button.SetMidOrigin();
+            settings_button.on_clicked_change.clientMenuSelectedChange = XCraftLib.ClientMenuSelected.settingsMenu;
                 
-            XCraftLib.Button credits_button = xlib_gui.NewButton("credits", new XCraftLib.ButtonSettings(w/2, h/2, -1, -1, 
+            XCraftLib.Button credits_button = xlib_gui.NewButton("main_menu/main/credits", new XCraftLib.ButtonSettings(w/2, h/2, -1, -1, 
                 "button_credits_normal",
                 "button_credits_hover",
-                "button_credits_clicked"
+                "button_credits_clicked",
+                new GUIEventChange()
             ));
             credits_button.SetMidOrigin();
+            credits_button.on_clicked_change.clientMenuSelectedChange = XCraftLib.ClientMenuSelected.creditsMenu;
                 
-            XCraftLib.Button exit_button = xlib_gui.NewButton("exit", new XCraftLib.ButtonSettings(w/2, h/2+(int)(begin_y_offset*0.25), -1, -1, 
+            XCraftLib.Button exit_button = xlib_gui.NewButton("main_menu/main/exit", new XCraftLib.ButtonSettings(w/2, h/2+(int)(begin_y_offset*0.25), -1, -1, 
                 "button_exit_normal",
                 "button_exit_hover",
-                "button_exit_clicked"
+                "button_exit_clicked",
+                null
             ));
             exit_button.SetMidOrigin();
-            // TODO: use this.Content to load your game content here
+
+            XCraftLib.Button singleplayer_button = xlib_gui.NewButton("main_menu/singleplayer_multiplayer_menu/singleplayer_button",
+            new XCraftLib.ButtonSettings(w/2, h/2-(int)(begin_y_offset*0.5f), -1, -1,
+                "button_singleplayer_normal",
+                "button_singleplayer_hover",
+                "button_singleplayer_clicked",
+                new GUIEventChange()
+            ));
+            singleplayer_button.SetMidOrigin();
+            singleplayer_button.on_clicked_change.clientMenuSelectedChange = XCraftLib.ClientMenuSelected.singleplayerStartMenu;
+            
+
+            XCraftLib.Button multiplayer_button = xlib_gui.NewButton("main_menu/singleplayer_multiplayer_menu/multiplayer_button",
+            new XCraftLib.ButtonSettings(w/2, h/2-(int)(begin_y_offset*0.25f), -1, -1,
+                "button_multiplayer_normal",
+                "button_multiplayer_hover",
+                "button_multiplayer_clicked",
+                new GUIEventChange()
+            ));
+            multiplayer_button.SetMidOrigin();
+            multiplayer_button.on_clicked_change.clientMenuSelectedChange = XCraftLib.ClientMenuSelected.multiplayerStartMenu;
         }
         public void SetWindowSize(int w, int h) {
             _graphics.PreferredBackBufferWidth = w;
@@ -391,7 +441,7 @@ namespace XCraft {
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
-            xlib_gui.Activity();
+            xlib_gui.Tick();
             xlib_gui.Render();
             _spriteBatch.End();
 
@@ -400,15 +450,91 @@ namespace XCraft {
     }
 
     public class GUIActivityAndRenderRules : XCraftLib.GUIActivityAndRenderRules {
-        public GUIActivityAndRenderRules() {
-
+        public GUIActivityAndRenderRules(Game1 game1) {
+            this.game1 = game1;
+            this.access = game1.GameAccess;
         }
         public override void Render() {
+            //menu
+            if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.mainMenu) {RenderMainMenu();}
+            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.singleplayerMultiplayerMenu) {RenderSingleplayerMultiplayerMenu();}
+            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.singleplayerStartMenu) {}
+            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.multiplayerStartMenu) {}
+            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.settingsMenu) {}
+            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.creditsMenu) {}
+            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.gameSettingsMenu) {}
+            //game menu
+            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.gameMenu) {
+                if (access.gameMenuSelected == XCraftLib.GameMenuSelected.menu) {
 
+                } else if (access.gameMenuSelected == XCraftLib.GameMenuSelected.settings_menu) {
+
+                } 
+                //inventory
+                if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.nonselected) {} 
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.inventory) {}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.roleMenu) {}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.shopMenu) {}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.assemblyMenu) {}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.minerMenu) {}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.outpustMenu) {}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.miniOutpustMenu) {}
+                //minimap
+                if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.standardMinimap)  {}
+                else if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.hiddenMinimap)  {}
+                else if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.expandedMinimap)  {}
+                else if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.invisibleMinimap)  {}
+            }
         }
         public override void Activity()
         {
-            
+            //menu
+            if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.mainMenu) {ActivityMainMenu();}
+            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.singleplayerMultiplayerMenu) {ActivitySingleplayerMultiplayerMenu();}
+            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.singleplayerStartMenu) {}
+            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.multiplayerStartMenu) {}
+            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.settingsMenu) {}
+            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.creditsMenu) {}
+            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.gameSettingsMenu) {}
+            //game menu
+            else if (access.clientMenuSelected == XCraftLib.ClientMenuSelected.gameMenu) {
+                if (access.gameMenuSelected == XCraftLib.GameMenuSelected.menu) {
+
+                } else if (access.gameMenuSelected == XCraftLib.GameMenuSelected.settings_menu) {
+
+                } 
+                //inventory
+                if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.nonselected) {} 
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.inventory) {}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.roleMenu) {}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.shopMenu) {}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.assemblyMenu) {}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.minerMenu) {}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.outpustMenu) {}
+                else if (access.clientInventorySelected == XCraftLib.ClientInventorySelected.miniOutpustMenu) {}
+                //minimap
+                if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.standardMinimap)  {}
+                else if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.hiddenMinimap)  {}
+                else if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.expandedMinimap)  {}
+                else if (access.clientMinimapSelected == XCraftLib.ClientMinimapSelected.invisibleMinimap)  {}
+            }
         }
+
+        protected void RenderMainMenu() {
+            this.gui.Render("main_menu/main");
+        }
+        protected void ActivityMainMenu() {
+            this.gui.Activity("main_menu/main");
+        }
+
+        protected void RenderSingleplayerMultiplayerMenu() {
+            this.gui.Render("main_menu/singleplayer_multiplayer_menu");
+        }
+        protected void ActivitySingleplayerMultiplayerMenu() {
+            this.gui.Activity("main_menu/singleplayer_multiplayer_menu"); 
+        }
+
+        protected GameAccess access;
+        protected Game1 game1;
     };
 }
