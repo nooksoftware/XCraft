@@ -20,23 +20,14 @@ if [ ! -d "$DEST_DIR" ]; then
     echo "error2"
     exit 1
 fi
-
-# Copy and merge files
+# Replace files
 for FILE in "$SOURCE_DIR"/*; do
     BASENAME=$(basename "$FILE") # Get file name without the path
     DEST_FILE="$DEST_DIR/$BASENAME"
 
-    if [ -e "$DEST_FILE" ]; then
-        # If the file exists, create a unique file name
-        COUNTER=1
-        while [ -e "${DEST_DIR}/${BASENAME%.*}_$COUNTER.${BASENAME##*.}" ]; do
-            ((COUNTER++))
-        done
-        DEST_FILE="${DEST_DIR}/${BASENAME%.*}_$COUNTER.${BASENAME##*.}"
-    fi
-
+    # Copy and replace file in the destination
     cp "$FILE" "$DEST_FILE"
-    echo "Copied $(basename "$FILE") to $DEST_FILE"
+    echo "Replaced $DEST_FILE with $FILE"
 done
 
 cd ~/Dev/XCraftLib/
