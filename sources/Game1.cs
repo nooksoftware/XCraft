@@ -310,7 +310,12 @@ namespace XCraft {
 
             int begin_y_offset = 44*4;
                         
-            XCraftLib.Button play_button = xlib_gui.NewButton("play", new XCraftLib.ButtonSettings(w/2, h/2-begin_y_offset, -1, -1, 
+            XCraftLib.GUISprite logo_sprite = xlib_gui.NewGUISprite("logo", new XCraftLib.GUISpriteSettings(w/2, 150, -1, -1,
+                "logo"
+            ));
+            logo_sprite.SetMidOrigin();
+
+            XCraftLib.Button play_button = xlib_gui.NewButton("play", new XCraftLib.ButtonSettings(w/2, h/2-(int)(begin_y_offset*0.5), -1, -1, 
                 "button_play_normal",
                 "button_play_hover",
                 "button_play_clicked",
@@ -318,7 +323,7 @@ namespace XCraft {
             ));
             play_button.SetMidOrigin();
                 
-            XCraftLib.Button settings_button = xlib_gui.NewButton("settings", new XCraftLib.ButtonSettings(w/2, h/2-begin_y_offset+44*1, -1, -1, 
+            XCraftLib.Button settings_button = xlib_gui.NewButton("settings", new XCraftLib.ButtonSettings(w/2, h/2-(int)(begin_y_offset*0.25), -1, -1, 
                 "button_settings_normal",
                 "button_settings_hover",
                 "button_settings_clicked",
@@ -326,7 +331,7 @@ namespace XCraft {
             ));
             settings_button.SetMidOrigin();
                 
-            XCraftLib.Button credits_button = xlib_gui.NewButton("credits", new XCraftLib.ButtonSettings(w/2, h/2-begin_y_offset+44*2, -1, -1, 
+            XCraftLib.Button credits_button = xlib_gui.NewButton("credits", new XCraftLib.ButtonSettings(w/2, h/2, -1, -1, 
                 "button_credits_normal",
                 "button_credits_hover",
                 "button_credits_clicked",
@@ -334,7 +339,7 @@ namespace XCraft {
             ));
             credits_button.SetMidOrigin();
                 
-            XCraftLib.Button exit_button = xlib_gui.NewButton("exit", new XCraftLib.ButtonSettings(w/2, h/2-begin_y_offset+44*3, -1, -1, 
+            XCraftLib.Button exit_button = xlib_gui.NewButton("exit", new XCraftLib.ButtonSettings(w/2, h/2+(int)(begin_y_offset*0.25), -1, -1, 
                 "button_exit_normal",
                 "button_exit_hover",
                 "button_exit_clicked",
