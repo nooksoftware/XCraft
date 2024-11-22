@@ -12,6 +12,33 @@ using XCraftLib;
 //using FastNoiseLite;
 
 namespace XCraft {
+    public class GameAccess : XCraftLib.IAccess {
+        ////////////////////////////////////////////
+        /// Initialization
+        ////////////////////////////////////////////
+        public static void Initialize() {
+            _instance = new GameAccess();
+        }
+        public void Initialize(SpriteBatch spriteBatch) {
+            this.spriteBatch = spriteBatch;;
+        }
+        public void Initialize(GraphicsDeviceManager graphicsDeviceManager) {
+            this.graphicsDeviceManager = graphicsDeviceManager;
+        }
+        ////////////////////////////////////////////
+        /// Access
+        ////////////////////////////////////////////
+        public static GameAccess GameInstance() {
+            if (_instance == null) {
+                return null;
+            }
+            return _instance as GameAccess;
+        }
+        public static GameAccess A {
+            get {return GameInstance();}
+        }
+        
+    }
     public enum Switch {
         InventorySwitch = 1,
         MinimapExpandSwitch,
