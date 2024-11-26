@@ -202,9 +202,17 @@ namespace XCraft {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin();
+            RenderTiles();
             _spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+        protected void RenderTiles() {
+            for (int i = 0; i < 512; i++) {
+                for (int j = 0; j < 256; j++ ){
+                    tiles[i,j].Draw(_spriteBatch, tp);
+                }
+            }
         }
     }
 }
