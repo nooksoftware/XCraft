@@ -45,9 +45,19 @@ namespace XCraft {
         ZS_2_0,
         ZS_0_5
     };
-    
+    public class Tile {
+        public int x;
+        public int y;
+        public TileType t;
+        public Tile(int x, int y, TileType t) {
+            this.x = x;
+            this.y = y;
+            this.t = t;
+        }
+    };
     public class Game1 : Game
     {
+        private Tile[,] tiles;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private Dictionary<string, Texture2D> _textures;
@@ -135,11 +145,21 @@ namespace XCraft {
             SetWindowSize(1600, 900);
 
             LoadGraphicsTextures();
+
+            LoadMap();
         }
         public void SetWindowSize(int w, int h) {
             _graphics.PreferredBackBufferWidth = w;
             _graphics.PreferredBackBufferHeight = h;
             _graphics.ApplyChanges();
+        }
+        protected void LoadMap() {
+            tiles = new Tile[512,256];
+            for (int i = 0; i < 512; i++) {
+                for (int j = 0; j < 256; j++) {
+                    tiles[i,j] = new Tile(i,j,TileType.AIR);
+                }
+            }
         }
         protected override void Update(GameTime gameTime)
         {
