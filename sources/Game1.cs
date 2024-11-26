@@ -45,14 +45,25 @@ namespace XCraft {
         ZS_2_0,
         ZS_0_5
     };
+    public static class Acc {
+        public static int navX = 0;
+        public static int navY = 0;
+    };
     public class Tile {
         public int x;
         public int y;
+        public int tp_pos_x = 0;
+        public int tp_pos_y = 0;
         public TileType t;
-        public Tile(int x, int y, TileType t) {
+        public Tile(int x, int y, TileType t, int tp_pos_x, int tp_pos_y) {
             this.x = x;
             this.y = y;
             this.t = t;
+            this.tp_pos_x = tp_pos_x;
+            this.tp_pos_y = tp_pos_y;
+        }
+        public void Draw(SpriteBatch spriteBatch, Texture2D tp) {
+            spriteBatch.Draw(tp, new Rectangle(32*tp_pos_x, 32*tp_pos_y, 32, 32), new Rectangle(x*32 + Acc.navX, y*32 + Acc.navY), Color.White);
         }
     };
     public class Game1 : Game
@@ -62,6 +73,7 @@ namespace XCraft {
         private SpriteBatch _spriteBatch;
         private Dictionary<string, Texture2D> _textures;
         private Dictionary<TileType, Vec2i> tp_pos;
+        private Texture2D tp;
 
         public Game1()
         {
@@ -71,6 +83,7 @@ namespace XCraft {
         }
         protected void LoadGraphicsTextures() {
             LoadTextures();
+            tp = Content.Load<Texture2D>("tp");
         }
         protected void LoadTextures() {
             LoadTex2D("button_play_normal");
