@@ -10,6 +10,36 @@ using System.Numerics;
 //using FastNoiseLite;
 
 namespace XCraft {
+    public enum TileType {
+        UNKNOWN = -1,
+        AIR = 0,
+        DIRT,
+        GRASS,
+        STONE,
+        BEDROCK,
+        SAND,
+        CLAY,
+        WATER,
+        MUD,
+        LOG1,
+        LOG2,
+        LOG3,
+        LEAVES1,
+        LEAVES2,
+        LEAVES3,
+        WOODEN_PL1,
+        WOODEN_PL2,
+        WOODEN_PL3,
+        WOOD1,
+        WOOD2,
+        WOOD3,
+        BRICKS,
+        CONCRETE,
+        STONE_BRICKS,
+        METAL,
+        WOODEN_BOX,
+        METAL_BOX
+    };
     public enum ZoomState {
         ZS_1_0 = 0,
         ZS_2_0,
@@ -21,6 +51,7 @@ namespace XCraft {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private Dictionary<string, Texture2D> _textures;
+        private Dictionary<TileType, Vec2i> tp_pos;
 
         public Game1()
         {
@@ -62,54 +93,48 @@ namespace XCraft {
             base.Initialize();
         }
 
-//        protected void AddTPP(Dictionary<TileType, Vec2i> tp_pos, TileType t, int x, int y) {
-//            tp_pos.Add(t, new Vec2i(x,y));
-//        }
-//        protected void LoadTPPos() {
-//            Dictionary<TileType, Vec2i> tp_pos = game_access.Get<Dictionary<TileType, Vec2i>>("tp_pos");
-//        
-//            AddTPP(tp_pos, TileType.DIRT, 0, 0);
-//            AddTPP(tp_pos, TileType.GRASS, 0, 1);
-//            AddTPP(tp_pos, TileType.STONE, 0, 2);
-//            AddTPP(tp_pos, TileType.BEDROCK, 0, 3);
-//            AddTPP(tp_pos, TileType.SAND, 0, 4);
-//            AddTPP(tp_pos, TileType.CLAY, 0, 5);
-//            AddTPP(tp_pos, TileType.WATER, 0, 6);
-//            AddTPP(tp_pos, TileType.MUD, 0, 7);
-//
-//            AddTPP(tp_pos, TileType.LOG1, 1, 0);
-//            AddTPP(tp_pos, TileType.LOG2, 1, 1);
-//            AddTPP(tp_pos, TileType.LOG3, 1, 2);
-//            AddTPP(tp_pos, TileType.LEAVES1, 1, 3);
-//            AddTPP(tp_pos, TileType.LEAVES2, 1, 4);
-//            AddTPP(tp_pos, TileType.LEAVES3, 1, 5);
-//
-//            AddTPP(tp_pos, TileType.WOODEN_PL1, 2, 0);
-//            AddTPP(tp_pos, TileType.WOODEN_PL2, 2, 1);
-//            AddTPP(tp_pos, TileType.WOODEN_PL3, 2, 2);
-//            AddTPP(tp_pos, TileType.WOOD1, 2, 3);
-//            AddTPP(tp_pos, TileType.WOOD2, 2, 4);
-//            AddTPP(tp_pos, TileType.WOOD3, 2, 5);
-//
-//            AddTPP(tp_pos, TileType.BRICKS, 2, 0);
-//            AddTPP(tp_pos, TileType.CONCRETE, 2, 1);
-//            AddTPP(tp_pos, TileType.STONE_BRICKS, 2, 2);
-//            AddTPP(tp_pos, TileType.METAL, 2, 3);
-//            AddTPP(tp_pos, TileType.WOODEN_BOX, 2, 4);
-//            AddTPP(tp_pos, TileType.METAL_BOX, 2, 5);
-//        }
+        protected void AddTPP(Dictionary<TileType, Vec2i> tp_pos, TileType t, int x, int y) {
+            tp_pos.Add(t, new Vec2i(x,y));
+        }
+        protected void LoadTPPos() {
+            tp_pos = new Dictionary<TileType, Vec2i>();
+        
+            AddTPP(tp_pos, TileType.DIRT, 0, 0);
+            AddTPP(tp_pos, TileType.GRASS, 0, 1);
+            AddTPP(tp_pos, TileType.STONE, 0, 2);
+            AddTPP(tp_pos, TileType.BEDROCK, 0, 3);
+            AddTPP(tp_pos, TileType.SAND, 0, 4);
+            AddTPP(tp_pos, TileType.CLAY, 0, 5);
+            AddTPP(tp_pos, TileType.WATER, 0, 6);
+            AddTPP(tp_pos, TileType.MUD, 0, 7);
+
+            AddTPP(tp_pos, TileType.LOG1, 1, 0);
+            AddTPP(tp_pos, TileType.LOG2, 1, 1);
+            AddTPP(tp_pos, TileType.LOG3, 1, 2);
+            AddTPP(tp_pos, TileType.LEAVES1, 1, 3);
+            AddTPP(tp_pos, TileType.LEAVES2, 1, 4);
+            AddTPP(tp_pos, TileType.LEAVES3, 1, 5);
+
+            AddTPP(tp_pos, TileType.WOODEN_PL1, 2, 0);
+            AddTPP(tp_pos, TileType.WOODEN_PL2, 2, 1);
+            AddTPP(tp_pos, TileType.WOODEN_PL3, 2, 2);
+            AddTPP(tp_pos, TileType.WOOD1, 2, 3);
+            AddTPP(tp_pos, TileType.WOOD2, 2, 4);
+            AddTPP(tp_pos, TileType.WOOD3, 2, 5);
+
+            AddTPP(tp_pos, TileType.BRICKS, 2, 0);
+            AddTPP(tp_pos, TileType.CONCRETE, 2, 1);
+            AddTPP(tp_pos, TileType.STONE_BRICKS, 2, 2);
+            AddTPP(tp_pos, TileType.METAL, 2, 3);
+            AddTPP(tp_pos, TileType.WOODEN_BOX, 2, 4);
+            AddTPP(tp_pos, TileType.METAL_BOX, 2, 5);
+        }
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             SetWindowSize(1600, 900);
 
-
-        
             LoadGraphicsTextures();
-
-
-            //this.GameAccess.gameMenuSelected = XCraftLib.GameMenuSelected;
-            // TODO: use this.Content to load your game content here
         }
         public void SetWindowSize(int w, int h) {
             _graphics.PreferredBackBufferWidth = w;
@@ -121,8 +146,6 @@ namespace XCraft {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
-
             Draw(gameTime);
 
             base.Update(gameTime);
@@ -132,7 +155,6 @@ namespace XCraft {
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
             _spriteBatch.Begin();
             _spriteBatch.End();
 
