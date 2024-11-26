@@ -20,6 +20,7 @@ namespace XCraft {
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private Dictionary<string, Texture2D> _textures;
 
         public Game1()
         {
@@ -28,11 +29,9 @@ namespace XCraft {
             IsMouseVisible = true;
         }
         protected void LoadGraphicsTextures() {
-
-            LoadGUITextures();
+            LoadTextures();
         }
-        protected void LoadGUITextures() {
-
+        protected void LoadTextures() {
             LoadTex2D("button_play_normal");
             LoadTex2D("button_play_hover");
             LoadTex2D("button_play_clicked");
@@ -51,11 +50,9 @@ namespace XCraft {
             LoadTex2D("button_multiplayer_normal");
             LoadTex2D("button_multiplayer_hover");
             LoadTex2D("button_multiplayer_clicked");
-
-            //todo
         }
         protected void LoadTex2D(string t) {
-
+            _textures.Add(t, Content.Load<Texture2D>(t));
         }
 
         protected override void Initialize()
