@@ -179,6 +179,19 @@ namespace XCraft {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            int navXC = 0;
+            int navYC = 0;
+            int ch = 10;
+            if (Keyboard.GetState().IsKeyDown(Keys.A)) {
+                navXC -= ch;
+            } else if (Keyboard.GetState().IsKeyDown(Keys.D)) {
+                navXC += ch;
+            } else if (Keyboard.GetState().IsKeyDown(Keys.W)) {
+                navYC -= ch;
+            } else if (Keyboard.GetState().IsKeyDown(Keys.S)) {
+                navYC += ch;
+            }
+
             Draw(gameTime);
 
             base.Update(gameTime);
