@@ -700,7 +700,7 @@ namespace XCraft {
         private MouseState ms;
         private KeyboardState prev_ks;
         private KeyboardState ks;
-        private bool player_spec = true;
+        private bool player_spec = false;
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
