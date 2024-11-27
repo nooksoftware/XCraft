@@ -128,6 +128,23 @@ namespace XCraft {
             this.y += y;
         }
         public void Move(bool l, bool r, bool t, bool b, Map map) {
+            bool on_ground = (
+                true
+            );
+            if (l) {
+                accX -= 0.8f;
+            }
+            if (r) {
+                accX += 0.8f;
+            }
+            if (t && on_ground) {
+                accY -= 15.0f;
+                on_ground = false;
+            }
+            
+
+        }
+        public void Move(bool l, bool r, bool t, bool b, Map map, bool m_) {
             int scantilesize = 1;
             int scanb_x = (((System.Convert.ToInt32(x))/32)-scantilesize);
             int scanb_y = (((System.Convert.ToInt32(y))/32)-scantilesize);
@@ -334,33 +351,6 @@ namespace XCraft {
 
         }
     };
-    /*
-    public class Tile {
-        public int x;
-        public int y;
-        public int tp_pos_x = -1;
-        public int tp_pos_y = -1;
-        public TileType t;
-        public Tile(int x, int y, TileType t, int tp_pos_x, int tp_pos_y) {
-            this.x = x;
-            this.y = y;
-            this.t = t;
-            this.tp_pos_x = tp_pos_x;
-            this.tp_pos_y = tp_pos_y;
-        }
-        public void Draw(SpriteBatch spriteBatch, Texture2D tp) {
-            if (tp_pos_x < 0 || tp_pos_y < 0) {
-                if(t == TileType.AIR) {
-                    //nothing
-                }
-            } else {
-                Rectangle dest = new Rectangle(x*32 - Acc.navX, y*32 - Acc.navY, 32, 32);
-                if (dest.X + 32 > 0 && dest.Y + 32 > 0 && dest.X < Acc.windowWidth && dest.Y < Acc.windowHeight) {
-                    spriteBatch.Draw(tp, new Rectangle(32*tp_pos_x, 32*tp_pos_y, 32, 32), dest, Color.White);
-                }
-            }
-        }
-    };*/
     public class Map {
         private FastNoiseLite lite;
         public int w = 0;
@@ -547,6 +537,62 @@ namespace XCraft {
             tiles[x,y] = new Tile(x,y,tp_x, tp_y, tt, tp);
         }
     };
+    public class Gameplay {
+        public Game1 game;
+        private Map map;
+        private Player this_player;
+
+        private GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
+        private Dictionary<string, Texture2D> _textures;
+        private Dictionary<TileType, Vec2i> tp_pos;
+        private Texture2D tp;
+        private Texture2D player_t;
+        private int mapWidth = 512;
+        private int mapHeight = 256;
+        private int u_h = 0;
+        private int t_h = 0;
+        protected Random random;
+        private float mvXf = 0.0f;
+        private float mvYf = 0.0f;
+        private MouseState prev_ms;
+        private MouseState ms;
+        private KeyboardState prev_ks;
+        private KeyboardState ks;
+        private bool player_spec = true;
+        public Gameplay(Game1 game,
+            Map map,
+            Player this_player,
+            GraphicsDeviceManager _graphics,
+            SpriteBatch _spriteBatch,
+            Dictionary<string, Texture2D> _textures,
+            Dictionary<TileType, Vec2i> tp_pos,
+            Texture2D tp,
+            Texture2D player_t,
+            int mapWidth,
+            int mapHeight
+        ) {
+            this.game = game;
+            this.map = map;
+            this.this_player = this_player;
+            this._graphics = _graphics;
+            this._spriteBatch = _spriteBatch;
+            this._textures = _textures;
+            this.tp_pos = tp_pos;
+            this.tp = tp;
+            this.player_t = player_t;
+            this.mapWidth = mapWidth;
+            this.mapHeight = mapHeight;
+        }
+
+        public void Tick(
+            GameTime gameTime
+        ) {
+            _spriteBatch.Begin();
+
+            _spriteBatch.End();
+        }
+    };
     public class Game1 : Game
     {
         private Map map;
@@ -558,6 +604,8 @@ namespace XCraft {
         private Dictionary<TileType, Vec2i> tp_pos;
         private Texture2D tp;
         private Texture2D player_t;
+
+        private Gameplay gameplay;
 
         public Game1()
         {
@@ -659,6 +707,18 @@ namespace XCraft {
             LoadMap();
             prev_ms = Mouse.GetState();
             ms = Mouse.GetState();
+
+            gameplay = new Gameplay(
+                this,
+                _graphics,
+                _spriteBatch,
+                _textures,
+                tp_pos,
+                tp,
+                player_t,
+                mapWidth,
+                mapHeight
+            );
         }
         public void SetWindowSize(int w, int h) {
             _graphics.PreferredBackBufferWidth = w;
@@ -677,23 +737,6 @@ namespace XCraft {
 
             this.map = new Map(mapWidth, mapHeight, u_h, t_h, 1.0f, tp_pos, tp);
             this_player = new Player(32*mapWidth/2, 32*(t_h-2), player_t);
-            /*LoadMapTT();
-            tiles = new Tile[mapWidth,mapHeight];
-            for (int i = 0; i < mapWidth; i++) {
-                for (int j = 0; j < mapHeight; j++) {
-                    TileType tiletype = tiles_types[i,j];
-                    if (tiletype != TileType.AIR && tiletype != TileType.UNKNOWN) {
-                        int tpx = tp_pos[tiletype].x;
-                        int tpy = tp_pos[tiletype].y;
-                        tiles[i,j] = new Tile(i,j, tpx, tpy, tiletype, tp);
-                    } else {
-                        tiles[i,j] = new Tile(i,j, -1, -1, tiletype, tp);
-                    }
-                }
-            }
-
-            
-            */
         }
         protected Random random;
         protected bool PercRandom(int perc) {
@@ -709,6 +752,9 @@ namespace XCraft {
         private bool player_spec = true;
         protected override void Update(GameTime gameTime)
         {
+            if (gameplay != null) {
+                Tick();
+            }
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
