@@ -51,6 +51,41 @@ namespace XCraft {
         public static int windowWidth = 1600;
         public static int windowHeight = 900;
     };
+    public enum EntityType {
+        UNKNOWN = 0,
+        PLAYER = 1,
+        SLIMER = 2,
+        BPLAYER = 3
+    };
+    public class Entity {
+        public float x = 0;
+        public float y = 0;
+        public EntityType type = 0;
+        public Texture2D t;
+
+        public Entity(int x, int y, EntityType type, Texture2D t) {
+
+        }
+        public void Draw(SpriteBatch spriteBatch) {
+            Rectangle d = new Rectangle(
+                (int)x-Acc.navX,
+                (int)y-Acc.navY,
+                t.Width, t.Height);
+            Rectangle o = new Rectangle(0,0,t.Width, t.Height);
+            spriteBatch.Draw(t, d, o, Color.White);
+        }
+    };
+    public class Player : Entity {
+        public Player(int x, int y, Texture2D t) 
+         : base(x,y,EntityType.PLAYER, t)
+        {
+
+        }
+        public void Move(float x, float y) {
+            this.x += x;
+            this.y += y;
+        }
+    };
     public class Tile {
         public int x = 0;
         public int y = 0;
@@ -116,11 +151,14 @@ namespace XCraft {
     public class Game1 : Game
     {
         private Tile[,] tiles;
+        private Player this_player;
+
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private Dictionary<string, Texture2D> _textures;
         private Dictionary<TileType, Vec2i> tp_pos;
         private Texture2D tp;
+        private Texture2D player_t;
 
         public Game1()
         {
@@ -135,6 +173,7 @@ namespace XCraft {
         protected void LoadGraphicsTextures() {
             LoadTextures();
             tp = Content.Load<Texture2D>("tp");
+            player_t = Content.Load<Texture2D>("player");
         }
         protected void LoadTextures() {
             LoadTex2D("button_play_normal");
@@ -235,6 +274,8 @@ namespace XCraft {
                     }
                 }
             }
+
+            this_player = new Player(32*900, 32*450, player_t);
         }
         protected Random random;
         protected bool PercRandom(int perc) {
@@ -272,20 +313,22 @@ namespace XCraft {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            int navXC = 0;
-            int navYC = 0;
+            int mvX = 0;
+            int mvY = 0;
             int ch = 10;
             if (Keyboard.GetState().IsKeyDown(Keys.A)) {
-                navXC -= ch;
+                mvX -= ch;
             } else if (Keyboard.GetState().IsKeyDown(Keys.D)) {
-                navXC += ch;
+                mvX += ch;
             } else if (Keyboard.GetState().IsKeyDown(Keys.W)) {
-                navYC -= ch;
+                mvY -= ch;
             } else if (Keyboard.GetState().IsKeyDown(Keys.S)) {
-                navYC += ch;
+                mvY += ch;
             }
-            Acc.navX += navXC;
-            Acc.navY += navYC;
+            this_player.Move(mvX, mvY);
+
+            Acc.navX = (int)((-Acc.windowWidth / 2) + this_player.x);
+            Acc.navY = (int)((-Acc.windowHeight / 2) + this_player.y);
 
             Draw(gameTime);
 
@@ -309,5 +352,5 @@ namespace XCraft {
                 }
             }
         }
-    }
+    };
 }
