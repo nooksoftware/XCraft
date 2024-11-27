@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework.Input;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using System.Numerics;
+using System.Security.Cryptography;
+using System.ComponentModel.Design.Serialization;
 //using FastNoiseLite;
 
 namespace XCraft {
@@ -48,6 +50,16 @@ namespace XCraft {
         ZS_2_0,
         ZS_0_5
     };
+    public class SideBounds {
+        public int ls = 0;
+        public int rs = 0;
+        public int ts = 0;
+        public int bs = 0;
+        public bool l = false;
+        public bool r = false;
+        public bool t = false;
+        public bool b = false;
+    };
     public static class Acc {
         public static int navX = 256*32;
         public static int navY = 64*32;
@@ -56,6 +68,16 @@ namespace XCraft {
 
         public static bool RectContains(Rectangle r, int x, int y) {
             return (x > r.X && x < r.X+r.Width && y > r.Y && y < r.Y+r.Height);
+        }
+        public static SideBounds SideBounds(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2) {
+            SideBounds b = new SideBounds();
+
+            b.l = (x1 == x2 + w2 || x2 == x1 + w1);
+            b.r = (x1 + w1 == x2 || x2 + w2 == x1);
+            b.t = (y1 == y2 + h2 || y2 == y1 + h1);
+            b.b = (y1 + h1 == y2 || y2 + h2 == y1);
+
+            return b;
         }
     };
     public enum EntityType {
@@ -67,6 +89,10 @@ namespace XCraft {
     public class Entity {
         public float x = 0;
         public float y = 0;
+        public int ox = 0;
+        public int oy = 0;
+        public float width = 0.0f;
+        public float height = 0.0f;
         public EntityType type = 0;
         public Texture2D t;
 
@@ -75,17 +101,23 @@ namespace XCraft {
             this.y = y;
             this.type = type;
             this.t = t;
+            this.ox = t.Width/2;
+            this.oy = t.Height/2;
         }
         public void Draw(SpriteBatch spriteBatch) {
             Rectangle d = new Rectangle(
-                (int)x-Acc.navX,
-                (int)y-Acc.navY,
+                System.Convert.ToInt32(x-ox),
+                System.Convert.ToInt32(y-oy),
                 t.Width, t.Height);
             Rectangle o = new Rectangle(0,0,t.Width, t.Height);
             spriteBatch.Draw(t, d, o, Color.White);
         }
     };
     public class Player : Entity {
+        public float gravityAcc = 0.0f;
+        public float accX = 0.0f;
+        public float accY = 0.0f;
+        public bool gravity_change = false;
         public Player(int x, int y, Texture2D t) 
          : base(x,y,EntityType.PLAYER, t)
         {
@@ -95,10 +127,152 @@ namespace XCraft {
             this.x += x;
             this.y += y;
         }
+        public void Move(bool l, bool r, bool t, bool b, Map map) {
+            int scantilesize = 1;
+            int scanb_x = (((System.Convert.ToInt32(x)+ox)/32)-scantilesize);
+            int scanb_y = (((System.Convert.ToInt32(y)+oy)/32)-scantilesize);
+            int scane_x = (((System.Convert.ToInt32(x)+ox)/32)+scantilesize);
+            int scane_y = (((System.Convert.ToInt32(y)+oy)/32)+scantilesize);
+            if (scanb_x < 0) scanb_x = 0;
+            if (scanb_x > map.w) scanb_x = map.w;
+            if (scanb_y < 0) scanb_y = 0;
+            if (scanb_y > map.h) scanb_y = map.h;
+
+            SideBounds sb = new SideBounds();
+
+            gravity_change = true;
+
+            for (int sx = scanb_x; sx < scane_x; sx++) {
+                for (int sy = scanb_y; sy < scane_y; sy++) {
+                    Tile ti = map.tiles[sx, sy];
+                    if (ti.EntityBound(this)) {
+                        if (x < ti.x+32) {
+                            this.x = ti.x+32;
+                            sb.l = true;
+                            accX = 0.0f;
+                        }
+                        if (x+width > ti.x) {
+                            this.x = ti.x-32;
+                            sb.r = true;
+                            accX = 0.0f;
+                        }
+                        if (y < ti.y+32) {
+                            this.y = ti.y+32;
+                            sb.t = true;
+                        }
+                        if (y+height > ti.y) {
+                            this.y = ti.y-32;
+                            sb.b = true;
+                            gravityAcc = 0.0f;
+                            gravity_change = false;
+                        }
+                    }
+                }
+            }
+
+            if (!sb.l) {
+                if (l){accX -= 0.18f;} else {
+                    accX *= 0.8f;
+                }
+            }
+            if (!sb.r) {
+                if (r) {accX += 0.18f;} else {
+                    accX *= 0.8f;
+                }
+            }
+            if (accX >= 0.05f || accX <= -0.05f) {
+                x += accX;
+            }
+            
+
+            if (!sb.b) {
+                if (gravity_change) {
+                    gravityAcc += 0.25f;
+                    if (gravityAcc < 9.0f) {
+                        gravityAcc = 9.0f;
+                    }
+                    this.y += gravityAcc;
+                }
+            }
+        }
+        public void ApplyGravityAndBounds() {
+/*
+            if (gravity_change) {
+                if (gravityAcc > 9.0f) {
+                    gravityAcc = 9.0f;
+                } else {
+                    gravityAcc += 0.25f;
+                }
+                this.y += gravityAcc;
+            }
+
+            int rx = (int)x - ox;
+            int ry = (int)y - oy;
+            int w = (int)this.width;
+            int h = (int)this.height;
+            int ix = System.Convert.ToInt32(x);
+            int iy = System.Convert.ToInt32(y);
+
+            int ver_area = 9;
+            Rectangle[] tb = new Rectangle[ver_area];
+            int player_tile_x = rx/32;
+            int player_tile_y = ry/32;
+            
+            int c = 0;
+            for (int i = player_tile_x-1; i > player_tile_x+2; ++i) {
+                for (int j = player_tile_y-1; j > player_tile_y+2; ++j) {
+                    int rect_x = map.tiles[i,j].y;
+                    int rect_y = map.tiles[i,j].y;
+                    int rect_w = 32;
+                    int rect_h = 32;
+                    tb[c] = new Rectangle(rect_x, rect_y, rect_w, rect_h);
+                    c++;
+                }
+            }
+            SideBounds fb = new SideBounds();
+            fb.l = false;
+            fb.r = false;
+            fb.t = false;
+            fb.b = false;
+            for (int i = 0; i < ver_area; ++i) {
+                Rectangle r2 = tb[i];
+                
+                SideBounds sb = Acc.SideBounds(ix, iy, w, h, r2.X, r2.Y, r2.Width, r2.Height);
+                fb.l = (sb.l == true ? true : fb.l);
+                fb.r = (sb.r == true ? true : fb.r);
+                fb.t = (sb.t == true ? true : fb.t);
+                fb.b = (sb.b == true ? true : fb.b);
+
+                if (fb.l) fb.ls = r2.X + r2.Width;
+                if (fb.r) fb.ls = r2.X;
+                if (fb.t) fb.ls = r2.Y + r2.Height;
+                if (fb.b) fb.ls = r2.Y;
+            }
+            gravity_change = true;
+            if (fb.l) {
+
+            } else if (fb.r) {
+
+            }
+            if (fb.b) {
+                gravity_change = false;
+                gravityAcc = 0.0f;
+            } else if (fb.t) {
+
+            }
+*/
+            
+        }
     };
     public class Scenario {};
     
     public class Tile {
+        public bool IsSolid() {
+            return (type != TileType.UNKNOWN || type != TileType.AIR || type != TileType.WATER);
+        }
+        public bool EntityBound(Entity e) {
+            return ((e.x + e.ox)/32 == x) && ((e.y + e.oy)/32 == y);
+        }
         public int x = 0;
         public int y = 0;
         public Texture2D t;
@@ -188,12 +362,12 @@ namespace XCraft {
         public int u_h = 0;
         public int t_h = 0;
         public float ore = 0;
-        Dictionary<TileType, Vec2i> tp_pos;
-        Tile[,] tiles;
-        Tile[,] visible_tiles_frame;
+        public Dictionary<TileType, Vec2i> tp_pos;
+        public Tile[,] tiles;
+        public Tile[,] visible_tiles_frame;
 
-        TileType[,] tile_types;
-        Texture2D tp;
+        public TileType[,] tile_types;
+        public Texture2D tp;
         public Map(
             int w, int h, 
             int u_h, int t_h,
@@ -496,7 +670,7 @@ namespace XCraft {
             t_h = 96;
 
             this.map = new Map(mapWidth, mapHeight, u_h, t_h, 1.0f, tp_pos, tp);
-            this_player = new Player(32*mapWidth/2, 32*(t_h-1), player_t);
+            this_player = new Player(32*mapWidth/2, 32*(t_h-2), player_t);
             /*LoadMapTT();
             tiles = new Tile[mapWidth,mapHeight];
             for (int i = 0; i < mapWidth; i++) {
@@ -524,6 +698,9 @@ namespace XCraft {
         private float mvYf = 0.0f;
         private MouseState prev_ms;
         private MouseState ms;
+        private KeyboardState prev_ks;
+        private KeyboardState ks;
+        private bool player_spec = true;
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -535,14 +712,27 @@ namespace XCraft {
             int ch = 10;
             bool shift = false;
 
+
+            
             
             prev_ms = ms;
             ms = Mouse.GetState();
+            prev_ks = ks;
+            ks = Keyboard.GetState();
+
+            bool p_pressed = prev_ks.IsKeyUp(Keys.P) && prev_ks.IsKeyDown(Keys.P);
+
+            if(p_pressed) {
+                player_spec = !player_spec;
+            }
+
+            
             int mouse_x = ms.X;
             int mouse_y = ms.Y;
             
             bool lmb_click = prev_ms.LeftButton == ButtonState.Released && ms.LeftButton == ButtonState.Pressed;
             bool rmb_click = prev_ms.RightButton == ButtonState.Released && ms.RightButton == ButtonState.Pressed;
+
 
             if (lmb_click) {
                 Vec2i p = map.TilePoint(mouse_x, mouse_y);
@@ -565,44 +755,78 @@ namespace XCraft {
                 }
             }
             
+            if (player_spec) {
+                if (Keyboard.GetState().IsKeyDown(Keys.LeftShift) || Keyboard.GetState().IsKeyDown(Keys.RightShift)) {
+                    shift = true;
+                }
+                if (shift) {
+                    ch = 25;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.A)) {
+                    mvX -= ch;
+                    mvXf -= ch/5.0f;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.D)) {
+                    mvX += ch;
+                    mvXf += ch/5.0f;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.W)) {
+                    mvY -= ch;
+                    mvYf -= ch/5.0f;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.S)) {
+                    mvY += ch;
+                    mvYf += ch/5.0f;
+                }
+                this_player.Move(mvXf, mvYf);
 
-            if (Keyboard.GetState().IsKeyDown(Keys.LeftShift) || Keyboard.GetState().IsKeyDown(Keys.RightShift)) {
-                shift = true;
-            }
-            if (shift) {
-                ch = 25;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.A)) {
-                mvX -= ch;
-                mvXf -= ch/5.0f;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.D)) {
-                mvX += ch;
-                mvXf += ch/5.0f;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.W)) {
-                mvY -= ch;
-                mvYf -= ch/5.0f;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.S)) {
-                mvY += ch;
-                mvYf += ch/5.0f;
-            }
-            this_player.Move(mvXf, mvYf);
+                if (mvXf < 0.05f && mvXf > -0.05f) {
+                    mvXf = 0.0f;
+                } else {
+                    mvXf *= 0.8f;
+                }
+                if (mvYf < 0.05f && mvYf > -0.05f) {
+                    mvYf = 0.0f;
+                } else {
+                    mvYf *= 0.8f;
+                }
 
-            if (mvXf < 0.05f && mvXf > -0.05f) {
-                mvXf = 0.0f;
+                Acc.navX = (int)((-Acc.windowWidth / 2) + this_player.x - this_player.ox);
+                Acc.navY = (int)((-Acc.windowHeight / 2) + this_player.y - this_player.oy);
             } else {
-                mvXf *= 0.8f;
-            }
-            if (mvYf < 0.05f && mvYf > -0.05f) {
-                mvYf = 0.0f;
-            } else {
-                mvYf *= 0.8f;
-            }
+                bool w = false;
+                bool a = false;
+                bool s = false;
+                bool d = false;
+                
+                if (Keyboard.GetState().IsKeyDown(Keys.A)) {
+                    mvX -= ch;
+                    mvXf -= ch/5.0f;
+                    a = true;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.D)) {
+                    mvX += ch;
+                    mvXf += ch/5.0f;
+                    d = true;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.W)) {
+                    mvY -= ch;
+                    mvYf -= ch/5.0f;
+                    w = true;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.S)) {
+                    mvY += ch;
+                    mvYf += ch/5.0f;
+                    s = true;
+                }
+                this_player.Move(a,d,w,s, map);
 
-            Acc.navX = (int)((-Acc.windowWidth / 2) + this_player.x);
-            Acc.navY = (int)((-Acc.windowHeight / 2) + this_player.y);
+
+                //this_player.ApplyGravityAndBounds(map);
+
+                Acc.navX = (int)((-Acc.windowWidth / 2) + this_player.x - this_player.ox);
+                Acc.navY = (int)((-Acc.windowHeight / 2) + this_player.y - this_player.oy);
+            }
 
             Draw(gameTime);
 
