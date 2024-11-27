@@ -182,6 +182,7 @@ namespace XCraft {
         }
     };*/
     public class Map {
+        private FastNoiseLite lite;
         public int w = 0;
         public int h = 0;
         public int u_h = 0;
@@ -199,6 +200,7 @@ namespace XCraft {
             float ore, Dictionary<TileType, Vec2i> tp_pos,
             Texture2D tp
         ) {
+            this.lite = new FastNoiseLite();
             this.w = w;
             this.h = h;
             this.u_h = u_h;
@@ -250,7 +252,7 @@ namespace XCraft {
             }
             return b;
         }
-        protected TileType Determined(int x, int y) {
+        protected TileType Determined(int x, int y, float ter_h) {
             if (y > h-3) {
                 bool r = LinPercRandom(h-3, h, y);
                 return SwitchSet(r, TileType.BEDROCK, TileType.STONE);
@@ -274,10 +276,18 @@ namespace XCraft {
 
                 TileType t = SwitchSet(h_linear, TileType.STONE, TileType.DIRT);
                 return t;
-            } else if (y == t_h) {
-                return TileType.GRASS;
-            } else if (y > t_h) {
-                return TileType.DIRT;
+            } else if (y >= t_h) {
+                int y_t_p = y - t_h;
+                int terrain_th_height = u_h - t_h;
+                int terrain_height = System.Convert.ToInt32((float)(terrain_th_height)*(float)ter_h);
+
+                if (y_t_p == terrain_height) {
+                    return TileType.GRASS;
+                } else if (y_t_p > terrain_height) {
+                    return TileType.DIRT;
+                } else {
+                    return TileType.AIR;
+                }
             } else {
                 return TileType.AIR;
             }
@@ -285,10 +295,22 @@ namespace XCraft {
         public bool IsntTPApplicable(TileType t) {
             return (t == TileType.UNKNOWN || t == TileType.AIR);
         }
+        protected float MinMax1_0Float(float v) {
+            return (float)((v+1.0f) * 0.5f);
+        }
         protected void Gen (){
+            float[,] ter_h = new float[w,1];
+            lite.SetFrequency(0.04f);
+            lite.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
+            for (int x = 0; x < w; x++) {
+                float n = MinMax1_0Float(lite.GetNoise(((float)x), 1.0f));
+                
+                ter_h[x,0] = n; //MinMax1_0Float(n);
+            }
             for (int x = 0; x < w; x++) {
                 for (int y = 0; y < h; y++) {
-                    tile_types[x,y] = Determined(x,y);
+                    float this_x_t_h = ter_h[x,0];
+                    tile_types[x,y] = Determined(x,y, this_x_t_h);
                 }
             }
             for (int x = 0; x < w; x++) {
@@ -465,10 +487,16 @@ namespace XCraft {
         }
         private int mapWidth = 512;
         private int mapHeight = 256;
-        private TileType[,] tiles_types;
+        private int u_h = 0;
+        private int t_h = 0;
         protected void LoadMap() {
-            this.map = new Map(mapWidth, mapHeight, (int)(mapHeight*0.75f), (int)(mapHeight*0.5f), 1.0f, tp_pos, tp);
-            this_player = new Player(32*(256), 32*(128), player_t);
+            mapWidth = 512;
+            mapHeight = 256;
+            u_h = 128;
+            t_h = 96;
+
+            this.map = new Map(mapWidth, mapHeight, u_h, t_h, 1.0f, tp_pos, tp);
+            this_player = new Player(32*mapWidth/2, 32*(t_h-1), player_t);
             /*LoadMapTT();
             tiles = new Tile[mapWidth,mapHeight];
             for (int i = 0; i < mapWidth; i++) {
@@ -491,32 +519,6 @@ namespace XCraft {
         protected bool PercRandom(int perc) {
             int v = random.Next(100);
             return (v < perc);
-        }
-        protected void LoadMapTT() {
-            
-
-            tiles_types = new TileType[mapWidth,mapHeight];
-            for (int x = 0; x < mapWidth; x++) {
-                for (int y = 0; y < mapHeight; y++) {
-                    if (y > mapHeight - 3) {
-                        bool bis = PercRandom(80);
-                        if (bis) tiles_types[x,y] = TileType.BEDROCK;
-                        else {tiles_types[x,y] = TileType.STONE;}
-                    } else if (y > 128) {
-                        bool bis = PercRandom(90);
-                        if (bis) tiles_types[x,y] = TileType.STONE;
-                        else {tiles_types[x,y] = TileType.DIRT;}
-
-
-                    } else if (y > 128-64) {
-                        tiles_types[x,y] = TileType.DIRT;
-                    } else if (y == 128-64) {
-                        tiles_types[x,y] = TileType.GRASS;
-                    } else {
-                        tiles_types[x,y] = TileType.AIR;
-                    }
-                }
-            }
         }
         private float mvXf = 0.0f;
         private float mvYf = 0.0f;
