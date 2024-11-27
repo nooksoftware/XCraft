@@ -305,7 +305,7 @@ namespace XCraft {
             }
         }
         public void Draw(SpriteBatch sp) {
-            
+            ClearVisibleTilesFrame();
             for (int x = 0; x < w; x++) {
                 for (int y = 0; y < h; y++) {
                     bool tile_visible = tiles[x,y].Draw(sp);
@@ -314,14 +314,16 @@ namespace XCraft {
                     }
                 }
             }
-            ClearVisibleTilesFrame();
+            
         }
         public Vec2i TilePoint(int x, int y) {
             for (int i = 0; i < w; i++) {
                 for (int j = 0; j < h; j++) {
                     if (visible_tiles_frame[i,j] != null) {
                         Tile t = visible_tiles_frame[i,j];
-                        return (Acc.RectContains(t.draw_d, x, y) ? new Vec2i(i,j): null);
+                        if(Acc.RectContains(t.draw_d, x, y)) {
+                            return new (i,j);
+                        }
                     }
                 }
             }
@@ -364,6 +366,10 @@ namespace XCraft {
             _textures = new Dictionary<string, Texture2D>();
             tp_pos = new Dictionary<TileType, Vec2i>();
 
+            IsFixedTimeStep = true;
+            TargetElapsedTime = TimeSpan.FromSeconds(1.0 / 60.0);
+            
+            
         }
         protected void LoadGraphicsTextures() {
             LoadTextures();
@@ -449,6 +455,8 @@ namespace XCraft {
             LoadGraphicsTextures();
             LoadTPPos();
             LoadMap();
+            prev_ms = Mouse.GetState();
+            ms = Mouse.GetState();
         }
         public void SetWindowSize(int w, int h) {
             _graphics.PreferredBackBufferWidth = w;
@@ -512,6 +520,8 @@ namespace XCraft {
         }
         private float mvXf = 0.0f;
         private float mvYf = 0.0f;
+        private MouseState prev_ms;
+        private MouseState ms;
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -523,12 +533,14 @@ namespace XCraft {
             int ch = 10;
             bool shift = false;
 
-            var ms = Mouse.GetState();
+            
+            prev_ms = ms;
+            ms = Mouse.GetState();
             int mouse_x = ms.X;
             int mouse_y = ms.Y;
             
-            bool lmb_click = ms.LeftButton == ButtonState.Pressed;
-            bool rmb_click = ms.RightButton == ButtonState.Pressed;
+            bool lmb_click = prev_ms.LeftButton == ButtonState.Released && ms.LeftButton == ButtonState.Pressed;
+            bool rmb_click = prev_ms.RightButton == ButtonState.Released && ms.RightButton == ButtonState.Pressed;
 
             if (lmb_click) {
                 Vec2i p = map.TilePoint(mouse_x, mouse_y);
