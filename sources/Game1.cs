@@ -52,10 +52,46 @@ namespace XCraft {
         public static int windowHeight = 900;
     };
     public class Tile {
+        public int x = 0;
+        public int y = 0;
+        public Texture2D t;
+        public int tp_x = -1;
+        public int tp_y = -1;
+        public TileType type = TileType.UNKNOWN;
+        public bool HasTp() {
+            return (tp_x != -1) && (tp_y != -1);
+        }
+        public Tile(int x, int y, int tp_x, int tp_y, TileType type, Texture2D tex) {
+            this.x = x;
+            this.y = y;
+            this.tp_x = tp_x;
+            this.tp_y = tp_y;
+            this.t = tex;
+            this.type = type;
+        }
+        public bool IsntUnknown() {
+            return (type != TileType.UNKNOWN || type != TileType.AIR) ;
+        }
+        public void Draw(SpriteBatch spriteBatch) {
+            if (HasTp() && IsntUnknown()) {
+                Rectangle d = new Rectangle(x*32 - Acc.navX, y*32 - Acc.navY,32,32);
+                Rectangle o = new Rectangle(tp_x*x, tp_y*y, 32, 32);
+                if (d.X < 0-32 || d.Y < 0-32) {
+                    return;
+                }
+                if (d.X > 1600 || d.Y > 900) {
+                    return;
+                }
+                spriteBatch.Draw(t, d, o, Color.White);
+            }
+        }
+    };
+    /*
+    public class Tile {
         public int x;
         public int y;
-        public int tp_pos_x = 0;
-        public int tp_pos_y = 0;
+        public int tp_pos_x = -1;
+        public int tp_pos_y = -1;
         public TileType t;
         public Tile(int x, int y, TileType t, int tp_pos_x, int tp_pos_y) {
             this.x = x;
@@ -76,7 +112,7 @@ namespace XCraft {
                 }
             }
         }
-    };
+    };*/
     public class Game1 : Game
     {
         private Tile[,] tiles;
@@ -193,9 +229,9 @@ namespace XCraft {
                     if (tiletype != TileType.AIR && tiletype != TileType.UNKNOWN) {
                         int tpx = tp_pos[tiletype].x;
                         int tpy = tp_pos[tiletype].y;
-                        tiles[i,j] = new Tile(i,j,tiletype, tpx, tpy);
+                        tiles[i,j] = new Tile(i,j, tpx, tpy, tiletype, tp);
                     } else {
-                        tiles[i,j] = new Tile(i,j,tiletype, -1, -1);
+                        tiles[i,j] = new Tile(i,j, -1, -1, tiletype, tp);
                     }
                 }
             }
@@ -248,6 +284,8 @@ namespace XCraft {
             } else if (Keyboard.GetState().IsKeyDown(Keys.S)) {
                 navYC += ch;
             }
+            Acc.navX += navXC;
+            Acc.navY += navYC;
 
             Draw(gameTime);
 
@@ -267,7 +305,7 @@ namespace XCraft {
         protected void RenderTiles() {
             for (int i = 0; i < mapWidth; i++) {
                 for (int j = 0; j < mapHeight; j++ ){
-                    tiles[i,j].Draw(_spriteBatch, tp);
+                    tiles[i,j].Draw(_spriteBatch);
                 }
             }
         }
