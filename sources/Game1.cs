@@ -588,9 +588,126 @@ namespace XCraft {
         public void Tick(
             GameTime gameTime
         ) {
-            _spriteBatch.Begin();
+            int mvX = 0;
+            int mvY = 0;
 
-            _spriteBatch.End();
+            int ch = 10;
+            bool shift = false;
+            prev_ms = ms;
+            ms = Mouse.GetState();
+            prev_ks = ks;
+            ks = Keyboard.GetState();
+
+            bool p_pressed = ks.IsKeyUp(Keys.P) && prev_ks.IsKeyDown(Keys.P);
+
+            if(p_pressed) {
+                player_spec = !player_spec;
+            }
+
+            int mouse_x = ms.X;
+            int mouse_y = ms.Y;
+            
+            bool lmb_click = prev_ms.LeftButton == ButtonState.Released && ms.LeftButton == ButtonState.Pressed;
+            bool rmb_click = prev_ms.RightButton == ButtonState.Released && ms.RightButton == ButtonState.Pressed;
+            if (lmb_click) {
+                Vec2i p = map.TilePoint(mouse_x, mouse_y);
+                if (p != null) {
+                    if (map.IsAir(p.x, p.y)) {
+                        map.SetTile(p.x, p.y, TileType.STONE);
+                    } else {
+                        map.AirTile(p.x, p.y);
+                    }
+                }
+            }
+            else if (rmb_click) {
+                Vec2i p = map.TilePoint(mouse_x, mouse_y);
+                if (p != null) {
+                    if (map.IsAir(p.x, p.y)) {
+                        map.SetTile(p.x, p.y, TileType.STONE_BRICKS);
+                    } else {
+                        map.AirTile(p.x, p.y);
+                    }
+                }
+            }
+            if (player_spec) {
+                if (Keyboard.GetState().IsKeyDown(Keys.LeftShift) || Keyboard.GetState().IsKeyDown(Keys.RightShift)) {
+                    shift = true;
+                }
+                if (shift) {
+                    ch = 25;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.A)) {
+                    mvX -= ch;
+                    mvXf -= ch/5.0f;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.D)) {
+                    mvX += ch;
+                    mvXf += ch/5.0f;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.W)) {
+                    mvY -= ch;
+                    mvYf -= ch/5.0f;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.S)) {
+                    mvY += ch;
+                    mvYf += ch/5.0f;
+                }
+
+                this_player.Move(mvXf, mvYf);
+
+                Acc.navX = (int)((-Acc.windowWidth / 2) + this_player.x - this_player.ox);
+                Acc.navY = (int)((-Acc.windowHeight / 2) + this_player.y - this_player.oy);
+            } else {
+                bool w = false;
+                bool a = false;
+                bool s = false;
+                bool d = false;
+                
+                if (Keyboard.GetState().IsKeyDown(Keys.A)) {
+                    mvX -= ch;
+                    mvXf -= ch/5.0f;
+                    a = true;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.D)) {
+                    mvX += ch;
+                    mvXf += ch/5.0f;
+                    d = true;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.W)) {
+                    mvY -= ch;
+                    mvYf -= ch/5.0f;
+                    w = true;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.S)) {
+                    mvY += ch;
+                    mvYf += ch/5.0f;
+                    s = true;
+                }
+                this_player.Move(a,d,w,s, map);
+
+
+                //this_player.ApplyGravityAndBounds(map);
+
+                Acc.navX = (int)((-Acc.windowWidth / 2) + this_player.x - this_player.ox);
+                Acc.navY = (int)((-Acc.windowHeight / 2) + this_player.y - this_player.oy);
+            }
+            if (mvXf < 0.05f && mvXf > -0.05f) {
+                mvXf = 0.0f;
+            } else {
+                mvXf *= 0.8f;
+            }
+            if (mvYf < 0.05f && mvYf > -0.05f) {
+                mvYf = 0.0f;
+            } else {
+                mvYf *= 0.8f;
+            }
+            Console.WriteLine("Player" + this_player.x + this_player.ox + " : " + this_player.y + this_player.oy + " ---- " + Acc.navX + " : " + Acc.navY + "   | " + (Acc.navX - this_player.x));
+        }
+        public void Draw(GameTime gameTime) {
+            _spriteBatch.Begin();                    
+            map.Draw(_spriteBatch);
+            this_player.Draw(_spriteBatch);
+            _spriteBatch.End();                        
         }
     };
     public class Game1 : Game
@@ -743,12 +860,7 @@ namespace XCraft {
             int v = random.Next(100);
             return (v < perc);
         }
-        private float mvXf = 0.0f;
-        private float mvYf = 0.0f;
-        private MouseState prev_ms;
-        private MouseState ms;
-        private KeyboardState prev_ks;
-        private KeyboardState ks;
+
         private bool player_spec = true;
         protected override void Update(GameTime gameTime)
         {
@@ -758,132 +870,7 @@ namespace XCraft {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            
-            int mvX = 0;
-            int mvY = 0;
-
-            int ch = 10;
-            bool shift = false;
-
-
-            
-            
-            prev_ms = ms;
-            ms = Mouse.GetState();
-            prev_ks = ks;
-            ks = Keyboard.GetState();
-
-            bool p_pressed = ks.IsKeyUp(Keys.P) && prev_ks.IsKeyDown(Keys.P);
-
-            if(p_pressed) {
-                player_spec = !player_spec;
-            }
-
-            
-            int mouse_x = ms.X;
-            int mouse_y = ms.Y;
-            
-            bool lmb_click = prev_ms.LeftButton == ButtonState.Released && ms.LeftButton == ButtonState.Pressed;
-            bool rmb_click = prev_ms.RightButton == ButtonState.Released && ms.RightButton == ButtonState.Pressed;
-
-
-            if (lmb_click) {
-                Vec2i p = map.TilePoint(mouse_x, mouse_y);
-                if (p != null) {
-                    if (map.IsAir(p.x, p.y)) {
-                        map.SetTile(p.x, p.y, TileType.STONE);
-                    } else {
-                        map.AirTile(p.x, p.y);
-                    }
-                }
-            }
-            else if (rmb_click) {
-                Vec2i p = map.TilePoint(mouse_x, mouse_y);
-                if (p != null) {
-                    if (map.IsAir(p.x, p.y)) {
-                        map.SetTile(p.x, p.y, TileType.STONE_BRICKS);
-                    } else {
-                        map.AirTile(p.x, p.y);
-                    }
-                }
-            }
-            
-            if (player_spec) {
-                if (Keyboard.GetState().IsKeyDown(Keys.LeftShift) || Keyboard.GetState().IsKeyDown(Keys.RightShift)) {
-                    shift = true;
-                }
-                if (shift) {
-                    ch = 25;
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.A)) {
-                    mvX -= ch;
-                    mvXf -= ch/5.0f;
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.D)) {
-                    mvX += ch;
-                    mvXf += ch/5.0f;
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.W)) {
-                    mvY -= ch;
-                    mvYf -= ch/5.0f;
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.S)) {
-                    mvY += ch;
-                    mvYf += ch/5.0f;
-                }
-                
-
-
-                this_player.Move(mvXf, mvYf);
-
-                Acc.navX = (int)((-Acc.windowWidth / 2) + this_player.x - this_player.ox);
-                Acc.navY = (int)((-Acc.windowHeight / 2) + this_player.y - this_player.oy);
-            } else {
-                bool w = false;
-                bool a = false;
-                bool s = false;
-                bool d = false;
-                
-                if (Keyboard.GetState().IsKeyDown(Keys.A)) {
-                    mvX -= ch;
-                    mvXf -= ch/5.0f;
-                    a = true;
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.D)) {
-                    mvX += ch;
-                    mvXf += ch/5.0f;
-                    d = true;
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.W)) {
-                    mvY -= ch;
-                    mvYf -= ch/5.0f;
-                    w = true;
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.S)) {
-                    mvY += ch;
-                    mvYf += ch/5.0f;
-                    s = true;
-                }
-                this_player.Move(a,d,w,s, map);
-
-
-                //this_player.ApplyGravityAndBounds(map);
-
-                Acc.navX = (int)((-Acc.windowWidth / 2) + this_player.x - this_player.ox);
-                Acc.navY = (int)((-Acc.windowHeight / 2) + this_player.y - this_player.oy);
-            }
-            if (mvXf < 0.05f && mvXf > -0.05f) {
-                mvXf = 0.0f;
-            } else {
-                mvXf *= 0.8f;
-            }
-            if (mvYf < 0.05f && mvYf > -0.05f) {
-                mvYf = 0.0f;
-            } else {
-                mvYf *= 0.8f;
-            }
-
-            Console.WriteLine("Player" + this_player.x + this_player.ox + " : " + this_player.y + this_player.oy + " ---- " + Acc.navX + " : " + Acc.navY + "   | " + (Acc.navX - this_player.x));
+            gameplay.Tick();
             Draw(gameTime);
 
             base.Update(gameTime);
@@ -892,17 +879,8 @@ namespace XCraft {
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            _spriteBatch.Begin();
-            RenderTiles();
-            this.this_player.Draw(_spriteBatch);
-            _spriteBatch.End();
-
+            gameplay.Draw(gameTime);
             base.Draw(gameTime);
-        }
-        protected void RenderTiles() {
-            map.Draw(_spriteBatch);
-            
         }
     };
 }
