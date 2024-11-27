@@ -64,7 +64,10 @@ namespace XCraft {
         public Texture2D t;
 
         public Entity(int x, int y, EntityType type, Texture2D t) {
-
+            this.x = x;
+            this.y = y;
+            this.type = type;
+            this.t = t;
         }
         public void Draw(SpriteBatch spriteBatch) {
             Rectangle d = new Rectangle(
@@ -173,7 +176,7 @@ namespace XCraft {
         protected void LoadGraphicsTextures() {
             LoadTextures();
             tp = Content.Load<Texture2D>("tp");
-            player_t = Content.Load<Texture2D>("player");
+            player_t = Content.Load<Texture2D>("button_play_normal");
         }
         protected void LoadTextures() {
             LoadTex2D("button_play_normal");
@@ -275,7 +278,7 @@ namespace XCraft {
                 }
             }
 
-            this_player = new Player(32*900, 32*450, player_t);
+            this_player = new Player(32*(256), 32*(128), player_t);
         }
         protected Random random;
         protected bool PercRandom(int perc) {
@@ -351,6 +354,7 @@ namespace XCraft {
                     tiles[i,j].Draw(_spriteBatch);
                 }
             }
+            this.this_player.Draw(_spriteBatch);
         }
     };
 }
