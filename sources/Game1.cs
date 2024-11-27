@@ -317,8 +317,8 @@ namespace XCraft {
             ClearVisibleTilesFrame();
         }
         public Vec2i TilePoint(int x, int y) {
-            for (int i = 0; x < w; x++) {
-                for (int j = 0; y < h; y++) {
+            for (int i = 0; i < w; i++) {
+                for (int j = 0; j < h; j++) {
                     if (visible_tiles_frame[i,j] != null) {
                         Tile t = visible_tiles_frame[i,j];
                         return (Acc.RectContains(t.draw_d, x, y) ? new Vec2i(i,j): null);
