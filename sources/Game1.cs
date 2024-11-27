@@ -106,8 +106,8 @@ namespace XCraft {
         }
         public void Draw(SpriteBatch spriteBatch) {
             Rectangle d = new Rectangle(
-                System.Convert.ToInt32(x-ox),
-                System.Convert.ToInt32(y-oy),
+                System.Convert.ToInt32(x-ox - Acc.navX),
+                System.Convert.ToInt32(y-oy - Acc.navY),
                 t.Width, t.Height);
             Rectangle o = new Rectangle(0,0,t.Width, t.Height);
             spriteBatch.Draw(t, d, o, Color.White);
@@ -129,10 +129,10 @@ namespace XCraft {
         }
         public void Move(bool l, bool r, bool t, bool b, Map map) {
             int scantilesize = 1;
-            int scanb_x = (((System.Convert.ToInt32(x)+ox)/32)-scantilesize);
-            int scanb_y = (((System.Convert.ToInt32(y)+oy)/32)-scantilesize);
-            int scane_x = (((System.Convert.ToInt32(x)+ox)/32)+scantilesize);
-            int scane_y = (((System.Convert.ToInt32(y)+oy)/32)+scantilesize);
+            int scanb_x = (((System.Convert.ToInt32(x))/32)-scantilesize);
+            int scanb_y = (((System.Convert.ToInt32(y))/32)-scantilesize);
+            int scane_x = (((System.Convert.ToInt32(x))/32)+scantilesize);
+            int scane_y = (((System.Convert.ToInt32(y))/32)+scantilesize);
             if (scanb_x < 0) scanb_x = 0;
             if (scanb_x > map.w) scanb_x = map.w;
             if (scanb_y < 0) scanb_y = 0;
@@ -145,17 +145,20 @@ namespace XCraft {
             for (int sx = scanb_x; sx < scane_x; sx++) {
                 for (int sy = scanb_y; sy < scane_y; sy++) {
                     Tile ti = map.tiles[sx, sy];
-                    if (ti.EntityBound(this)) {
-                        if (x < ti.x+32) {
-                            this.x = ti.x+32;
-                            sb.l = true;
-                            accX = 0.0f;
-                        }
-                        if (x+width > ti.x) {
-                            this.x = ti.x-32;
-                            sb.r = true;
-                            accX = 0.0f;
-                        }
+                    if (ti.PointBound(
+                            System.Convert.ToInt32(this.x), 
+                            System.Convert.ToInt32(this.y))
+                        ) {
+                        // if (x < ti.x+32) {
+                        //     this.x = ti.x+32;
+                        //     sb.l = true;
+                        //     accX = 0.0f;
+                        // }
+                        // if (x+width > ti.x) {
+                        //     this.x = ti.x-32;
+                        //     sb.r = true;
+                        //     accX = 0.0f;
+                        // }
                         if (y < ti.y+32) {
                             this.y = ti.y+32;
                             sb.t = true;
@@ -270,8 +273,11 @@ namespace XCraft {
         public bool IsSolid() {
             return (type != TileType.UNKNOWN || type != TileType.AIR || type != TileType.WATER);
         }
+        public bool PointBound(int px, int py) {
+            return IsSolid() && (x == px/32 && y == py/32);
+        }
         public bool EntityBound(Entity e) {
-            return ((e.x + e.ox)/32 == x) && ((e.y + e.oy)/32 == y);
+            return IsSolid() && ((e.x)/32 == x) && ((e.y)/32 == y);
         }
         public int x = 0;
         public int y = 0;
@@ -700,12 +706,13 @@ namespace XCraft {
         private MouseState ms;
         private KeyboardState prev_ks;
         private KeyboardState ks;
-        private bool player_spec = false;
+        private bool player_spec = true;
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            
             int mvX = 0;
             int mvY = 0;
 
@@ -720,7 +727,7 @@ namespace XCraft {
             prev_ks = ks;
             ks = Keyboard.GetState();
 
-            bool p_pressed = prev_ks.IsKeyUp(Keys.P) && prev_ks.IsKeyDown(Keys.P);
+            bool p_pressed = ks.IsKeyUp(Keys.P) && prev_ks.IsKeyDown(Keys.P);
 
             if(p_pressed) {
                 player_spec = !player_spec;
@@ -778,18 +785,10 @@ namespace XCraft {
                     mvY += ch;
                     mvYf += ch/5.0f;
                 }
-                this_player.Move(mvXf, mvYf);
+                
 
-                if (mvXf < 0.05f && mvXf > -0.05f) {
-                    mvXf = 0.0f;
-                } else {
-                    mvXf *= 0.8f;
-                }
-                if (mvYf < 0.05f && mvYf > -0.05f) {
-                    mvYf = 0.0f;
-                } else {
-                    mvYf *= 0.8f;
-                }
+
+                this_player.Move(mvXf, mvYf);
 
                 Acc.navX = (int)((-Acc.windowWidth / 2) + this_player.x - this_player.ox);
                 Acc.navY = (int)((-Acc.windowHeight / 2) + this_player.y - this_player.oy);
@@ -827,7 +826,18 @@ namespace XCraft {
                 Acc.navX = (int)((-Acc.windowWidth / 2) + this_player.x - this_player.ox);
                 Acc.navY = (int)((-Acc.windowHeight / 2) + this_player.y - this_player.oy);
             }
+            if (mvXf < 0.05f && mvXf > -0.05f) {
+                mvXf = 0.0f;
+            } else {
+                mvXf *= 0.8f;
+            }
+            if (mvYf < 0.05f && mvYf > -0.05f) {
+                mvYf = 0.0f;
+            } else {
+                mvYf *= 0.8f;
+            }
 
+            Console.WriteLine("Player" + this_player.x + this_player.ox + " : " + this_player.y + this_player.oy + " ---- " + Acc.navX + " : " + Acc.navY + "   | " + (Acc.navX - this_player.x));
             Draw(gameTime);
 
             base.Update(gameTime);
@@ -839,13 +849,14 @@ namespace XCraft {
 
             _spriteBatch.Begin();
             RenderTiles();
+            this.this_player.Draw(_spriteBatch);
             _spriteBatch.End();
 
             base.Draw(gameTime);
         }
         protected void RenderTiles() {
             map.Draw(_spriteBatch);
-            this.this_player.Draw(_spriteBatch);
+            
         }
     };
 }
