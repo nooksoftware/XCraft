@@ -38,7 +38,10 @@ namespace XCraft {
         STONE_BRICKS,
         METAL,
         WOODEN_BOX,
-        METAL_BOX
+        METAL_BOX,
+        IRON_ORE,
+        GOLD_ORE,
+        DIA_ORE
     };
     public enum ZoomState {
         ZS_1_0 = 0,
@@ -89,6 +92,127 @@ namespace XCraft {
             this.y += y;
         }
     };
+    public class Scenario {};
+    public class Map {
+        public int w = 0;
+        public int h = 0;
+        public int u_h = 0;
+        public int t_h = 0;
+        public float ore = 0;
+        Dictionary<TileType, Vec2i> tp_pos;
+        Tile[,] tiles;
+        TileType[,] tile_types;
+        Texture2D tp;
+        public Map(
+            int w, int h, 
+            int u_h, int t_h,
+            float ore, Dictionary<TileType, Vec2i> tp_pos,
+            Texture2D tp
+        ) {
+            this.w = w;
+            this.h = h;
+            this.u_h = u_h;
+            this.t_h = t_h;
+            this.ore = ore;
+            this.tp_pos = tp_pos;
+            this.tp = tp;
+
+            random = new Random();
+
+            tiles = new Tile[w,h];
+            tile_types = new TileType[w,h];
+
+            Gen();
+        }
+        protected Random random;
+        protected int ToPerc(float v) {
+            return (int)(v * 100);
+        }
+        protected bool PercRandom(int perc) {
+            int v = random.Next(100);
+            return (v < perc);
+        }
+        protected bool Random(int f) {
+            return (random.Next(f) == 0);
+        }
+        protected bool LinPercRandom(int b, int e, int v) {
+            return PercRandom(ToPerc((float)(v-b) / (float)(b-e)));
+        }
+        protected float LinPerc(int b, int e, int v) {
+            return (float)(v-b) / (float)(b-e);
+        }
+        protected float LinPercInv(int b, int e, int v) {
+            //todo
+            return (float)(v-b) / (float)(b-e);
+        }
+        protected TileType SwitchSet(bool s, TileType a, TileType b) {
+            if (s) {
+                return a;
+            }
+            return b;
+        }
+        protected TileType Determined(int x, int y) {
+            if (y > h-3) {
+                bool r = LinPercRandom(h-3, h, y);
+                return SwitchSet(r, TileType.BEDROCK, TileType.STONE);
+            } else if (y > u_h) {
+                bool h_linear = LinPercRandom(u_h, t_h+1, y);
+                
+                if (h_linear) {
+                    bool ore1 = Random((int)(180*(ore)));
+                    if (ore1) {
+                        return TileType.IRON_ORE;                            
+                    }
+                    bool ore2 = Random((int)(240*(ore)));
+                    if (ore2) {
+                        return TileType.GOLD_ORE;                        
+                    }
+                    bool ore3 = Random((int)(360*(ore)));
+                    if (ore3) {
+                        return TileType.DIA_ORE;                        
+                    }
+                }
+
+                TileType t = SwitchSet(h_linear, TileType.STONE, TileType.DIRT);
+                return t;
+            } else if (y == t_h) {
+                return TileType.GRASS;
+            } else if (y > t_h) {
+                return TileType.DIRT;
+            } else {
+                return TileType.AIR;
+            }
+        }
+        public bool IsntTPApplicable(TileType t) {
+            return (t == TileType.UNKNOWN || t == TileType.AIR);
+        }
+        protected void Gen (){
+            for (int x = 0; x < w; x++) {
+                for (int y = 0; y < h; y++) {
+                    tile_types[x,y] = Determined(x,y);
+                }
+            }
+            for (int x = 0; x < w; x++) {
+                for (int y = 0; y < h; y++) {
+                    TileType tt = tile_types[x,y];
+                    if (IsntTPApplicable(tt)) {
+                        tiles[x,y] = new Tile(x,y,-1, -1, tt, tp);
+                    } else {
+                        int tp_x = tp_pos[tt].x;
+                        int tp_y = tp_pos[tt].y;
+                        tiles[x,y] = new Tile(x,y,tp_x, tp_y, tt, tp);
+                    }
+                }
+            }
+        }
+        public void Draw(SpriteBatch sp) {
+            for (int x = 0; x < w; x++) {
+                for (int y = 0; y < h; y++) {
+                    tiles[x,y].Draw(sp);
+                }
+            }
+        }
+    };
     public class Tile {
         public int x = 0;
         public int y = 0;
@@ -97,7 +221,7 @@ namespace XCraft {
         public int tp_y = -1;
         public TileType type = TileType.UNKNOWN;
         public bool HasTp() {
-            return (tp_x != -1) && (tp_y != -1);
+            return (tp_x != -1) || (tp_y != -1);
         }
         public Tile(int x, int y, int tp_x, int tp_y, TileType type, Texture2D tex) {
             this.x = x;
@@ -113,7 +237,7 @@ namespace XCraft {
         public void Draw(SpriteBatch spriteBatch) {
             if (HasTp() && IsntUnknown()) {
                 Rectangle d = new Rectangle(x*32 - Acc.navX, y*32 - Acc.navY,32,32);
-                Rectangle o = new Rectangle(tp_x*x, tp_y*y, 32, 32);
+                Rectangle o = new Rectangle(tp_x*32, tp_y*32, 32, 32);
                 if (d.X < 0-32 || d.Y < 0-32) {
                     return;
                 }
@@ -153,7 +277,7 @@ namespace XCraft {
     };*/
     public class Game1 : Game
     {
-        private Tile[,] tiles;
+        private Map map;
         private Player this_player;
 
         private GraphicsDeviceManager _graphics;
@@ -176,7 +300,7 @@ namespace XCraft {
         protected void LoadGraphicsTextures() {
             LoadTextures();
             tp = Content.Load<Texture2D>("tp");
-            player_t = Content.Load<Texture2D>("button_play_normal");
+            player_t = Content.Load<Texture2D>("pl");
         }
         protected void LoadTextures() {
             LoadTex2D("button_play_normal");
@@ -209,7 +333,7 @@ namespace XCraft {
             base.Initialize();
         }
 
-        protected void AddTPP(TileType t, int x, int y) {
+        protected void AddTPP(TileType t, int y, int x) {
             this.tp_pos.Add(t, new Vec2i(x,y));
         }
         protected void LoadTPPos() {
@@ -238,12 +362,16 @@ namespace XCraft {
             AddTPP(TileType.WOOD2, 2, 4);
             AddTPP(TileType.WOOD3, 2, 5);
 
-            AddTPP(TileType.BRICKS, 2, 0);
-            AddTPP(TileType.CONCRETE, 2, 1);
-            AddTPP(TileType.STONE_BRICKS, 2, 2);
-            AddTPP(TileType.METAL, 2, 3);
-            AddTPP(TileType.WOODEN_BOX, 2, 4);
-            AddTPP(TileType.METAL_BOX, 2, 5);
+            AddTPP(TileType.BRICKS, 3, 0);
+            AddTPP(TileType.CONCRETE, 3, 1);
+            AddTPP(TileType.STONE_BRICKS, 3, 2);
+            AddTPP(TileType.METAL, 3, 3);
+            AddTPP(TileType.WOODEN_BOX, 3, 4);
+            AddTPP(TileType.METAL_BOX, 3, 5);
+
+            AddTPP(TileType.IRON_ORE, 4, 0);
+            AddTPP(TileType.GOLD_ORE, 4, 1);
+            AddTPP(TileType.DIA_ORE, 4, 2);
         }
         protected override void LoadContent()
         {
@@ -263,7 +391,9 @@ namespace XCraft {
         private int mapHeight = 256;
         private TileType[,] tiles_types;
         protected void LoadMap() {
-            LoadMapTT();
+            this.map = new Map(mapWidth, mapHeight, (int)(mapHeight*0.75f), (int)(mapHeight*0.5f), 1.0f, tp_pos, tp);
+            this_player = new Player(32*(256), 32*(128), player_t);
+            /*LoadMapTT();
             tiles = new Tile[mapWidth,mapHeight];
             for (int i = 0; i < mapWidth; i++) {
                 for (int j = 0; j < mapHeight; j++) {
@@ -278,7 +408,8 @@ namespace XCraft {
                 }
             }
 
-            this_player = new Player(32*(256), 32*(128), player_t);
+            
+            */
         }
         protected Random random;
         protected bool PercRandom(int perc) {
@@ -311,6 +442,8 @@ namespace XCraft {
                 }
             }
         }
+        private float mvXf = 0.0f;
+        private float mvYf = 0.0f;
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -318,17 +451,43 @@ namespace XCraft {
 
             int mvX = 0;
             int mvY = 0;
+
             int ch = 10;
+            bool shift = false;
+            if (Keyboard.GetState().IsKeyDown(Keys.LeftShift) || Keyboard.GetState().IsKeyDown(Keys.RightShift)) {
+                shift = true;
+            }
+            if (shift) {
+                ch = 25;
+            }
             if (Keyboard.GetState().IsKeyDown(Keys.A)) {
                 mvX -= ch;
-            } else if (Keyboard.GetState().IsKeyDown(Keys.D)) {
-                mvX += ch;
-            } else if (Keyboard.GetState().IsKeyDown(Keys.W)) {
-                mvY -= ch;
-            } else if (Keyboard.GetState().IsKeyDown(Keys.S)) {
-                mvY += ch;
+                mvXf -= ch/5.0f;
             }
-            this_player.Move(mvX, mvY);
+            if (Keyboard.GetState().IsKeyDown(Keys.D)) {
+                mvX += ch;
+                mvXf += ch/5.0f;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.W)) {
+                mvY -= ch;
+                mvYf -= ch/5.0f;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.S)) {
+                mvY += ch;
+                mvYf += ch/5.0f;
+            }
+            this_player.Move(mvXf, mvYf);
+
+            if (mvXf < 0.05f && mvXf > -0.05f) {
+                mvXf = 0.0f;
+            } else {
+                mvXf *= 0.8f;
+            }
+            if (mvYf < 0.05f && mvYf > -0.05f) {
+                mvYf = 0.0f;
+            } else {
+                mvYf *= 0.8f;
+            }
 
             Acc.navX = (int)((-Acc.windowWidth / 2) + this_player.x);
             Acc.navY = (int)((-Acc.windowHeight / 2) + this_player.y);
@@ -349,11 +508,7 @@ namespace XCraft {
             base.Draw(gameTime);
         }
         protected void RenderTiles() {
-            for (int i = 0; i < mapWidth; i++) {
-                for (int j = 0; j < mapHeight; j++ ){
-                    tiles[i,j].Draw(_spriteBatch);
-                }
-            }
+            map.Draw(_spriteBatch);
             this.this_player.Draw(_spriteBatch);
         }
     };
