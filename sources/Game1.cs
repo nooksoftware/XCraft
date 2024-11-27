@@ -53,6 +53,10 @@ namespace XCraft {
         public static int navY = 64*32;
         public static int windowWidth = 1600;
         public static int windowHeight = 900;
+
+        public static bool RectContains(Rectangle r, int x, int y) {
+            return (x > r.X && x < r.X+r.Width && y > r.Y && y < r.Y+r.Height);
+        }
     };
     public enum EntityType {
         UNKNOWN = 0,
@@ -93,6 +97,90 @@ namespace XCraft {
         }
     };
     public class Scenario {};
+    
+    public class Tile {
+        public int x = 0;
+        public int y = 0;
+        public Texture2D t;
+        public int tp_x = -1;
+        public int tp_y = -1;
+        public TileType type = TileType.UNKNOWN;
+        public bool HasTp() {
+            return (tp_x != -1) || (tp_y != -1);
+        }
+        public Tile(int x, int y, int tp_x, int tp_y, TileType type, Texture2D tex) {
+            this.x = x;
+            this.y = y;
+            this.tp_x = tp_x;
+            this.tp_y = tp_y;
+            this.t = tex;
+            this.type = type;
+        }
+        public bool IsntUnknown() {
+            return (type != TileType.UNKNOWN || type != TileType.AIR) ;
+        }
+        public Rectangle draw_d;
+        public bool Draw(SpriteBatch spriteBatch) {
+            draw_d.X = 0;
+            draw_d.Y = 0;
+            draw_d.Width = 0;
+            draw_d.Height = 0;
+            if (HasTp() && IsntUnknown()) {
+                Rectangle d = new Rectangle(x*32 - Acc.navX, y*32 - Acc.navY,32,32);
+                Rectangle o = new Rectangle(tp_x*32, tp_y*32, 32, 32);
+                if (d.X < 0-32 || d.Y < 0-32) {
+                    return false;
+                }
+                if (d.X > 1600 || d.Y > 900) {
+                    return false;
+                }
+                spriteBatch.Draw(t, d, o, Color.White);
+                draw_d = d;
+                return true;
+            } else
+            if (type == TileType.AIR) {
+                Rectangle d = new Rectangle(x*32 - Acc.navX, y*32 - Acc.navY,32,32);
+
+                if (d.X < 0-32 || d.Y < 0-32) {
+                    return false;
+                }
+                if (d.X > 1600 || d.Y > 900) {
+                    return false;
+                }
+                draw_d = d;
+                return true;
+            }
+            return false;
+
+        }
+    };
+    /*
+    public class Tile {
+        public int x;
+        public int y;
+        public int tp_pos_x = -1;
+        public int tp_pos_y = -1;
+        public TileType t;
+        public Tile(int x, int y, TileType t, int tp_pos_x, int tp_pos_y) {
+            this.x = x;
+            this.y = y;
+            this.t = t;
+            this.tp_pos_x = tp_pos_x;
+            this.tp_pos_y = tp_pos_y;
+        }
+        public void Draw(SpriteBatch spriteBatch, Texture2D tp) {
+            if (tp_pos_x < 0 || tp_pos_y < 0) {
+                if(t == TileType.AIR) {
+                    //nothing
+                }
+            } else {
+                Rectangle dest = new Rectangle(x*32 - Acc.navX, y*32 - Acc.navY, 32, 32);
+                if (dest.X + 32 > 0 && dest.Y + 32 > 0 && dest.X < Acc.windowWidth && dest.Y < Acc.windowHeight) {
+                    spriteBatch.Draw(tp, new Rectangle(32*tp_pos_x, 32*tp_pos_y, 32, 32), dest, Color.White);
+                }
+            }
+        }
+    };*/
     public class Map {
         public int w = 0;
         public int h = 0;
@@ -101,6 +189,8 @@ namespace XCraft {
         public float ore = 0;
         Dictionary<TileType, Vec2i> tp_pos;
         Tile[,] tiles;
+        Tile[,] visible_tiles_frame;
+
         TileType[,] tile_types;
         Texture2D tp;
         public Map(
@@ -121,8 +211,17 @@ namespace XCraft {
 
             tiles = new Tile[w,h];
             tile_types = new TileType[w,h];
+            visible_tiles_frame = new Tile[w,h];
+            ClearVisibleTilesFrame();
 
             Gen();
+        }
+        protected void ClearVisibleTilesFrame() {
+            for (int x = 0; x < w; x++) {
+                for (int y = 0; y < h; y++) {
+                    visible_tiles_frame[x,y] = null;
+                }
+            }
         }
         protected Random random;
         protected int ToPerc(float v) {
@@ -206,75 +305,44 @@ namespace XCraft {
             }
         }
         public void Draw(SpriteBatch sp) {
+            
             for (int x = 0; x < w; x++) {
                 for (int y = 0; y < h; y++) {
-                    tiles[x,y].Draw(sp);
+                    bool tile_visible = tiles[x,y].Draw(sp);
+                    if (tile_visible) {
+                        visible_tiles_frame[x,y] = tiles[x,y];
+                    }
                 }
             }
+            ClearVisibleTilesFrame();
+        }
+        public Vec2i TilePoint(int x, int y) {
+            for (int i = 0; x < w; x++) {
+                for (int j = 0; y < h; y++) {
+                    if (visible_tiles_frame[i,j] != null) {
+                        Tile t = visible_tiles_frame[i,j];
+                        return (Acc.RectContains(t.draw_d, x, y) ? new Vec2i(i,j): null);
+                    }
+                }
+            }
+            return null;
+        }
+        public bool IsAir(int x, int y) {
+            return (tiles[x,y].type == TileType.AIR);
+        }
+        public void AirTile(int x, int y) {
+            if (tiles[x,y] != null) {
+                tiles[x,y].type = TileType.AIR;
+                tiles[x,y].tp_x = -1;
+                tiles[x,y].tp_y = -1;
+            }
+        }
+        public void SetTile(int x, int y, TileType tt) {
+            int tp_x = tp_pos[tt].x;
+            int tp_y = tp_pos[tt].y;
+            tiles[x,y] = new Tile(x,y,tp_x, tp_y, tt, tp);
         }
     };
-    public class Tile {
-        public int x = 0;
-        public int y = 0;
-        public Texture2D t;
-        public int tp_x = -1;
-        public int tp_y = -1;
-        public TileType type = TileType.UNKNOWN;
-        public bool HasTp() {
-            return (tp_x != -1) || (tp_y != -1);
-        }
-        public Tile(int x, int y, int tp_x, int tp_y, TileType type, Texture2D tex) {
-            this.x = x;
-            this.y = y;
-            this.tp_x = tp_x;
-            this.tp_y = tp_y;
-            this.t = tex;
-            this.type = type;
-        }
-        public bool IsntUnknown() {
-            return (type != TileType.UNKNOWN || type != TileType.AIR) ;
-        }
-        public void Draw(SpriteBatch spriteBatch) {
-            if (HasTp() && IsntUnknown()) {
-                Rectangle d = new Rectangle(x*32 - Acc.navX, y*32 - Acc.navY,32,32);
-                Rectangle o = new Rectangle(tp_x*32, tp_y*32, 32, 32);
-                if (d.X < 0-32 || d.Y < 0-32) {
-                    return;
-                }
-                if (d.X > 1600 || d.Y > 900) {
-                    return;
-                }
-                spriteBatch.Draw(t, d, o, Color.White);
-            }
-        }
-    };
-    /*
-    public class Tile {
-        public int x;
-        public int y;
-        public int tp_pos_x = -1;
-        public int tp_pos_y = -1;
-        public TileType t;
-        public Tile(int x, int y, TileType t, int tp_pos_x, int tp_pos_y) {
-            this.x = x;
-            this.y = y;
-            this.t = t;
-            this.tp_pos_x = tp_pos_x;
-            this.tp_pos_y = tp_pos_y;
-        }
-        public void Draw(SpriteBatch spriteBatch, Texture2D tp) {
-            if (tp_pos_x < 0 || tp_pos_y < 0) {
-                if(t == TileType.AIR) {
-                    //nothing
-                }
-            } else {
-                Rectangle dest = new Rectangle(x*32 - Acc.navX, y*32 - Acc.navY, 32, 32);
-                if (dest.X + 32 > 0 && dest.Y + 32 > 0 && dest.X < Acc.windowWidth && dest.Y < Acc.windowHeight) {
-                    spriteBatch.Draw(tp, new Rectangle(32*tp_pos_x, 32*tp_pos_y, 32, 32), dest, Color.White);
-                }
-            }
-        }
-    };*/
     public class Game1 : Game
     {
         private Map map;
@@ -454,6 +522,36 @@ namespace XCraft {
 
             int ch = 10;
             bool shift = false;
+
+            var ms = Mouse.GetState();
+            int mouse_x = ms.X;
+            int mouse_y = ms.Y;
+            
+            bool lmb_click = ms.LeftButton == ButtonState.Pressed;
+            bool rmb_click = ms.RightButton == ButtonState.Pressed;
+
+            if (lmb_click) {
+                Vec2i p = map.TilePoint(mouse_x, mouse_y);
+                if (p != null) {
+                    if (map.IsAir(p.x, p.y)) {
+                        map.SetTile(p.x, p.y, TileType.STONE);
+                    } else {
+                        map.AirTile(p.x, p.y);
+                    }
+                }
+            }
+            else if (rmb_click) {
+                Vec2i p = map.TilePoint(mouse_x, mouse_y);
+                if (p != null) {
+                    if (map.IsAir(p.x, p.y)) {
+                        map.SetTile(p.x, p.y, TileType.STONE_BRICKS);
+                    } else {
+                        map.AirTile(p.x, p.y);
+                    }
+                }
+            }
+            
+
             if (Keyboard.GetState().IsKeyDown(Keys.LeftShift) || Keyboard.GetState().IsKeyDown(Keys.RightShift)) {
                 shift = true;
             }
