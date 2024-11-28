@@ -105,9 +105,19 @@ namespace XCraft {
 
     };       
     public class I {
-        public I() {
+        D d;
+        Game1 g;
+        public I(D d, Game1 g) {
+            this.d = d;
+            this.g = g;
+        }
+        public void Console() {
+            
+        }
+        public void GConsole() {
 
         }
+
     };
     public class MP {
         public Game1 g;
