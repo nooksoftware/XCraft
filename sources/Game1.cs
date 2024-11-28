@@ -9,11 +9,68 @@ using LiteNetLib.Utils;
 using System.Numerics;
 using System.Security.Cryptography;
 using System.ComponentModel.Design.Serialization;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 //using FastNoiseLite;
 
 namespace XCraft {
+    public enum TT {
+        Air = 0,
+        Dirt = 1,
+        Grass = 2,
+        Sand = 3,
+        Cobblestone = 4
+    };
+    public class T {
+        public int x = 0;
+        public int y = 0;
+        TT tt;
+        public T(int x, int y, TT tt) {
+            this.x = x;
+            this.y = y;
+            this.tt = tt;
+        }
+        public void Set(TT tt) {
+            this.tt = tt;
+        }
+    };
+    public class M {
+        T[,] t;
+        public D d;
+        
+        public M(D d)  {
+            this.d = d;
+            this.t = new T[d.mW, d.mH];
+            Fill();
+        }
+        public void Set(int x, int y, TT tt) {
+            if (t[x,y] != null) {
+                t[x,y].Set(tt);
+            } else { 
+                t[x,y] = new T(x,y,tt);
+            }
+        }
+        public void Fill() {
+            for (int i = 0; i < d.mW; ++i) {
+                for (int j = 0; j < d.mH; ++j) {
+                    t[i,j] = new T(i,j, TT.A);
+                }
+            }
+        }
+        public void FillH(int bH, int eH, TT tt) {
+            for (int x = 0; x < d.mW; x++) {
+                for (int y = bH; y < eH; y++) {
+                    Set(x,y,tt);
+                }
+            }
+        }
+        public void Gen() {
+            int mgH2 = d.mgH2;
+            int mgH1 = d.mgH1;
+            int mgH0 = d.mgH0;
 
-
+        }
+    };
     public class D { //Data
         public Game1 g;
         public int mW = 512;
@@ -22,6 +79,13 @@ namespace XCraft {
         public float zY = 0.0f;
         public float z = 1.0f;
         public int zS = 2;
+
+        public int mgH2 = 256-3;
+        public int mgH1 = 256-96;
+        public int mgH0 = 256-128-32;
+
+        public M m;
+        
 
         public D(Game1 g) {
             this.g = g;
@@ -34,6 +98,9 @@ namespace XCraft {
             zY = mH/2.0f;
             z = 1.0f;
             zS = 2;
+            mgH2 = 256-3;
+            mgH1 = 256-96;
+            mgH0 = 256-128-32;
         }
 
     };       
