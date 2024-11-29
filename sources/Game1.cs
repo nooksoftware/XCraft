@@ -32,6 +32,7 @@ namespace XCraft {
             Content.RootDirectory = "Content";
 
             this.d = new D(this);
+            d.n = new Navigation();
 
             IsMouseVisible = true;
 
@@ -83,7 +84,30 @@ namespace XCraft {
         }
 
         protected void KeyboardMouseInput() {
+            d.p_ms = d.ms;
+            d.ms = Mouse.GetState();
+            d.p_ks = d.ks;
+            d.ks = Keyboard.GetState();
+        }
+        protected void WASDArrowsNav() {
+bool s = LShiftHold() || RShiftHold();
 
+            if (AHold() || LeftHold()) {
+                if (!s) d.z.zXAcc -= 5.0f;
+                else d.z.zXAcc -= 15.0f;
+            }
+            if (DHold() || RightHold()) {
+                if (!s) d.z.zXAcc += 5.0f;
+                else d.z.zXAcc += 15.0f;
+            }
+            if (WHold() || UpHold()) {
+                if (!s) d.z.zYAcc -= 5.0f;
+                else d.z.zYAcc -= 15.0f;
+            }
+            if (SHold() || DownHold()) {
+                if (!s) d.z.zYAcc += 5.0f;
+                else d.z.zYAcc += 15.0f;
+            }
         }
         protected override void Update(GameTime gameTime)
         {
@@ -91,19 +115,20 @@ namespace XCraft {
                 Exit();
 
             KeyboardMouseInput();
-
+            WASDArrowsNav();
+            ApplyNavAcc();
             Draw(gameTime);
 
             base.Update(gameTime);
-
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            m.Draw(_spriteBatch);
+
             base.Draw(gameTime);
         }
-
     };
 }

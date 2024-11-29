@@ -37,6 +37,24 @@ namespace XCraft {
             this.tp = tp;
             this.d = d;
         }
+        public Rectangle d;
+        public Rectangle o;
+        public bool Draw(SpriteBatch spriteBatch) {
+            d = new Rectangle(x*32 - d.z.zX, y*32 - d.z.zY,32,32);
+            o = new Rectangle(tpX*32, tpY*32, 32, 32);
+            if (d.X < -32 || d.Y < -32) {
+                return false;
+            }
+            if (d.X > d.wW || d.Y > d.wH) {
+                return false;
+            }
+
+            if (tt == TT.AIR || tt == TT.UNKNOWN) {
+                return true;
+            }
+            spriteBatch.Draw(tp, d, o, Color.White);
+            return true;
+        }
     };
     public enum TT {
         UNKNOWN = -1,

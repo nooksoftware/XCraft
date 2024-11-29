@@ -18,7 +18,7 @@ namespace XCraft {
     public class D {
         public Game1 game;
         public M m;
-        public NatAddressType n;
+        public Navigation n;
 
         public Dictionary<TileType, V2i> tpPos;
         public Dictionary<string, Texture2D> textures;
@@ -93,6 +93,8 @@ namespace XCraft {
             get {return (ms.Y);}
         }
 
+        public int wW = 1280;
+        public int wH = 720;
         public readonly int def_mW = 512;
         public readonly int def_mH = 256;
         public readonly int def_wW = 1280;

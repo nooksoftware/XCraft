@@ -55,5 +55,16 @@ namespace XCraft {
                 }
             }
         }
+        public void Draw(SpriteBatch sp) {
+            ClearVisibleTilesFrame();
+            for (int x = 0; x < w ; x++) {
+                for (int y = 0; y < h; y++) {
+                    bool v = T(x,y).Draw(sp);
+                    if (v) {
+                        ts_visible[x,y] = T(x,y);
+                    }
+                }
+            }
+        }
     };
 }
