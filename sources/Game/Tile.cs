@@ -19,11 +19,23 @@ namespace XCraft {
         public x = 0;
         public y = 0;
         public TT tt;
+        public Texture2D tp;
+        public int tpX = -1;
+        public int tpY = -1;
+        public D d;
 
-        public T(int x, int y, TT tt) {
+        public bool IsSolid() {
+            return (tt != TileType.UNKNOWN || tt != TileType.AIR || tt != TileType.WATER);
+        }
+        public bool HasTP() {
+            return (tpX != -1) || (tpY != -1); || (tp == null);
+        }
+        public T(int x, int y, TT tt, Texture2D tp, D d) {
             this.x = x;
             this.y = y;
             this.tt = tt;
+            this.tp = tp;
+            this.d = d;
         }
     };
     public enum TT {

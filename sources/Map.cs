@@ -16,8 +16,25 @@ using System.Threading.Tasks;
 
 namespace XCraft {
     public class M {
-        TT[,] tts;
-        T[,] ts;
+        private FastNoiseLite lite;
+        public int w = 0;
+        public int h = 0;
+
+
+        public TT[,] tts;
+        public T[,] ts;
+        public T[,] ts_visible;
+
+        public Map(int w, int h) {
+            this.w = w;
+            this.h = h;
+            this.tts = new TT[w,h];
+            this.ts = new T[w,h];
+            this.ts_visible = null;
+        }
+        public void GenerateDefault() {
+            G g = new G((this, 512, 256, -1, -1, -1, -1, -1, -1, true));
+        }
 
         public TT TT(int x, int y) {
             if (tts[x,y] != null) 

@@ -49,9 +49,32 @@ namespace XCraft {
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            LoadDefTextures();
+
             SetWindowSize(D.def_wW2, D.def_wH2);
         }
+        protected void LoadDefTextures() {
+            d.Tex("tp", Content.Load<Texture2D>("tp"));
+            d.Tex("pl", Content.Load<Texture2D>("pl"));
 
+            d.Tex("button_play_hover", Content.Load<Texture2D>("button_play_hover"));
+            d.Tex("button_play_clicked", Content.Load<Texture2D>("button_play_clicked"));
+            d.Tex("button_settings_normal", Content.Load<Texture2D>("button_settings_normal"));
+            d.Tex("button_settings_hover", Content.Load<Texture2D>("button_settings_hover"));
+            d.Tex("button_settings_clicked", Content.Load<Texture2D>("button_settings_clicked"));
+            d.Tex("button_credits_normal", Content.Load<Texture2D>("button_credits_normal"));
+            d.Tex("button_credits_hover", Content.Load<Texture2D>("button_credits_hover"));
+            d.Tex("button_credits_clicked", Content.Load<Texture2D>("button_credits_clicked"));
+            d.Tex("button_exit_normal", Content.Load<Texture2D>("button_exit_normal"));
+            d.Tex("button_exit_hover", Content.Load<Texture2D>("button_exit_hover"));
+            d.Tex("button_exit_clicked", Content.Load<Texture2D>("button_exit_clicked"));
+            d.Tex("button_singleplayer_normal", Content.Load<Texture2D>("button_singleplayer_normal"));
+            d.Tex("button_singleplayer_hover", Content.Load<Texture2D>("button_singleplayer_hover"));
+            d.Tex("button_singleplayer_clicked", Content.Load<Texture2D>("button_singleplayer_clicked"));
+            d.Tex("button_multiplayer_normal", Content.Load<Texture2D>("button_multiplayer_normal"));
+            d.Tex("button_multiplayer_hover", Content.Load<Texture2D>("button_multiplayer_hover"));
+            d.Tex("button_multiplayer_clicked", Content.Load<Texture2D>("button_multiplayer_clicked"));
+        }
         public void SetWindowSize(int w, int h) {
             _graphics.PreferredBackBufferWidth = w;
             _graphics.PreferredBackBufferHeight = h;
