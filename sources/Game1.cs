@@ -27,7 +27,8 @@ namespace XCraft {
             this.game = game;
         }
 
-        
+        public readonly int def_mW = 512;
+        public readonly int def_mH = 256;
     };
     public class Game1 : Game {
         public D d;

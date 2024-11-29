@@ -16,10 +16,51 @@ using System.Threading.Tasks;
 
 namespace XCraft {
     public class T {
+        public x = 0;
+        public y = 0;
+        public TT tt;
 
+        public T(int x, int y, TT tt) {
+            this.x = x;
+            this.y = y;
+            this.tt = tt;
+        }
     };
     public enum TT {
-
+        UNKNOWN = -1,
+        AIR = 0,
+        DIRT,
+        GRASS,
+        STONE,
+        BEDROCK,
+        SAND,
+        CLAY,
+        WATER,
+        MUD,
+        LOG1,
+        LOG2,
+        LOG3,
+        LEAVES1,
+        LEAVES2,
+        LEAVES3,
+        WOODEN_PL1,
+        WOODEN_PL2,
+        WOODEN_PL3,
+        WOOD1,
+        WOOD2,
+        WOOD3,
+        BRICKS,
+        CONCRETE,
+        STONE_BRICKS,
+        METAL,
+        WOODEN_BOX,
+        METAL_BOX,
+        IRON_ORE,
+        GOLD_ORE,
+        DIA_ORE,
+        ORE1,
+        ORE2,
+        ORE3,
     };
     public class S {
 
@@ -81,9 +122,38 @@ namespace XCraft {
 
     };
     public class G {
+        public M m;
 
+        int w = 512;
+        int h = 256;
+
+        int mH3 = 3;
+        int mH2 = 96;
+        int mH1 = 160;
+
+        int iOp = 2200;
+        int gOp = 4500;
+        int dOp = 6000;
+
+        public G() {
+
+        }
     };
     public class M {
+        TT[,] tts;
+        T[,] ts;
 
+        public TT TT(int x, int y) {
+            if (tts[x,y] != null) 
+                return tts[x,y];
+
+            return null;
+        }
+        public T T(int x, int y) {
+            if (ts[x,y] != null) 
+                return ts[x,y];
+
+            return null;
+        }
     };
 }
