@@ -31,9 +31,19 @@ namespace XCraft {
         public D(Game1 game) {
             this.game = game;
         }
+        public int xM {
+            get {return (ms.X);}
+        }
+        public int yM {
+            get {return (ms.Y);}
+        }
 
         public readonly int def_mW = 512;
         public readonly int def_mH = 256;
+        public readonly int def_wW = 1280;
+        public readonly int def_wH = 720;
+        public readonly int def_wW2 = 1600;
+        public readonly int def_wH2 = 900;
     };
     public class A {
         public Game1 g;
@@ -42,6 +52,13 @@ namespace XCraft {
             this.g = g;
             this.d = d;
         }
+        public int xM {
+            get {return (d.ms.X);}
+        }
+        public int yM {
+            get {return (d.ms.Y);}
+        }
+
         public bool LMBHold() {
             return D.ms.LeftButton == ButtonState.Pressed;
         }
@@ -255,7 +272,7 @@ namespace XCraft {
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            SetWindowSize(D.mW, D.mH);
+            SetWindowSize(D.def_wW2, D.def_wH2);
         }
 
         public void SetWindowSize(int w, int h) {
