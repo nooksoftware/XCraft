@@ -77,5 +77,34 @@ namespace XCraft {
             this.z = z;
         }
     };
+    public class SBounds {
+        public int ls = 0;
+        public int rs = 0;
+        public int ts = 0;
+        public int bs = 0;
+        public bool l = false;
+        public bool r = false;
+        public bool t = false;
+        public bool b = false;
+
+        public bool Check(SBounds b) {
+            //todo
+        }
+    };
+
+//    public static bool RectContains(Rectangle r, int x, int y) {
+//        return (x > r.X && x < r.X+r.Width && y > r.Y && y < r.Y+r.Height);
+//    }
+//    public static SideBounds SideBounds(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2) {
+//        SideBounds b = new SideBounds();
+//
+//     b.l = (x1 == x2 + w2 || x2 == x1 + w1);
+//        b.r = (x1 + w1 == x2 || x2 + w2 == x1);
+//        b.t = (y1 == y2 + h2 || y2 == y1 + h1);
+//        b.b = (y1 + h1 == y2 || y2 + h2 == y1);
+//
+//     return b;
+//    }
+
 
 }
