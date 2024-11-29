@@ -48,5 +48,12 @@ namespace XCraft {
 
             return null;
         }
+        protected void ClearVisibleTilesFrame() {
+            for (int x = 0; x < w; x++) {
+                for (int y = 0; y < h; y++) {
+                    ts_visible[x,y] = null;
+                }
+            }
+        }
     };
 }
