@@ -49,7 +49,24 @@ namespace XCraft {
             return t;
         }
         public void LoadRects() {
-            LoadBTTPBounds(_BT.);
+            LoadBTTPBounds(
+                BASE, 0, 0, 106, 61
+            )
+            LoadBTTPBounds(
+                OUTPUST, 107, 0, 78, 53
+            )
+            LoadBTTPBounds(
+                ARMORY, 107+78, 0, 68, 51
+            )
+            LoadBTTPBounds(
+                SHOP, 107+78+68+1, 0, 68, 51
+            )
+            LoadBTTPBounds(
+                ASSEMBLY, 107+78+68+68+1+1, 0, 68, 51
+            );
+            LoadBTTPBounds(
+                STRUCTURE_PLACEHOLDER, 0, 0, 35, 35
+            );
         }
         public void LoadDefTpPos() {
             LoadTPPos(TT.DIRT, 0, 0);

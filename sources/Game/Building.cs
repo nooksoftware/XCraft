@@ -21,7 +21,8 @@ namespace XCraft {
         OUTPUST,
         ARMORY,
         SHOP,
-        ASSEMBLY
+        ASSEMBLY,
+        STRUCTURE_PLACEHOLDER
     };
     public class _B : public E{
         public _BT bt = _BT.UNKNOWN;
@@ -32,7 +33,11 @@ namespace XCraft {
         public Building(D d, int x, int y, ET et, _BT bt) : base(x,y,et) {
             this.d = d;
             this.bt = bt;
-            tpbt = d.Tex("tpbt");
+            if (_bt == _BT.STRUCTURE_PLACEHOLDER) {
+                tpbt = d.Tex("stel");
+            } else {
+                tpbt = d.Tex("tpbt");
+            }
             tpbtB = d.btTpBounds[bt];
             this.w = tpbtB.w;
             this.h = tpbtB.h;

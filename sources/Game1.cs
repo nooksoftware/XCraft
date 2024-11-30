@@ -64,6 +64,8 @@ namespace XCraft {
             d.Tex("tp", Content.Load<Texture2D>("tp"));
             d.Tex("tpbt", Content.Load<Texture2D>("tpbt"));
             d.Tex("pl", Content.Load<Texture2D>("pl"));
+            d.Tex("stel", Content.Load<Texture2D>("st_el"));
+
 
             d.Tex("button_play_hover", Content.Load<Texture2D>("button_play_hover"));
             d.Tex("button_play_clicked", Content.Load<Texture2D>("button_play_clicked"));
