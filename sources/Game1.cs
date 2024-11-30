@@ -13,7 +13,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 //using FastNoiseLite;
 
-
 namespace XCraft {
     public class Game1 : Game {
         public D d;
@@ -25,7 +24,6 @@ namespace XCraft {
         public D D {
             get {return d;}
         }
-
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -43,12 +41,10 @@ namespace XCraft {
 
             TargetElapsedTime = TimeSpan.FromSeconds(1.0 / 60.0);
         }
-
         protected override void Initialize()
         {
             base.Initialize();
         }
-
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -92,7 +88,6 @@ namespace XCraft {
 
             _graphics.ApplyChanges();
         }
-
         protected void KeyboardMouseInput() {
             d.p_ms = d.ms;
             d.ms = Mouse.GetState();
@@ -131,7 +126,6 @@ namespace XCraft {
 
             base.Update(gameTime);
         }
-
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
