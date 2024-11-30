@@ -246,6 +246,9 @@ namespace XCraft {
         }
     };
     public class GUIA {
+        public readonly int frames_nextclick_set = 9;
+        public int frames_nextclick = 0;
+
         public GUIE parent; public GUI gui; public D d; public A a;
         public GUIA(GUIE parent, GUI gui, D d, A a) {
             this.parent = parent;
@@ -263,7 +266,12 @@ namespace XCraft {
             return ((mX > rX && mX < rX + rW) && (mY > rY && mY < rY + rH));
         }
         public bool Clicked() {
-            return a.OneReleasedLMB();
+            if (a.OneClickedLMB() && frames_nextclick == 0) {
+                System.Console.WriteLine("Clicked");
+                frames_nextclick = frames_nextclick_set;
+                return true;
+            }
+            return false;
         }
         public bool LMBHold() {
             return a.LMBHold();
@@ -287,7 +295,8 @@ namespace XCraft {
             return (Clicked() && MouseOnArea());
         }
         public virtual void Activity() {
-
+            if (frames_nextclick > 0) {frames_nextclick--;}
+            else {frames_nextclick = 0;}
         }  
     };
 

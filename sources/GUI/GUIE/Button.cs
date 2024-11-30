@@ -18,6 +18,8 @@ namespace XCraft {
     public class ButtonGUIA : GUIA {
         public ButtonGUIA(GUIE parent, GUI gui, D d, A a) : base(parent, gui, d, a) {}
         public override void Activity() {
+            base.Activity();
+
             ButtonGUIE cparent = parent as ButtonGUIE;
             if (cparent == null) {
                 return;

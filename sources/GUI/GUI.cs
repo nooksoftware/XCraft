@@ -80,6 +80,8 @@ namespace XCraft {
 
             main.Add("editor/mappanel", new PanelGUIE(this, d, a, 20, 500, 500, 240));
             main.Add("editor/mappanel/generate", new ButtonGUIE(this, d, a, f, "Generate Map", 20, 20, 250, 35));
+            main.Add("editor/mappanel/textinputfield", new TextInputFieldGUIE(this, d, a, f, "TextInputField", 20, 100, 350, 150));
+
         }
 
 
