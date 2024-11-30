@@ -135,6 +135,7 @@ namespace XCraft {
 
             _spriteBatch.Begin();
             D.m.Draw(_spriteBatch);
+            D.gui.Draw(_spriteBatch);
             _spriteBatch.End();
             base.Draw(gameTime);
         }

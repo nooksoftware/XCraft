@@ -20,6 +20,8 @@ namespace XCraft {
         public M m;
         public N n;
 
+        public GUI gui;
+
         public Dictionary<TT, V2i> tpPos;
         public Dictionary<_BT, Ri> btTpBounds;
         public Dictionary<string, Texture2D> textures;
