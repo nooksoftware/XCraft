@@ -38,12 +38,12 @@ namespace XCraft {
         public readonly Ri b_n3 = new Ri(16, 0, 13, 35);
 
         public readonly Ri b_h1 = new Ri(29, 0, 13, 35);
-        public readonly Ri b_h2 = new Ri(29, 0, 1, 35);
-        public readonly Ri b_h3 = new Ri(29, 0, 13, 35);
+        public readonly Ri b_h2 = new Ri(43, 0, 1, 35);
+        public readonly Ri b_h3 = new Ri(45, 0, 13, 35);
 
         public readonly Ri b_c1 = new Ri(58, 0, 13, 35);
-        public readonly Ri b_c2 = new Ri(58, 0, 1, 35);
-        public readonly Ri b_c3 = new Ri(58, 0, 13, 35);
+        public readonly Ri b_c2 = new Ri(72, 0, 1, 35);
+        public readonly Ri b_c3 = new Ri(74, 0, 13, 35);
 
         public ButtonGUIR(GUIE parent, GUI gui, D d, A a) : base(parent, gui, d, a) {}
         public override void Render(SpriteBatch spriteBatch) {
