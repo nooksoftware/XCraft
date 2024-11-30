@@ -358,9 +358,18 @@ namespace XCraft {
         public readonly Ri b_c6 = new Ri(112, 9, 6, 6);
         public readonly Ri b_c7 = new Ri(119, 9, 1, 6);
         public readonly Ri b_c8 = new Ri(121, 9, 6, 6);
-        
-        public PanelGUIR(GUIE parent, GUI gui, D d, A a) : base(parent, gui, d, a) {
 
+        public readonly Ri b_grad = new Ri(96, 26, 50, 50);
+        
+        protected int pW = 0;
+        protected int pH = 0;
+
+        public PanelGUIR(GUIE parent, GUI gui, D d, A a) : base(parent, gui, d, a) {
+            PanelGUIE cparent = parent as PanelGUIE;
+            if (cparent != null) {
+                pW = cparent.lW - (b_n1.w + 1 + b_n1.w);
+                pH = cparent.lH - (b_n1.h + 1 + b_n1.h);
+            }
         }
         public override void Render(SpriteBatch spriteBatch) {
             if (parent.isUniv) {
@@ -371,37 +380,41 @@ namespace XCraft {
             }
         }
         public void RenderN(SpriteBatch spriteBatch) {
-            RenderP(spriteBatch, b_n1);
-            RenderP(spriteBatch, b_n2);
-            RenderP(spriteBatch, b_n3);
-            RenderP(spriteBatch, b_n4);
-            RenderP(spriteBatch, b_n5);
-            RenderP(spriteBatch, b_n6);
-            RenderP(spriteBatch, b_n7);
-            RenderP(spriteBatch, b_n8);
+            RenderP(spriteBatch, b_n1, 0, 0);
+            RenderP(spriteBatch, b_n2, b_n1.w, 0);
+            RenderP(spriteBatch, b_n3, b_n1.w+pW, 0);
+            RenderP(spriteBatch, b_n4, 0, b_n1.h);
+            RenderP(spriteBatch, b_n5, b_n1.w+pW, b_n1.h);
+            RenderP(spriteBatch, b_n6, 0, b_n1.h+pH);
+            RenderP(spriteBatch, b_n7, b_n1.w, b_n1.h+pH);
+            RenderP(spriteBatch, b_n8, b_n1.w+pW, b_n1.h+pH);
+            RenderG(spriteBatch, b_grad, b_n1.w, b_n1.h);
         }
         public void RenderH(SpriteBatch spriteBatch) {
-            RenderP(spriteBatch, b_h1);
-            RenderP(spriteBatch, b_h2);
-            RenderP(spriteBatch, b_h3);
-            RenderP(spriteBatch, b_h4);
-            RenderP(spriteBatch, b_h5);
-            RenderP(spriteBatch, b_h6);
-            RenderP(spriteBatch, b_h7);
-            RenderP(spriteBatch, b_h8);
+            RenderP(spriteBatch, b_h1, );
+            RenderP(spriteBatch, b_h2, );
+            RenderP(spriteBatch, b_h3, );
+            RenderP(spriteBatch, b_h4, );
+            RenderP(spriteBatch, b_h5, );
+            RenderP(spriteBatch, b_h6, );
+            RenderP(spriteBatch, b_h7, );
+            RenderP(spriteBatch, b_h8, );
         }
         public void RenderC(SpriteBatch spriteBatch) {
-            RenderP(spriteBatch, b_c1);
-            RenderP(spriteBatch, b_c2);
-            RenderP(spriteBatch, b_c3);
-            RenderP(spriteBatch, b_c4);
-            RenderP(spriteBatch, b_c5);
-            RenderP(spriteBatch, b_c6);
-            RenderP(spriteBatch, b_c7);
-            RenderP(spriteBatch, b_c8);
+            RenderP(spriteBatch, b_c1, );
+            RenderP(spriteBatch, b_c2, );
+            RenderP(spriteBatch, b_c3, );
+            RenderP(spriteBatch, b_c4, );
+            RenderP(spriteBatch, b_c5, );
+            RenderP(spriteBatch, b_c6, );
+            RenderP(spriteBatch, b_c7, );
+            RenderP(spriteBatch, b_c8, );
         }
-        public void RenderP(SpriteBatch spriteBatch, Ri bounds) {
-            gui.DrawGUIUnivTClickState(spriteBatch, parent, bounds, Color.White);
+        public void RenderP(SpriteBatch spriteBatch, Ri bounds, int mx, int my) {
+            gui.DrawGUIUnivTClickState(spriteBatch, parent, bounds, Color.White, mx, my);
+        }
+        public void RenderG(SpriteBatch spriteBatch, Ri bounds, int mx, int my) {
+            gui.DrawGUIUnivT(spriteBatch, parent, b_grad, dest, mx, my);
         }
     }
     public class PanelGUIE : GUIE {
