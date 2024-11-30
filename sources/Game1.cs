@@ -62,6 +62,7 @@ namespace XCraft {
         }
         protected void LoadDefTextures() {
             d.Tex("tp", Content.Load<Texture2D>("tp"));
+            d.Tex("tpbt", Content.Load<Texture2D>("tpbt"));
             d.Tex("pl", Content.Load<Texture2D>("pl"));
 
             d.Tex("button_play_hover", Content.Load<Texture2D>("button_play_hover"));

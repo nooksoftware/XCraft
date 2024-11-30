@@ -21,6 +21,7 @@ namespace XCraft {
         public N n;
 
         public Dictionary<TT, V2i> tpPos;
+        public Dictionary<_BT, Ri> btTpBounds;
         public Dictionary<string, Texture2D> textures;
 
         public MouseState ms;
@@ -37,6 +38,7 @@ namespace XCraft {
             this.tpPos = new Dictionary<TT, V2i>();
             this.textures = new Dictionary<string, Texture2D>();
             LoadDefTpPos();
+            LoadRects();
         }
         public void Tex(string id, Texture2D tex) {
             textures.Add(id, tex);
@@ -45,6 +47,9 @@ namespace XCraft {
             Texture2D t;
             textures.TryGetValue(id, out t);
             return t;
+        }
+        public void LoadRects() {
+            LoadBTTPBounds(_BT.);
         }
         public void LoadDefTpPos() {
             LoadTPPos(TT.DIRT, 0, 0);
@@ -79,6 +84,9 @@ namespace XCraft {
         }
         protected void LoadTPPos(TT tt, int x, int y) {
             tpPos.Add(tt, new V2i(x,y));
+        }
+        protected void LoadBTTPBounds(_BT bt, int x, int y, int w, int h) {
+            btTpBounds.Add(bt, new Ri(x,y,w,h));
         }
         public int xM {
             get {return (ms.X);}
