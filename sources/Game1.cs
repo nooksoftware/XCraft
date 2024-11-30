@@ -62,6 +62,8 @@ namespace XCraft {
             d.m.GenerateDefault();
             d.n.zX = 32*256;
             d.n.zY = 32*128;
+
+            D.gui = new GUI(this, d, a);
         }
         protected void LoadDefTextures() {
             d.Tex("tp", Content.Load<Texture2D>("tp"));
@@ -123,6 +125,8 @@ namespace XCraft {
         public bool ut_success = false;
         public bool ut_start = true;
         public void InitializeAllUnitTests() {
+            uts.Add("gui_uta", new GUI_UT1("GUI Unit Test A", this, d, a));
+            uts.Add("gui_utb", new GUI_UT2("GUI Unit Test B", this, d, a));
 
         }
         public void RunAllUnitTests() {

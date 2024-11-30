@@ -26,9 +26,13 @@
     <File>/home/dj/Dev/XCraft/Content/inventory_grid.png</File>
     <File>/home/dj/Dev/XCraft/Content/logo.png</File>
     <File>/home/dj/Dev/XCraft/Content/pl.png</File>
+    <File>/home/dj/Dev/XCraft/Content/st_el.png</File>
     <File>/home/dj/Dev/XCraft/Content/tp.png</File>
+    <File>/home/dj/Dev/XCraft/Content/tpbt.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

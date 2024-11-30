@@ -38,6 +38,7 @@ namespace XCraft {
         public D(Game1 game) {
             this.game = game;
             this.tpPos = new Dictionary<TT, V2i>();
+            this.btTpBounds = new Dictionary<_BT, Ri>();
             this.textures = new Dictionary<string, Texture2D>();
             LoadDefTpPos();
             LoadRects();
@@ -52,22 +53,22 @@ namespace XCraft {
         }
         public void LoadRects() {
             LoadBTTPBounds(
-                BASE, 0, 0, 106, 61
-            )
-            LoadBTTPBounds(
-                OUTPUST, 107, 0, 78, 53
-            )
-            LoadBTTPBounds(
-                ARMORY, 107+78, 0, 68, 51
-            )
-            LoadBTTPBounds(
-                SHOP, 107+78+68+1, 0, 68, 51
-            )
-            LoadBTTPBounds(
-                ASSEMBLY, 107+78+68+68+1+1, 0, 68, 51
+                _BT.BASE, 0, 0, 106, 61
             );
             LoadBTTPBounds(
-                STRUCTURE_PLACEHOLDER, 0, 0, 35, 35
+                _BT.OUTPUST, 107, 0, 78, 53
+            );
+            LoadBTTPBounds(
+                _BT.ARMORY, 107+78, 0, 68, 51
+            );
+            LoadBTTPBounds(
+                _BT.SHOP, 107+78+68+1, 0, 68, 51
+            );
+            LoadBTTPBounds(
+                _BT.ASSEMBLY, 107+78+68+68+1+1, 0, 68, 51
+            );
+            LoadBTTPBounds(
+                _BT.STRUCTURE_PLACEHOLDER, 0, 0, 35, 35
             );
         }
         public void LoadDefTpPos() {

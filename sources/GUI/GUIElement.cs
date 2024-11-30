@@ -69,9 +69,9 @@ namespace XCraft {
 
                 e = e.children[key];
                 if (e == null) {
-                    return;
+                    return null;
                 } else if (i+1 == keys.Length) {
-                    GUI el = e.children[key];
+                    GUIE el = e.children[key];
                     return el;
                 }
             }
@@ -87,17 +87,20 @@ namespace XCraft {
                 e = e.children[key];
 
                 if (e == null) {
-                    return false
+                    return false;
                 } else if (i+1 == keys.Length) {
                     return true;
                 }
             }
+            return (e != null);
         }
         public void Draw(SpriteBatch spriteBatch) {
             if(r != null) {
                 r.Render(spriteBatch);
             }
-
+            foreach (var el in children) {
+                el.Value.Draw(spriteBatch);
+            }
         }
     };
     public enum GUIT {

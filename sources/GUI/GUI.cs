@@ -17,10 +17,14 @@ using System.Threading.Tasks;
 namespace XCraft {
     public class GUI {
         public GUIE main;
+        public Game1 g;
+        public A a;
         public D d;
-        public GUI(D d) {
+        public GUI(Game1 g, D d, A a) {
             this.d = d;
-            main = new GUIE(d, this);
+            this.g = g;
+            this.a = a;
+            main = new GUIE(this, d, GUIT.GUIELEMENT);
         }
 
         public void Draw(SpriteBatch spriteBatch) {

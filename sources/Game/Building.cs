@@ -24,16 +24,16 @@ namespace XCraft {
         ASSEMBLY,
         STRUCTURE_PLACEHOLDER
     };
-    public class _B : public E{
+    public class _B : E {
         public _BT bt = _BT.UNKNOWN;
         public Texture2D tpbt;
         public D d;
         public Ri tpbtB;
 
-        public Building(D d, int x, int y, ET et, _BT bt) : base(x,y,et) {
+        public _B(D d, int x, int y, ET et, _BT bt) : base(x,y,et) {
             this.d = d;
             this.bt = bt;
-            if (_bt == _BT.STRUCTURE_PLACEHOLDER) {
+            if (bt == _BT.STRUCTURE_PLACEHOLDER) {
                 tpbt = d.Tex("stel");
             } else {
                 tpbt = d.Tex("tpbt");
@@ -47,15 +47,15 @@ namespace XCraft {
 
         public void Draw(SpriteBatch spriteBatch) {
             Rectangle de = new Rectangle(
-                x-ox - d.n.zX,
-                y-oy - d.n.zY,
+                (int)(x-ox - d.n.zX),
+                (int)(y-oy - d.n.zY),
                 w,
-                h,
+                h
             );
             Rectangle o = new Rectangle(
-                tpbtB.x
-                tpbtB.y
-                tpbtB.w
+                tpbtB.x,
+                tpbtB.y,
+                tpbtB.w,
                 tpbtB.h
             );
             spriteBatch.Draw(tpbt,de,o, Color.White);
