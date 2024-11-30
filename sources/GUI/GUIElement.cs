@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 
 
 namespace XCraft {
+/*
     public class GUIE {
         public Dictionary<string, GUIE> children;
         public GUI gui;
@@ -289,4 +290,5 @@ namespace XCraft {
 
         }  
     };
+*/
 }

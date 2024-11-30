@@ -28,6 +28,28 @@ namespace XCraft {
         public Texture2D GUIUnivT {
             get {return guiUniv2DT;}
         }
+        public void DrawGUIUniversalTexture(
+            SpriteBatch spriteBatch,
+            GUIE guiElement,
+            Ri origin_texture,
+            Ri destination,
+            Color c
+        ) {
+            Rectangle origin = new Rectangle(
+                origin_texture.x,
+                origin_texture.y,
+                origin_texture.w,
+                origin_texture.h, 
+            );
+            Rectangle dest = new Rectangle(
+                destination.x,
+                destination.y,
+                destination.w,
+                destination.h
+            );
+            spriteBatch.Draw(GUIUnivT, dest, origin, c);
+        }
+
         public void DrawGUIUnivT(SpriteBatch sp, GUIE e, Ri o, Ri de, Color c, int mX = 0, int mY = 0) {
             Rectangle origin = new Rectangle(o.x, o.y, o.w, o.h);
             Rectangle dest = new Rectangle(mX+de.x+e.rX(), mY+de.y+e.rY(), de.w, de.h);
