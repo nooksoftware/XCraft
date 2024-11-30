@@ -1,2 +1,3 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
 "/home/dj/Dev/XCraft/Content/./logo.png","/home/dj/Dev/XCraft/Content/bin/DesktopGL/logo.xnb","TextureProcessor","Texture2DContent",85469,281517,0.1595352
+"/home/dj/Dev/XCraft/Content/DejaVuSans.spritefont","/home/dj/Dev/XCraft/Content/bin/DesktopGL/DejaVuSans.xnb","FontDescriptionProcessor","SpriteFontContent",2013,37922,0.3493519

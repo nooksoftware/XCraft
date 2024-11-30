@@ -22,6 +22,7 @@
     <File>/home/dj/Dev/XCraft/Content/button_singleplayer_clicked.png</File>
     <File>/home/dj/Dev/XCraft/Content/button_singleplayer_hover.png</File>
     <File>/home/dj/Dev/XCraft/Content/button_singleplayer_normal.png</File>
+    <File>/home/dj/Dev/XCraft/Content/DejaVuSans.spritefont</File>
     <File>/home/dj/Dev/XCraft/Content/gui.png</File>
     <File>/home/dj/Dev/XCraft/Content/guiuniv.png</File>
     <File>/home/dj/Dev/XCraft/Content/inventory_grid.png</File>
@@ -32,6 +33,7 @@
     <File>/home/dj/Dev/XCraft/Content/tpbt.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

@@ -52,6 +52,7 @@ namespace XCraft {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             LoadDefTextures();
+            LoadDefFonts();
             EditorS editor_settings = new EditorS();
             this.d.gui = new GUI(this, d, a);
             this.editor = new Editor(this, d, a, d.gui, "editor", editor_settings);
@@ -66,6 +67,9 @@ namespace XCraft {
             d.n.zY = 32*128;
 
             D.gui = new GUI(this, d, a);
+        }
+        protected void LoadDefFonts() {
+            d.Fon("DejaVuSans", Content.Load<SpriteFont>("DejaVuSans"));
         }
         protected void LoadDefTextures() {
             d.Tex("tp", Content.Load<Texture2D>("tp"));
@@ -165,7 +169,7 @@ namespace XCraft {
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
             // if (editor) {
             editor.Tick();
@@ -173,6 +177,7 @@ namespace XCraft {
 
             D.m.Draw(_spriteBatch);
             D.gui.Draw(_spriteBatch);
+            D.gui.Activity();
             _spriteBatch.End();
             base.Draw(gameTime);
         }

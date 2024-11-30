@@ -17,6 +17,7 @@ Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Siz
 "/home/dj/Dev/XCraft/Content/button_singleplayer_clicked.png","/home/dj/Dev/XCraft/Content/bin/DesktopGL/Content/button_singleplayer_clicked.xnb","TextureProcessor","Texture2DContent",8231,46549,0.004582
 "/home/dj/Dev/XCraft/Content/button_singleplayer_hover.png","/home/dj/Dev/XCraft/Content/bin/DesktopGL/Content/button_singleplayer_hover.xnb","TextureProcessor","Texture2DContent",7894,46549,0.0054886
 "/home/dj/Dev/XCraft/Content/button_singleplayer_normal.png","/home/dj/Dev/XCraft/Content/bin/DesktopGL/Content/button_singleplayer_normal.xnb","TextureProcessor","Texture2DContent",8108,46549,0.0041743
+"/home/dj/Dev/XCraft/Content/DejaVuSans.spritefont","/home/dj/Dev/XCraft/Content/bin/DesktopGL/Content/DejaVuSans.xnb","FontDescriptionProcessor","SpriteFontContent",2013,37922,0.2809651
 "/home/dj/Dev/XCraft/Content/gui.png","/home/dj/Dev/XCraft/Content/bin/DesktopGL/Content/gui.xnb","TextureProcessor","Texture2DContent",4426,32809,0.0034168
 "/home/dj/Dev/XCraft/Content/guiuniv.png","/home/dj/Dev/XCraft/Content/bin/DesktopGL/Content/guiuniv.xnb","TextureProcessor","Texture2DContent",22787,65749,0.1795832
 "/home/dj/Dev/XCraft/Content/inventory_grid.png","/home/dj/Dev/XCraft/Content/bin/DesktopGL/Content/inventory_grid.xnb","TextureProcessor","Texture2DContent",7419,209493,0.013411

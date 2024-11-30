@@ -229,6 +229,13 @@
 /processorParam:TextureFormat=Color
 /build:button_singleplayer_normal.png
 
+#begin DejaVuSans.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:DejaVuSans.spritefont
+
 #begin gui.png
 /importer:TextureImporter
 /processor:TextureProcessor

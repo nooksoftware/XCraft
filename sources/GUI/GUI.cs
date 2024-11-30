@@ -32,7 +32,7 @@ namespace XCraft {
             Rectangle origin = new Rectangle(o.x, o.y, o.w, o.h);
             Rectangle dest = new Rectangle(mX+de.x+e.rX(), mY+de.y+e.rY(), de.w, de.h);
             
-            sp.Draw(GUIUnivT, origin, dest, c);
+            sp.Draw(GUIUnivT, dest, origin, c);
         }
         public void DrawGUIUnivTClickState(SpriteBatch sp, GUIE e, Ri ri, Color c, int mX = 0, int mY = 0) {
             Rectangle s = new Rectangle(0,0,ri.w,ri.h);
@@ -50,12 +50,14 @@ namespace XCraft {
             LoadDefaultGUI();
         }
         protected void LoadDefaultGUI() {
+            SpriteFont f = d.Fon("DejaVuSans");
+
             main.Add("editor", new GUIE(this, d, a, GUIT.GUIELEMENT));
             main.Add("mainmenu", new GUIE(this, d, a, GUIT.GUIELEMENT));
             main.Add("gamemenu", new GUIE(this, d, a, GUIT.GUIELEMENT));
 
             main.Add("editor/mappanel", new PanelGUIE(this, d, a, 20, 200, 180, 240));
-            main.Add("editor/mappanel/generate", new ButtonGUIE(this, d, a, 20, 20, 100, 35));
+            main.Add("editor/mappanel/generate", new ButtonGUIE(this, d, a, f, "Generate Map", 20, 20, 100, 35));
         }
 
 
@@ -63,6 +65,17 @@ namespace XCraft {
             if (main.Exists(current_menu)) {
                 main.Get(current_menu).Draw(spriteBatch);
             };
+        }
+        public void Activity() {
+            if (main.Exists(current_menu)) {
+                main.Get(current_menu).Activity();
+            
+                if (main.Get2<ButtonGUIE>("editor/mappanel/generate").Clicked()) {
+                    d.m.GenerateDefault();
+                }
+            }
+
+            
         }
     };
 }

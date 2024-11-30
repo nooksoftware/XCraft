@@ -4,6 +4,7 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
+    <File>/home/dj/Dev/XCraft/Content/DejaVuSans.spritefont</File>
     <File>/home/dj/Dev/XCraft/Content/./logo.png</File>
   </SourceFiles>
   <DestFiles>

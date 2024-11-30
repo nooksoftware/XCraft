@@ -51,3 +51,4 @@
 /home/dj/Dev/XCraft/bin/Debug/net8.0/Content/st_el.xnb
 /home/dj/Dev/XCraft/bin/Debug/net8.0/Content/tpbt.xnb
 /home/dj/Dev/XCraft/bin/Debug/net8.0/Content/guiuniv.xnb
+/home/dj/Dev/XCraft/bin/Debug/net8.0/Content/DejaVuSans.xnb

@@ -52,6 +52,7 @@ namespace XCraft {
         }
         public void Generate() {
             Verify();
+            lite.SetSeed(random.Next(1000000));
             GenerateBasicTerrain();
             GenerateBasicOre();
         }
