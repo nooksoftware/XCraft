@@ -391,30 +391,32 @@ namespace XCraft {
             RenderG(spriteBatch, b_grad, b_n1.w, b_n1.h);
         }
         public void RenderH(SpriteBatch spriteBatch) {
-            RenderP(spriteBatch, b_h1, );
-            RenderP(spriteBatch, b_h2, );
-            RenderP(spriteBatch, b_h3, );
-            RenderP(spriteBatch, b_h4, );
-            RenderP(spriteBatch, b_h5, );
-            RenderP(spriteBatch, b_h6, );
-            RenderP(spriteBatch, b_h7, );
-            RenderP(spriteBatch, b_h8, );
+            RenderP(spriteBatch, b_h1, 0, 0);
+            RenderP(spriteBatch, b_h2, b_n1.w, 0);
+            RenderP(spriteBatch, b_h3, b_n1.w+pW, 0);
+            RenderP(spriteBatch, b_h4, 0, b_n1.h);
+            RenderP(spriteBatch, b_h5, b_n1.w+pW, b_n1.h);
+            RenderP(spriteBatch, b_h6, 0, b_n1.h+pH);
+            RenderP(spriteBatch, b_h7, b_n1.w, b_n1.h+pH);
+            RenderP(spriteBatch, b_h8, b_n1.w+pW, b_n1.h+pH);
+            RenderG(spriteBatch, b_grad, b_n1.w, b_n1.h);
         }
         public void RenderC(SpriteBatch spriteBatch) {
-            RenderP(spriteBatch, b_c1, );
-            RenderP(spriteBatch, b_c2, );
-            RenderP(spriteBatch, b_c3, );
-            RenderP(spriteBatch, b_c4, );
-            RenderP(spriteBatch, b_c5, );
-            RenderP(spriteBatch, b_c6, );
-            RenderP(spriteBatch, b_c7, );
-            RenderP(spriteBatch, b_c8, );
+            RenderP(spriteBatch, b_c1, 0, 0);
+            RenderP(spriteBatch, b_c2, b_n1.w, 0);
+            RenderP(spriteBatch, b_c3, b_n1.w+pW, 0);
+            RenderP(spriteBatch, b_c4, 0, b_n1.h);
+            RenderP(spriteBatch, b_c5, b_n1.w+pW, b_n1.h);
+            RenderP(spriteBatch, b_c6, 0, b_n1.h+pH);
+            RenderP(spriteBatch, b_c7, b_n1.w, b_n1.h+pH);
+            RenderP(spriteBatch, b_c8, b_n1.w+pW, b_n1.h+pH);
+            RenderG(spriteBatch, b_grad, b_n1.w, b_n1.h);
         }
         public void RenderP(SpriteBatch spriteBatch, Ri bounds, int mx, int my) {
             gui.DrawGUIUnivTClickState(spriteBatch, parent, bounds, Color.White, mx, my);
         }
         public void RenderG(SpriteBatch spriteBatch, Ri bounds, int mx, int my) {
-            gui.DrawGUIUnivT(spriteBatch, parent, b_grad, dest, mx, my);
+            gui.DrawGUIUnivT(spriteBatch, parent, b_grad, new Ri(0,0,pW,pH), Color.White, mx, my);
         }
     }
     public class PanelGUIE : GUIE {
