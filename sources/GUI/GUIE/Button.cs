@@ -67,8 +67,8 @@ namespace XCraft {
             int rY = parent.rY();
             int rW = parent.rW();
             gui.DrawGUIUniversalTexture(spriteBatch, parent, b_n1, new Ri(rX, rY, b_n1.w, b_n1.h), Color.White);
-            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_n2, new Ri(rX+b_n1.w, rY, b_n2.w*rW, b_n2.h), Color.White);
-            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_n3, new Ri(rX+b_n1.w+b_n2.w*rW, rY, b_n3.w, b_n3.h), Color.White);
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_n2, new Ri(rX+b_n1.w, rY, b_n2.w*rW-b_n1.w-b_n3.w, b_n2.h), Color.White);
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_n3, new Ri(rX+b_n1.w+b_n2.w*rW-b_n1.w-b_n3.w, rY, b_n3.w, b_n3.h), Color.White);
         }
 
         public void RenderH(SpriteBatch spriteBatch) {
@@ -77,8 +77,8 @@ namespace XCraft {
             int rW = parent.rW();
 
             gui.DrawGUIUniversalTexture(spriteBatch, parent, b_h1, new Ri(rX, rY, b_h1.w, b_h1.h), Color.White);
-            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_h2, new Ri(rX+b_h1.w, rY, b_h2.w*rW, b_h2.h), Color.White);
-            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_h3, new Ri(rX+b_h1.w+b_h2.w*rW, rY, b_h3.w, b_h3.h), Color.White);
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_h2, new Ri(rX+b_h1.w, rY, b_h2.w*rW-b_h1.w-b_h3.w, b_h2.h), Color.White);
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_h3, new Ri(rX+b_h1.w+b_h2.w*rW-b_h1.w-b_h3.w, rY, b_h3.w, b_h3.h), Color.White);
         }
 
         public void RenderC(SpriteBatch spriteBatch) {
@@ -87,8 +87,8 @@ namespace XCraft {
             int rW = parent.rW();
 
             gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c1, new Ri(rX, rY, b_c1.w, b_c1.h), Color.White);
-            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c2, new Ri(rX+b_c1.w, rY, b_c2.w*rW, b_c2.h), Color.White);
-            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c3, new Ri(rX+b_c1.w+b_c2.w*rW, rY, b_c3.w, b_c3.h), Color.White);
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c2, new Ri(rX+b_c1.w, rY, b_c2.w*rW-b_c1.w-b_c3.w, b_c2.h), Color.White);
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c3, new Ri(rX+b_c1.w+b_c2.w*rW-b_c1.w-b_c3.w, rY, b_c3.w, b_c3.h), Color.White);
         }
 
     }

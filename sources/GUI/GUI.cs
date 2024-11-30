@@ -78,8 +78,8 @@ namespace XCraft {
             main.Add("mainmenu", new GUIE(this, d, a, GUIT.GUIELEMENT));
             main.Add("gamemenu", new GUIE(this, d, a, GUIT.GUIELEMENT));
 
-            main.Add("editor/mappanel", new PanelGUIE(this, d, a, 20, 200, 180, 240));
-            main.Add("editor/mappanel/generate", new ButtonGUIE(this, d, a, f, "Generate Map", 20, 20, 100, 35));
+            main.Add("editor/mappanel", new PanelGUIE(this, d, a, 20, 500, 500, 240));
+            main.Add("editor/mappanel/generate", new ButtonGUIE(this, d, a, f, "Generate Map", 20, 20, 250, 35));
         }
 
 
