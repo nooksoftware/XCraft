@@ -366,12 +366,31 @@ namespace XCraft {
 
     }
     public class ButtonGUIR : GUIR {
+        public readonly Ri b_n= new Ri(0, 0, 13, 35);
+        public readonly Ri b_h= new Ri(14, 0, 13, 35);
+        public readonly Ri b_c= new Ri(28, 0, 13, 35);
+
         public ButtonGUIR(GUIE parent, GUI gui, D d) : base(parent, gui, d) {}
         public override void Render(SpriteBatch spriteBatch) {
             if (parent.isUniv) {
-                base.Render(spriteBatch);
+                if(clickState == 0) {RenderN(spriteBatch);}
+                else if (clickState == 1) {RenderH(spriteBatch);}
+                else if (clickState == 2) {RenderC(spriteBatch);}
+                //base.Render(spriteBatch);
             }
         }
+        public void RenderN(SpriteBatch spriteBatch) {
+            gui.DrawGUIUnivTClickState(spriteBatch, parent, b_n, Color.White);
+        }
+
+        public void RenderH(SpriteBatch spriteBatch) {
+            gui.DrawGUIUnivTClickState(spriteBatch, parent, b_h, Color.White);
+        }
+
+        public void RenderC(SpriteBatch spriteBatch) {
+            gui.DrawGUIUnivTClickState(spriteBatch, parent, b_c, Color.White);
+        }
+
     }
     public class ButtonGUIE : GUIE {
         public ButtonGUIE(GUI gui, D d, int lX = 0, int lY = 0, int lW = -1, int lH = -1) 
