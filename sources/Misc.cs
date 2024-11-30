@@ -89,6 +89,7 @@ namespace XCraft {
 
         public bool Check(SBounds b) {
             //todo
+            return true;
         }
     };
 

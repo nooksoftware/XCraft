@@ -19,28 +19,30 @@ namespace XCraft {
         private FastNoiseLite lite;
         public int w = 0;
         public int h = 0;
+        public D d;
 
 
         public TT[,] tts;
         public T[,] ts;
         public T[,] ts_visible;
 
-        public Map(int w, int h) {
+        public M(int w, int h, D d) {
             this.w = w;
             this.h = h;
+            this.d = d;
             this.tts = new TT[w,h];
             this.ts = new T[w,h];
-            this.ts_visible = null;
+            this.ts_visible = new T[w,h];
         }
         public void GenerateDefault() {
-            G g = new G((this, 512, 256, -1, -1, -1, -1, -1, -1, true));
+            G g = new G(d, this, 512, 256, -1, -1, -1, -1, -1, -1, true);
         }
 
         public TT TT(int x, int y) {
             if (tts[x,y] != null) 
                 return tts[x,y];
 
-            return null;
+            return XCraft.TT.UNKNOWN;
         }
         public T T(int x, int y) {
             if (ts[x,y] != null) 

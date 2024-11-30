@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 
 namespace XCraft {
         public class G {
+        FastNoiseLite lite;
         public D d;
         public M m;
 
@@ -26,15 +27,16 @@ namespace XCraft {
 
         int mH3 = 3;
         int mH2 = 96;
-        int mH1 = 160;
+        int mH1 = 49;
 
         int iOp = 180; // 2200
         int gOp = 240; // 4500
         int dOp = 360; // 6000
 
-        public G(Data d, Map m, int w, int h, int wH3, int wH2, int wH1, int iOp, int gOp, int dOp, bool gen = false) {
+        public G(D d, M m, int w, int h, int wH3, int wH2, int wH1, int iOp, int gOp, int dOp, bool gen = false) {
             this.d = d;
             this.tp = d.Tex("tp");
+            lite = new FastNoiseLite();
 
             Set(m, w, h, mH3, mH2, mH1, iOp, gOp, dOp);
             random = new Random();
@@ -53,8 +55,8 @@ namespace XCraft {
             GenerateBasicTerrain();
             GenerateBasicOre();
         }
-        public void VerifyError(string m) {
-            Console.WriteLine("Error while generating map " - m);
+        public void VerifyError(string message) {
+            Console.WriteLine("Error while generating map " + message);
         }
         public void Verify() {
             if(d == null) {
@@ -68,57 +70,68 @@ namespace XCraft {
                 VerifyError("tp == null");
 
             }
-            if(w > 32) {
-                VerifyError("w > 32");
+            if(w < 32) {
+                VerifyError("w < 32");
 
             }
-            if(h > 32) {
-                VerifyError("h > 32");
+            if(h < 32) {
+                VerifyError("h < 32");
 
             }
-            if(mH3 > 0) {
-                VerifyError("mH3 > 0");
+            if(mH3 <= 0) {
+                VerifyError("mH3 <= 0");
 
             }
-            if(mH2 > 8) {
-                VerifyError("mH2 > 8");
+            if(mH2 <= 8) {
+                VerifyError("mH2 <= 8");
 
             }
-            if(mH1 > 0) {
-                VerifyError("mH1 > 0");
+            if(mH1 <= 0) {
+                VerifyError("mH1 <= 0");
 
             }
-            if(iOp > 0) {
-                VerifyError("iOp > 0");
+            if(iOp < 0) {
+                VerifyError("iOp < 0");
 
             }
-            if(gOp > 0) {
-                VerifyError("gOp > 0");
+            if(gOp < 0) {
+                VerifyError("gOp < 0");
 
             }
-            if(dOp > 0) {
-                VerifyError("dOp > 0");
+            if(dOp < 0) {
+                VerifyError("dOp < 0");
 
             }
         }
         protected Random random;
-        public bool RandomF(int f) { 
-            return (random.Next(f) == 0);
+        
+        public bool RandomIP(int perc) {
+            return random.Next(100) < perc;
+        }
+        public bool RandomL(int max, int v) {
+            return RandomIP(System.Convert.ToInt32(100*((float)v/(float)max)));
+        }
+        public bool Random(int f) {
+            return random.Next(f) == 0;
         }
         protected void GenerateBasicTerrain() {
             int bedrock_y1 = h-mH3;
             int bedrock_y2 = h;
             int ground_y1 = h-mH2-mH3;
             int ground_y2 = h-mH3;
-            int terrain_y1 = h-mH1-mH2-mH3
+            int terrain_y1 = h-mH1-mH2-mH3;
             int terrain_y2 = h-mH2-mH3;
+
+        // int mH3 = 3;
+        // int mH2 = 96;
+        // int mH1 = 49;
 
             for (int x = 0; x < w; x++) {
                 for (int y = bedrock_y1; y < bedrock_y2; y++) {
                     int yr = y-bedrock_y1;
                     float perc = (float)yr / (float)(bedrock_y2 - bedrock_y1);
 
-                    bool b = RandomF(bedrock_y2 - bedrock_y1 - yr);
+                    bool b = Random(bedrock_y2 - bedrock_y1 - yr);
                     if (b) {
                         T(x,y, TT.BEDROCK);
                     } else {
@@ -129,7 +142,7 @@ namespace XCraft {
             for (int x = 0; x < w; x++) {
                 for (int y = ground_y1; y < ground_y2; y++) {
                     int yr = y-ground_y1;
-                    bool b = Random(ground_y2 - ground_y1 - yr);
+                    bool b = RandomL(ground_y2 - ground_y1, yr);
                     if (b) {
                         T(x,y, TT.STONE);
                     } else {
@@ -138,7 +151,7 @@ namespace XCraft {
                 }
             }
 
-            float[,] terH = new float(w,1);
+            float[,] terH = new float[w,1];
             lite.SetFrequency(0.04f);
             lite.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
             for (int x = 0; x < w; x++) {
@@ -148,15 +161,19 @@ namespace XCraft {
             }
 
             for (int x = 0; x < w; x++) {
+                int terrH = 
+                System.Convert.ToInt32(
+                    terH[x,0]*(terrain_y2-terrain_y1)
+                );
                 for (int y = terrain_y1; y < terrain_y2; y++) {
                     int yr = y-terrain_y1;
-                    int terrH = terH[x,0]*yr;
-                    if (y-terrain_y1 == terrH) {
+                    
+                    if (yr == terrH) {
                         T(x,y, TT.GRASS);
-                    } else if (y-terrain_y1 > terrH) {
+                    } else if (yr > terrH) {
                         T(x,y, TT.DIRT);
 
-                    } else if (y-terrain_y1 < terrH) {
+                    } else if (yr < terrH) {
                         T(x,y, TT.AIR);
                     }
                 }
@@ -168,6 +185,8 @@ namespace XCraft {
             }
         }
         protected void GenerateBasicOre() {
+            int ground_y1 = h-mH2-mH3;
+            int ground_y2 = h-mH3;
             for (int x = 0; x < w; x++) {
                 for (int y = ground_y1; y < ground_y2; y++) {
                     bool ore1 = Random((int)(iOp));
@@ -189,7 +208,7 @@ namespace XCraft {
             m.tts[x,y] = tt;
             m.ts[x,y] = new T(x, y, tt, tp, d);
         }
-        public void Set(Map m, int w, int h, int wH3, int wH2, int wH1, int iOp, int gOp, int dOp) {
+        public void Set(M m, int w, int h, int wH3, int wH2, int wH1, int iOp, int gOp, int dOp) {
             if (m != null) {this.m = m;}
             if (w != -1) {this.w = w;}
             if (h != -1) {this.h = h;}

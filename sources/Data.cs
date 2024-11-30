@@ -18,9 +18,9 @@ namespace XCraft {
     public class D {
         public Game1 game;
         public M m;
-        public Navigation n;
+        public N n;
 
-        public Dictionary<TileType, V2i> tpPos;
+        public Dictionary<TT, V2i> tpPos;
         public Dictionary<string, Texture2D> textures;
 
         public MouseState ms;
@@ -34,8 +34,9 @@ namespace XCraft {
 
         public D(Game1 game) {
             this.game = game;
-            this.tpPos = new Dictionary<TileType, V2i>();
+            this.tpPos = new Dictionary<TT, V2i>();
             this.textures = new Dictionary<string, Texture2D>();
+            LoadDefTpPos();
         }
         public void Tex(string id, Texture2D tex) {
             textures.Add(id, tex);
@@ -46,45 +47,38 @@ namespace XCraft {
             return t;
         }
         public void LoadDefTpPos() {
-            LoadTPPos(TileType.DIRT, 0, 0);
-            LoadTPPos(TileType.GRASS, 0, 1);
-            LoadTPPos(TileType.STONE, 0, 2);
-            LoadTPPos(TileType.BEDROCK, 0, 3);
-            LoadTPPos(TileType.SAND, 0, 4);
-            LoadTPPos(TileType.CLAY, 0, 5);
-            LoadTPPos(TileType.WATER, 0, 6);
-            LoadTPPos(TileType.MUD, 0, 7);
-
-            LoadTPPos(TileType.LOG1, 1, 0);
-            LoadTPPos(TileType.LOG2, 1, 1);
-            LoadTPPos(TileType.LOG3, 1, 2);
-            LoadTPPos(TileType.LEAVES1, 1, 3);
-            LoadTPPos(TileType.LEAVES2, 1, 4);
-            LoadTPPos(TileType.LEAVES3, 1, 5);
-
-            LoadTPPos(TileType.WOODEN_PL1, 2, 0);
-            LoadTPPos(TileType.WOODEN_PL2, 2, 1);
-            LoadTPPos(TileType.WOODEN_PL3, 2, 2);
-            LoadTPPos(TileType.WOOD1, 2, 3);
-            LoadTPPos(TileType.WOOD2, 2, 4);
-            LoadTPPos(TileType.WOOD3, 2, 5);
-
-            LoadTPPos(TileType.BRICKS, 3, 0);
-            LoadTPPos(TileType.CONCRETE, 3, 1);
-            LoadTPPos(TileType.STONE_BRICKS, 3, 2);
-            LoadTPPos(TileType.METAL, 3, 3);
-            LoadTPPos(TileType.WOODEN_BOX, 3, 4);
-            LoadTPPos(TileType.METAL_BOX, 3, 5);
-
-            LoadTPPos(TileType.IRON_ORE, 4, 0);
-            LoadTPPos(TileType.GOLD_ORE, 4, 1);
-            LoadTPPos(TileType.DIA_ORE, 4, 2);
+            LoadTPPos(TT.DIRT, 0, 0);
+            LoadTPPos(TT.GRASS, 1, 0);
+            LoadTPPos(TT.STONE, 2, 0);
+            LoadTPPos(TT.BEDROCK, 3, 0);
+            LoadTPPos(TT.SAND, 4, 0);
+            LoadTPPos(TT.CLAY, 5, 0);
+            LoadTPPos(TT.WATER, 6, 0);
+            LoadTPPos(TT.MUD, 7, 0);
+            LoadTPPos(TT.LOG1, 0, 1);
+            LoadTPPos(TT.LOG2, 1, 1);
+            LoadTPPos(TT.LOG3, 2, 1);
+            LoadTPPos(TT.LEAVES1, 3, 1);
+            LoadTPPos(TT.LEAVES2, 4, 1);
+            LoadTPPos(TT.LEAVES3, 5, 1);
+            LoadTPPos(TT.WOODEN_PL1, 0, 2);
+            LoadTPPos(TT.WOODEN_PL2, 1, 2);
+            LoadTPPos(TT.WOODEN_PL3, 2, 2);
+            LoadTPPos(TT.WOOD1, 3, 2);
+            LoadTPPos(TT.WOOD2, 4, 2);
+            LoadTPPos(TT.WOOD3, 5, 2);
+            LoadTPPos(TT.BRICKS, 0, 3);
+            LoadTPPos(TT.CONCRETE, 1, 3);
+            LoadTPPos(TT.STONE_BRICKS, 2, 3);
+            LoadTPPos(TT.METAL, 3, 3);
+            LoadTPPos(TT.WOODEN_BOX, 4, 3);
+            LoadTPPos(TT.METAL_BOX, 5, 3);
+            LoadTPPos(TT.IRON_ORE, 0, 4);
+            LoadTPPos(TT.GOLD_ORE, 1, 4);
+            LoadTPPos(TT.DIA_ORE, 2, 4);
         }
         protected void LoadTPPos(TT tt, int x, int y) {
-            tpPos.Add(t, new V2i(x,y));
-        }
-        protected void LoadDefTextures() {
-            
+            tpPos.Add(tt, new V2i(x,y));
         }
         public int xM {
             get {return (ms.X);}

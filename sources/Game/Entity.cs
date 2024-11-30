@@ -20,8 +20,8 @@ namespace XCraft {
         public float y = 0.0f;
         public int ox = 0;
         public int oy = 0;
-        public int w = 0.0f;
-        public int h = 0.0f;
+        public int w = 0;
+        public int h = 0;
         public float accX = 0.0f;
         public float accY = 0.0f;
         public bool accXb = false;
@@ -48,7 +48,10 @@ namespace XCraft {
         }
         public void Draw(SpriteBatch spriteBatch) {
             //scale (zoom)
-            Rectangle d = new Rectangle(x-ox - d.z.zX, x-oy - d.z.zY, w, h);
+            Rectangle de = new Rectangle(
+                (int)(x-ox - d.n.zX), 
+                (int)(x-oy - d.n.zY), 
+                w, h);
             Rectangle o = new Rectangle(0, 0, w, h);
             //spriteBatch.Draw(t, d, o, Color.White);
         }

@@ -40,10 +40,10 @@ namespace XCraft {
             this.zY += System.Convert.ToInt32(zYAcc);
             zXAcc *= 0.75f;
             zYAcc *= 0.75f;
-            if (zXAcc > -0.1f || zXAcc < 0.1f) {
+            if (zXAcc > -0.05f && zXAcc < 0.05f) {
                 zXAcc = 0.0f;
             }
-            if (zYAcc > -0.1f || zYAcc < 0.1f) {
+            if (zYAcc > -0.1f && zYAcc < 0.1f) {
                 zYAcc = 0.0f;
             }
         }

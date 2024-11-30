@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 namespace XCraft {
     public class Game1 : Game {
         public D d;
+        public A a;
         private GraphicsDeviceManager _graphics;
 
         private SpriteBatch _spriteBatch;
@@ -32,7 +33,9 @@ namespace XCraft {
             Content.RootDirectory = "Content";
 
             this.d = new D(this);
-            d.n = new Navigation();
+            d.n = new N();
+
+            this.a = new A(this, d);
 
             IsMouseVisible = true;
 
@@ -53,6 +56,13 @@ namespace XCraft {
             LoadDefTextures();
 
             SetWindowSize(D.def_wW2, D.def_wH2);
+            D.wW = D.def_wW2;
+            D.wH = D.def_wH2;
+
+            d.m = new M(d.mW, d.mH, d);
+            d.m.GenerateDefault();
+            d.n.zX = 32*256;
+            d.n.zY = 32*128;
         }
         protected void LoadDefTextures() {
             d.Tex("tp", Content.Load<Texture2D>("tp"));
@@ -90,23 +100,23 @@ namespace XCraft {
             d.ks = Keyboard.GetState();
         }
         protected void WASDArrowsNav() {
-bool s = LShiftHold() || RShiftHold();
+            bool s = a.LShiftHold();
 
-            if (AHold() || LeftHold()) {
-                if (!s) d.z.zXAcc -= 5.0f;
-                else d.z.zXAcc -= 15.0f;
+            if (a.AHold() || a.LeftHold()) {
+                if (!s) {d.n.zXAcc -= 5.0f;}
+                else {d.n.zXAcc -= 15.0f;}
             }
-            if (DHold() || RightHold()) {
-                if (!s) d.z.zXAcc += 5.0f;
-                else d.z.zXAcc += 15.0f;
+            if (a.DHold() || a.RightHold()) {
+                if (!s) {d.n.zXAcc += 5.0f;}
+                else {d.n.zXAcc += 15.0f;}
             }
-            if (WHold() || UpHold()) {
-                if (!s) d.z.zYAcc -= 5.0f;
-                else d.z.zYAcc -= 15.0f;
+            if (a.WHold() || a.UpHold()) {
+                if (!s) {d.n.zYAcc -= 5.0f;}
+                else {d.n.zYAcc -= 15.0f;}
             }
-            if (SHold() || DownHold()) {
-                if (!s) d.z.zYAcc += 5.0f;
-                else d.z.zYAcc += 15.0f;
+            if (a.SHold() || a.DownHold()) {
+                if (!s) {d.n.zYAcc += 5.0f;}
+                else {d.n.zYAcc += 15.0f;}
             }
         }
         protected override void Update(GameTime gameTime)
@@ -116,7 +126,7 @@ bool s = LShiftHold() || RShiftHold();
 
             KeyboardMouseInput();
             WASDArrowsNav();
-            ApplyNavAcc();
+            d.n.ApplyNavAcc();
             Draw(gameTime);
 
             base.Update(gameTime);
@@ -126,8 +136,9 @@ bool s = LShiftHold() || RShiftHold();
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            m.Draw(_spriteBatch);
-
+            _spriteBatch.Begin();
+            D.m.Draw(_spriteBatch);
+            _spriteBatch.End();
             base.Draw(gameTime);
         }
     };

@@ -16,8 +16,8 @@ using System.Threading.Tasks;
 
 namespace XCraft {
     public class T {
-        public x = 0;
-        public y = 0;
+        public int x = 0;
+        public int y = 0;
         public TT tt;
         public Texture2D tp;
         public int tpX = -1;
@@ -25,10 +25,10 @@ namespace XCraft {
         public D d;
 
         public bool IsSolid() {
-            return (tt != TileType.UNKNOWN || tt != TileType.AIR || tt != TileType.WATER);
+            return (tt != TT.UNKNOWN || tt != TT.AIR || tt != TT.WATER);
         }
         public bool HasTP() {
-            return (tpX != -1) || (tpY != -1); || (tp == null);
+            return (tpX != -1) || (tpY != -1) || (tp == null);
         }
         public T(int x, int y, TT tt, Texture2D tp, D d) {
             this.x = x;
@@ -36,23 +36,31 @@ namespace XCraft {
             this.tt = tt;
             this.tp = tp;
             this.d = d;
+
+            if (d.tpPos.ContainsKey(tt)) {
+                this.tpX = d.tpPos[tt].x;
+                this.tpY = d.tpPos[tt].y;
+            }
         }
-        public Rectangle d;
+        public Rectangle de;
         public Rectangle o;
         public bool Draw(SpriteBatch spriteBatch) {
-            d = new Rectangle(x*32 - d.z.zX, y*32 - d.z.zY,32,32);
+            de = new Rectangle(x*32 - d.n.zX, y*32 - d.n.zY,32,32);
             o = new Rectangle(tpX*32, tpY*32, 32, 32);
-            if (d.X < -32 || d.Y < -32) {
+            if (de.X < -32 || de.Y < -32) {
                 return false;
             }
-            if (d.X > d.wW || d.Y > d.wH) {
+            if (de.X > d.wW || de.Y > d.wH) {
                 return false;
             }
 
             if (tt == TT.AIR || tt == TT.UNKNOWN) {
                 return true;
             }
-            spriteBatch.Draw(tp, d, o, Color.White);
+            if (tpX == -1 || tpY == -1) {
+                return false;
+            }
+            spriteBatch.Draw(tp, de, o, Color.White);
             return true;
         }
     };

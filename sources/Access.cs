@@ -13,7 +13,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 //using FastNoiseLite;
 
-
 namespace XCraft {
     public class A {
         public Game1 g;
@@ -28,33 +27,32 @@ namespace XCraft {
         public int yM {
             get {return (d.ms.Y);}
         }
-
         public bool LMBHold() {
-            return D.ms.LeftButton == ButtonState.Pressed;
+            return d.ms.LeftButton == ButtonState.Pressed;
         }
         public bool RMBHold() {
-            return D.ms.RightButton == ButtonState.Pressed;
+            return d.ms.RightButton == ButtonState.Pressed;
         }
-        public bool OneClickedLMB() {
-            return (
-                d.d_ms.RightButton == ButtonState.Released && d.ms.LeftButton == ButtonState.Pressed
-            );
-        }
-        public bool OneClickedLMB() {
-            return (
-                d.ms.RightButton == ButtonState.Released && d.d_ms.LeftButton == ButtonState.Pressed
-            );
-        }
-        public bool OneReleasedLMB() {
-            return (
-                d.d_ms.LeftButton == ButtonState.Released && d.ms.LeftButton == ButtonState.Pressed
-            );
-        }
-        public bool OneReleasedLMB() {
-            return (
-                d.ms.LeftButton == ButtonState.Released && d.d_ms.LeftButton == ButtonState.Pressed
-            );
-        }
+        // public bool OneClickedRMB() {
+        //     return (
+        //         d.d_ms.RightButton == ButtonState.Released && d.ms.LeftButton == ButtonState.Pressed
+        //     );
+        // }
+        // public bool OneClickedRMB() {
+        //     return (
+        //         d.ms.RightButton == ButtonState.Released && d.d_ms.LeftButton == ButtonState.Pressed
+        //     );
+        // }
+        // public bool OneReleasedLMB() {
+        //     return (
+        //         d.d_ms.LeftButton == ButtonState.Released && d.ms.LeftButton == ButtonState.Pressed
+        //     );
+        // }
+        // public bool OneReleasedLMB() {
+        //     return (
+        //         d.ms.LeftButton == ButtonState.Released && d.d_ms.LeftButton == ButtonState.Pressed
+        //     );
+        // }
         public bool OnePressedA() {return (d.ks.IsKeyDown(Keys.A) && d.p_ks.IsKeyUp(Keys.A));}
         public bool OnePressedD() {return (d.ks.IsKeyDown(Keys.D) && d.p_ks.IsKeyUp(Keys.D));}
         public bool OnePressedW() {return (d.ks.IsKeyDown(Keys.W) && d.p_ks.IsKeyUp(Keys.W));}
@@ -104,23 +102,23 @@ namespace XCraft {
         public bool BHold() {return (d.ks.IsKeyDown(Keys.B));}
         public bool NHold() {return (d.ks.IsKeyDown(Keys.N));}
         public bool MHold() {return (d.ks.IsKeyDown(Keys.M));}
-        public bool 0Hold() {return (d.ks.IsKeyDown(Keys.D0));}
-        public bool 1Hold() {return (d.ks.IsKeyDown(Keys.D1));}
-        public bool 2Hold() {return (d.ks.IsKeyDown(Keys.D2));}
-        public bool 3Hold() {return (d.ks.IsKeyDown(Keys.D3));}
-        public bool 4Hold() {return (d.ks.IsKeyDown(Keys.D4));}
-        public bool 5Hold() {return (d.ks.IsKeyDown(Keys.D5));}
-        public bool 6Hold() {return (d.ks.IsKeyDown(Keys.D6));}
-        public bool 7Hold() {return (d.ks.IsKeyDown(Keys.D7));}
-        public bool 8Hold() {return (d.ks.IsKeyDown(Keys.D8));}
-        public bool 9Hold() {return (d.ks.IsKeyDown(Keys.D9));}
+        public bool N0Hold() {return (d.ks.IsKeyDown(Keys.D0));}
+        public bool N1Hold() {return (d.ks.IsKeyDown(Keys.D1));}
+        public bool N2Hold() {return (d.ks.IsKeyDown(Keys.D2));}
+        public bool N3Hold() {return (d.ks.IsKeyDown(Keys.D3));}
+        public bool N4Hold() {return (d.ks.IsKeyDown(Keys.D4));}
+        public bool N5Hold() {return (d.ks.IsKeyDown(Keys.D5));}
+        public bool N6Hold() {return (d.ks.IsKeyDown(Keys.D6));}
+        public bool N7Hold() {return (d.ks.IsKeyDown(Keys.D7));}
+        public bool N8Hold() {return (d.ks.IsKeyDown(Keys.D8));}
+        public bool N9Hold() {return (d.ks.IsKeyDown(Keys.D9));}
         public bool EscHold() {return (d.ks.IsKeyDown(Keys.Escape));}
         public bool LCtrlHold() {return (d.ks.IsKeyDown(Keys.LeftControl));}
         public bool RCtrlHold() {return (d.ks.IsKeyDown(Keys.RightControl));}
-        public bool LAltHold() {return (d.ks.IsKeyDown(Keys.LeftShift));}
-        public bool RAltHold() {return (d.ks.IsKeyDown(Keys.RightShift));}
-        public bool LShiftHold() {return (d.ks.IsKeyDown(Keys.LeftAlt));}
-        public bool RShiftHold() {return (d.ks.IsKeyDown(Keys.RightAlt));}
+        public bool LAltHold() {return (d.ks.IsKeyDown(Keys.LeftAlt));}
+        public bool RAltHold() {return (d.ks.IsKeyDown(Keys.RightAlt));}
+        public bool LShiftHold() {return (d.ks.IsKeyDown(Keys.LeftShift));}
+        public bool RShiftHold() {return (d.ks.IsKeyDown(Keys.RightShift));}
         public bool BackspaceHold() {return (d.ks.IsKeyDown(Keys.Back));}
 
         public bool OnePressedQ() {return (d.ks.IsKeyDown(Keys.Q) && d.p_ks.IsKeyUp(Keys.Q));}
@@ -158,10 +156,10 @@ namespace XCraft {
         public bool OnePressedEsc() {return (d.ks.IsKeyDown(Keys.Escape) && d.p_ks.IsKeyUp(Keys.Escape));}
         public bool OnePressedLCtrl() {return (d.ks.IsKeyDown(Keys.LeftControl) && d.p_ks.IsKeyUp(Keys.LeftControl));}
         public bool OnePressedRCtrl() {return (d.ks.IsKeyDown(Keys.RightControl) && d.p_ks.IsKeyUp(Keys.RightControl));}
-        public bool OnePressedLAlt() {return (d.ks.IsKeyDown(Keys.LeftShift) && d.p_ks.IsKeyUp(Keys.LeftShift));}
-        public bool OnePressedRAlt() {return (d.ks.IsKeyDown(Keys.RightShift) && d.p_ks.IsKeyUp(Keys.RightShift));}
-        public bool OnePressedLShift() {return (d.ks.IsKeyDown(Keys.LeftAlt) && d.p_ks.IsKeyUp(Keys.LeftAlt));}
-        public bool OnePressedRShift() {return (d.ks.IsKeyDown(Keys.RightAlt) && d.p_ks.IsKeyUp(Keys.RightAlt));}
+        public bool OnePressedLAlt() {return (d.ks.IsKeyDown(Keys.LeftAlt) && d.p_ks.IsKeyUp(Keys.LeftAlt));}
+        public bool OnePressedRAlt() {return (d.ks.IsKeyDown(Keys.RightAlt) && d.p_ks.IsKeyUp(Keys.RightAlt));}
+        public bool OnePressedLShift() {return (d.ks.IsKeyDown(Keys.LeftShift) && d.p_ks.IsKeyUp(Keys.LeftShift));}
+        public bool OnePressedRShift() {return (d.ks.IsKeyDown(Keys.RightShift) && d.p_ks.IsKeyUp(Keys.RightShift));}
         public bool OnePressedBackspace() {return (d.ks.IsKeyDown(Keys.Back) && d.p_ks.IsKeyUp(Keys.Back));}
 
         public bool OneReleasedQ() {return (d.ks.IsKeyUp(Keys.Q) && d.p_ks.IsKeyDown(Keys.Q));}
@@ -204,8 +202,5 @@ namespace XCraft {
         public bool OneReleasedLShift() {return (d.ks.IsKeyUp(Keys.LeftAlt) && d.p_ks.IsKeyDown(Keys.LeftAlt));}
         public bool OneReleasedRShift() {return (d.ks.IsKeyUp(Keys.RightAlt) && d.p_ks.IsKeyDown(Keys.RightAlt));}
         public bool OneReleasedBackspace() {return (d.ks.IsKeyUp(Keys.Back) && d.p_ks.IsKeyDown(Keys.Back));}
-
-
-
     };
 }
