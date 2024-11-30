@@ -33,26 +33,26 @@ namespace XCraft {
         public bool RMBHold() {
             return d.ms.RightButton == ButtonState.Pressed;
         }
-        // public bool OneClickedRMB() {
-        //     return (
-        //         d.d_ms.RightButton == ButtonState.Released && d.ms.LeftButton == ButtonState.Pressed
-        //     );
-        // }
-        // public bool OneClickedRMB() {
-        //     return (
-        //         d.ms.RightButton == ButtonState.Released && d.d_ms.LeftButton == ButtonState.Pressed
-        //     );
-        // }
-        // public bool OneReleasedLMB() {
-        //     return (
-        //         d.d_ms.LeftButton == ButtonState.Released && d.ms.LeftButton == ButtonState.Pressed
-        //     );
-        // }
-        // public bool OneReleasedLMB() {
-        //     return (
-        //         d.ms.LeftButton == ButtonState.Released && d.d_ms.LeftButton == ButtonState.Pressed
-        //     );
-        // }
+        public bool OneClickedLMB() {
+            return (
+                d.ms.LeftButton == ButtonState.Pressed && d.p_ms.LeftButton == ButtonState.Released
+            );
+        }
+        public bool OneClickedRMB() {
+            return (
+                d.ms.RightButton == ButtonState.Pressed && d.p_ms.RightButton == ButtonState.Released
+            );
+        }
+        public bool OneReleasedLMB() {
+            return (
+                d.ms.LeftButton == ButtonState.Released && d.p_ms.LeftButton == ButtonState.Pressed
+            );
+        }
+        public bool OneReleasedRMB() {
+            return (
+                d.ms.RightButton == ButtonState.Released && d.p_ms.RightButton == ButtonState.Pressed
+            );
+        }
         public bool OnePressedA() {return (d.ks.IsKeyDown(Keys.A) && d.p_ks.IsKeyUp(Keys.A));}
         public bool OnePressedD() {return (d.ks.IsKeyDown(Keys.D) && d.p_ks.IsKeyUp(Keys.D));}
         public bool OnePressedW() {return (d.ks.IsKeyDown(Keys.W) && d.p_ks.IsKeyUp(Keys.W));}

@@ -19,10 +19,11 @@ namespace XCraft {
         public Dictionary<string, GUIE> children;
         public GUI gui;
         public D d;
+        public A a;
 
         public GUIE parent;
-        public GUIR r;
-        public GUIA a;
+        public GUIR guir;
+        public GUIA guia;
         public GUIT guit = GUIT.GUIELEMENT;
 
         public bool isUniv = true;
@@ -60,6 +61,12 @@ namespace XCraft {
                 return lY-lOy;
             }
         }
+        public int rW() {
+            return lW;
+        }
+        public int rH() {
+            return lH;
+        }
         public bool HasParent() {
             if (parent != null) {
                 return true;
@@ -86,7 +93,7 @@ namespace XCraft {
         protected virtual void cHeight(int p) {
             lH = (p != -1 ? p : 0);
         }
-        public GUIE(GUI gui, D d, GUIT guit = GUIT.GUIELEMENT, int lX = 0, int lY = 0, int lW = -1, int lH = -1) {
+        public GUIE(GUI gui, D d, A a, GUIT guit = GUIT.GUIELEMENT, int lX = 0, int lY = 0, int lW = -1, int lH = -1) {
             
             this.lX = lX;
             this.lY = lY;
@@ -98,6 +105,7 @@ namespace XCraft {
             
             this.gui = gui;
             this.d = d;
+            this.a = a;
             this.clickStateGUIUnivB = new Dictionary<int, Ri>();
             this.clickStateGUIUnivC = new Dictionary<int, Color>();
 
@@ -107,8 +115,8 @@ namespace XCraft {
 
             this.children = new Dictionary<string, GUIE>();
 
-            r = new GUIR(this, gui, d);
-            a = new GUIA(this, gui, d);
+            guir = new GUIR(this, gui, d, a);
+            guia = new GUIA(this, gui, d, a);
         }
         public void Connect(GUIE e) {
             e.parent = this;
@@ -130,6 +138,16 @@ namespace XCraft {
                     e = e.children[key];
                 }
             }
+        }
+        public GuiET Get2<GuiET>(string path) where GuiET : class {
+            GUIE e = Get(path);
+            if (e != null) {
+                GuiET e2 = e as GuiET;
+                if (e2 != null) {
+                    return e2;
+                }
+            }
+            return default(GuiET);
         }
         public GUIE Get(string path) {
             string[] keys = path.Split('/');
@@ -167,11 +185,16 @@ namespace XCraft {
             return (e != null);
         }
         public void Draw(SpriteBatch spriteBatch) {
-            if(r != null) {
-                r.Render(spriteBatch);
+            if(guir != null) {
+                guir.Render(spriteBatch);
             }
             foreach (var el in children) {
                 el.Value.Draw(spriteBatch);
+            }
+        }
+        public void Activity() {
+            if (guia != null) {
+                guia.Activity();
             }
         }
     };
@@ -183,11 +206,12 @@ namespace XCraft {
         TEXT_INPUT_FIELD
     };
     public class GUIR {
-        public GUIE parent; public GUI gui; public D d;
-        public GUIR(GUIE parent, GUI gui, D d) {
+        public GUIE parent; public GUI gui; public D d; public A a;
+        public GUIR(GUIE parent, GUI gui, D d, A a) {
             this.parent = parent;
             this.gui = gui;
             this.d = d;
+            this.a = a;
         }
         public int clickState {
             get {return parent.click_state;}
@@ -218,11 +242,48 @@ namespace XCraft {
         }
     };
     public class GUIA {
-        public GUIE parent; public GUI gui; public D d;
-        public GUIA(GUIE parent, GUI gui, D d) {
+        public GUIE parent; public GUI gui; public D d; public A a;
+        public GUIA(GUIE parent, GUI gui, D d, A a) {
             this.parent = parent;
             this.gui = gui;
             this.d = d;
+            this.a = a;
+        }
+        public bool MouseOnArea() {
+            int rX = parent.rX();
+            int rY = parent.rY();
+            int rW = parent.rW();
+            int rH = parent.rH();
+            int mX = d.ms.X;
+            int mY = d.ms.Y;
+            return ((mX > rX && mX < rX + rW) && (mY > rY && mY < rY + rH));
+        }
+        public bool Clicked() {
+            return a.OneReleasedLMB();
+        }
+        public bool LMBHold() {
+            return a.LMBHold();
+        }
+        public void StandardClickStateDetermineForClickable() {
+            if (parent.click_state == 2 && LMBHold()) {
+                parent.click_state = 2;
+                return;
+            }
+            if (MouseOnArea()) {
+                if (Clicked()) {
+                    parent.click_state = 2;    
+                } else {
+                    parent.click_state = 1;
+                }
+            } else {
+                parent.click_state = 0;
+            }
+        }
+        public bool ClickedOnArea() {
+            return (Clicked() && MouseOnArea());
+        }
+        public virtual void Activity() {
+
         }
         
     };
@@ -267,7 +328,7 @@ namespace XCraft {
             96, 26, 50, 50
     */
     public class PanelGUIA : GUIA {
-        public PanelGUIA(GUIE parent, GUI gui, D d) : base(parent, gui, d) {}
+        public PanelGUIA(GUIE parent, GUI gui, D d, A a) : base(parent, gui, d, a) {}
 
     }
     public class PanelGUIR : GUIR {
@@ -298,7 +359,7 @@ namespace XCraft {
         public readonly Ri b_c7 = new Ri(119, 9, 1, 6);
         public readonly Ri b_c8 = new Ri(121, 9, 6, 6);
         
-        public PanelGUIR(GUIE parent, GUI gui, D d) : base(parent, gui, d) {
+        public PanelGUIR(GUIE parent, GUI gui, D d, A a) : base(parent, gui, d, a) {
 
         }
         public override void Render(SpriteBatch spriteBatch) {
@@ -344,10 +405,10 @@ namespace XCraft {
         }
     }
     public class PanelGUIE : GUIE {
-        public PanelGUIE(GUI gui, D d, int lX = 0, int lY = 0, int lW = -1, int lH = -1) 
-        : base(gui, d, GUIT.PANEL, lX, lY, lW, lH) {
-            r = new PanelGUIR(this, gui, d);
-            a = new PanelGUIA(this, gui, d);
+        public PanelGUIE(GUI gui, D d, A a, int lX = 0, int lY = 0, int lW = -1, int lH = -1) 
+        : base(gui, d, a, GUIT.PANEL, lX, lY, lW, lH) {
+            guir = new PanelGUIR(this, gui, d, a);
+            guia = new PanelGUIA(this, gui, d, a);
             isUniv = true;
         }
         protected override void cWidth(int p = 57) {
@@ -364,15 +425,25 @@ namespace XCraft {
         28, 0, 13, 35
     */
     public class ButtonGUIA : GUIA {
-        public ButtonGUIA(GUIE parent, GUI gui, D d) : base(parent, gui, d) {}
-
+        public ButtonGUIA(GUIE parent, GUI gui, D d, A a) : base(parent, gui, d, a) {}
+        public override void Activity() {
+            ButtonGUIE cparent = parent as ButtonGUIE;
+            if (cparent == null) {
+                return;
+            }
+            if (ClickedOnArea()) {
+                cparent.clicked = true;
+            } else {
+                cparent.clicked = false;
+            }
+        }
     }
     public class ButtonGUIR : GUIR {
         public readonly Ri b_n= new Ri(0, 0, 13, 35);
         public readonly Ri b_h= new Ri(14, 0, 13, 35);
         public readonly Ri b_c= new Ri(28, 0, 13, 35);
 
-        public ButtonGUIR(GUIE parent, GUI gui, D d) : base(parent, gui, d) {}
+        public ButtonGUIR(GUIE parent, GUI gui, D d, A a) : base(parent, gui, d, a) {}
         public override void Render(SpriteBatch spriteBatch) {
             if (parent.isUniv) {
                 if(clickState == 0) {RenderN(spriteBatch);}
@@ -395,17 +466,21 @@ namespace XCraft {
 
     }
     public class ButtonGUIE : GUIE {
-        public ButtonGUIE(GUI gui, D d, int lX = 0, int lY = 0, int lW = -1, int lH = -1) 
-        : base(gui, d, GUIT.BUTTON, lX, lY, lW, lH) {
-            r = new ButtonGUIR(this, gui, d);
-            a = new ButtonGUIA(this, gui, d);
+        public ButtonGUIE(GUI gui, D d, A a, int lX = 0, int lY = 0, int lW = -1, int lH = -1) 
+        : base(gui, d, a, GUIT.BUTTON, lX, lY, lW, lH) {
+            guir = new ButtonGUIR(this, gui, d, a);
+            guia = new ButtonGUIA(this, gui, d, a);
             isUniv = true;
         }
+        public bool clicked = false;
         protected override void cWidth(int p = 27) {
             base.cWidth(p);
         }
         protected override void cHeight(int p = 35) {
             base.cHeight(p);
+        }
+        public bool Clicked() {
+            return clicked;
         }
     };
 
@@ -421,10 +496,10 @@ namespace XCraft {
         16, 60, 13, 22
     */
     public class SliderGUIA : GUIA {
-        public SliderGUIA(GUIE parent, GUI gui, D d) : base(parent, gui, d) {}
+        public SliderGUIA(GUIE parent, GUI gui, D d, A a) : base(parent, gui, d, a) {}
     }
     public class SliderGUIR : GUIR {
-        public SliderGUIR(GUIE parent, GUI gui, D d) : base(parent, gui, d) {}
+        public SliderGUIR(GUIE parent, GUI gui, D d, A a) : base(parent, gui, d, a) {}
         public override void Render(SpriteBatch spriteBatch) {
             if (parent.isUniv) {
                 base.Render(spriteBatch);
@@ -432,10 +507,10 @@ namespace XCraft {
         }
     }
     public class SliderGUIE : GUIE {
-        public SliderGUIE(GUI gui, D d, int lX = 0, int lY = 0, int lW = -1, int lH = -1) 
-        : base(gui, d, GUIT.SLIDER, lX, lY, lW, lH) {
-            r = new SliderGUIR(this, gui, d);
-            a = new SliderGUIA(this, gui, d);
+        public SliderGUIE(GUI gui, D d, A a, int lX = 0, int lY = 0, int lW = -1, int lH = -1) 
+        : base(gui, d, a, GUIT.SLIDER, lX, lY, lW, lH) {
+            guir = new SliderGUIR(this, gui, d, a);
+            guia = new SliderGUIA(this, gui, d, a);
             isUniv = true;
         }
         protected override void cWidth(int p = 43) {
@@ -446,11 +521,11 @@ namespace XCraft {
         }
     };
     public class TextInputFieldGUIA : GUIA {
-        public TextInputFieldGUIA(GUIE parent, GUI gui, D d) : base(parent, gui, d) {}
+        public TextInputFieldGUIA(GUIE parent, GUI gui, D d, A a) : base(parent, gui, d, a) {}
 
     }
     public class TextInputFieldGUIR : GUIR {
-        public TextInputFieldGUIR(GUIE parent, GUI gui, D d) : base(parent, gui, d) {}
+        public TextInputFieldGUIR(GUIE parent, GUI gui, D d, A a) : base(parent, gui, d,a ) {}
         public override void Render(SpriteBatch spriteBatch) {
             if (parent.isUniv) {
                 base.Render(spriteBatch);
@@ -458,10 +533,10 @@ namespace XCraft {
         }
     }
     public class TextInputFieldGUIE : GUIE {
-        public TextInputFieldGUIE(GUI gui, D d, int lX = 0, int lY = 0, int lW = -1, int lH = -1) 
-        : base(gui, d, GUIT.TEXT_INPUT_FIELD, lX, lY, lW, lH) {
-            r = new TextInputFieldGUIR(this, gui, d);
-            a = new TextInputFieldGUIA(this, gui, d);
+        public TextInputFieldGUIE(GUI gui, D d, A a, int lX = 0, int lY = 0, int lW = -1, int lH = -1) 
+        : base(gui, d, a, GUIT.TEXT_INPUT_FIELD, lX, lY, lW, lH) {
+            guir = new TextInputFieldGUIR(this, gui, d, a);
+            guia = new TextInputFieldGUIA(this, gui, d, a);
             isUniv = true;
         }
         protected override void cWidth(int p = 31) {

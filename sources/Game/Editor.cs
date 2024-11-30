@@ -25,6 +25,9 @@ namespace XCraft {
         public GUI gui;
         public string gui_main_l;
         public EditorS settings;
+
+        protected bool loaded_guie = false;
+        public GUIE editor_guie;
         public Editor(Game1 g, D d, A a, GUI gui, string gui_main_l, EditorS settings) {
             this.g = g;
             this.d = d;
@@ -37,10 +40,24 @@ namespace XCraft {
         public void Tick() {
             if (this.g != null && this.d != null && this.a != null && this.gui != null && this.settings != null )
             {
+                if (loaded_guie == false) {
+                    editor_guie = gui.main.Get("editor");
+                    loaded_guie = true;
+                }
 
+                PanelGUIE panel = editor_guie.Get2<PanelGUIE>("mappanel");
+                ButtonGUIE generateB = panel.Get2<ButtonGUIE>("generate");
+
+                if (generateB.Clicked()) {
+                    ReloadMap();
+                }
             } else {
                 return;
             }
+
+        }
+
+        public void ReloadMap() {
 
         }
     };

@@ -166,6 +166,11 @@ namespace XCraft {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin();
+
+            // if (editor) {
+            editor.Tick();
+            // }
+
             D.m.Draw(_spriteBatch);
             D.gui.Draw(_spriteBatch);
             _spriteBatch.End();
