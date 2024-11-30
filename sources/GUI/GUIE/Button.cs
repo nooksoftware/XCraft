@@ -22,14 +22,16 @@ namespace XCraft {
             if (cparent == null) {
                 return;
             }
+            //StandardClickStateDetermineForClickable();
             StandardClickStateDetermineForClickable();
+            //if (ClickedOnArea()) {
             if (ClickedOnArea()) {
                 cparent.clicked = true;
             } else {
                 cparent.clicked = false;
             }
         }
-    }
+    };
     public class ButtonGUIR : GUIR {
         public readonly Ri b_n1 = new Ri(0, 0, 13, 35);
         public readonly Ri b_n2 = new Ri(14, 0, 1, 35);
@@ -61,32 +63,32 @@ namespace XCraft {
             }
         }
         public void RenderN(SpriteBatch spriteBatch) {
-            int lX = parent.lX; 
-            int lY = parent.lY;
-            int lW = parent.lW;
-            gui.DrawGUIUnivT(spriteBatch, parent, b_n1, new Ri(lX, lY, b_n1.w, b_n1.h), Color.White);
-            gui.DrawGUIUnivT(spriteBatch, parent, b_n2, new Ri(lX+b_n1.w, lY, b_n2.w*lW, b_n2.h), Color.White);
-            gui.DrawGUIUnivT(spriteBatch, parent, b_n3, new Ri(lX+b_n1.w+b_n2.w*lW, lY, b_n3.w, b_n3.h), Color.White);
+            int rX = parent.rX(); 
+            int rY = parent.rY();
+            int rW = parent.rW();
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_n1, new Ri(rX, rY, b_n1.w, b_n1.h), Color.White);
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_n2, new Ri(rX+b_n1.w, rY, b_n2.w*rW, b_n2.h), Color.White);
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_n3, new Ri(rX+b_n1.w+b_n2.w*rW, rY, b_n3.w, b_n3.h), Color.White);
         }
 
         public void RenderH(SpriteBatch spriteBatch) {
-            int lX = parent.lX; 
-            int lY = parent.lY;
-            int lW = parent.lW;
+            int rX = parent.rX(); 
+            int rY = parent.rY();
+            int rW = parent.rW();
 
-            gui.DrawGUIUnivT(spriteBatch, parent, b_h1, new Ri(lX, lY, b_h1.w, b_h1.h), Color.White);
-            gui.DrawGUIUnivT(spriteBatch, parent, b_h2, new Ri(lX+b_h1.w, lY, b_h2.w*lW, b_h2.h), Color.White);
-            gui.DrawGUIUnivT(spriteBatch, parent, b_h3, new Ri(lX+b_h1.w+b_h2.w*lW, lY, b_h3.w, b_h3.h), Color.White);
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_h1, new Ri(rX, rY, b_h1.w, b_h1.h), Color.White);
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_h2, new Ri(rX+b_h1.w, rY, b_h2.w*rW, b_h2.h), Color.White);
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_h3, new Ri(rX+b_h1.w+b_h2.w*rW, rY, b_h3.w, b_h3.h), Color.White);
         }
 
         public void RenderC(SpriteBatch spriteBatch) {
-            int lX = parent.lX; 
-            int lY = parent.lY;
-            int lW = parent.lW;
+            int rX = parent.rX(); 
+            int rY = parent.rY();
+            int rW = parent.rW();
 
-            gui.DrawGUIUnivT(spriteBatch, parent, b_c1, new Ri(lX, lY, b_c1.w, b_c1.h), Color.White);
-            gui.DrawGUIUnivT(spriteBatch, parent, b_c2, new Ri(lX+b_c1.w, lY, b_c2.w*lW, b_c2.h), Color.White);
-            gui.DrawGUIUnivT(spriteBatch, parent, b_c3, new Ri(lX+b_c1.w+b_c2.w*lW, lY, b_c3.w, b_c3.h), Color.White);
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c1, new Ri(rX, rY, b_c1.w, b_c1.h), Color.White);
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c2, new Ri(rX+b_c1.w, rY, b_c2.w*rW, b_c2.h), Color.White);
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c3, new Ri(rX+b_c1.w+b_c2.w*rW, rY, b_c3.w, b_c3.h), Color.White);
         }
 
     }

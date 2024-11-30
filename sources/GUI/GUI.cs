@@ -39,7 +39,7 @@ namespace XCraft {
                 origin_texture.x,
                 origin_texture.y,
                 origin_texture.w,
-                origin_texture.h, 
+                origin_texture.h
             );
             Rectangle dest = new Rectangle(
                 destination.x,
