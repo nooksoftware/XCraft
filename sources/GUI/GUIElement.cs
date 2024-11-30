@@ -120,13 +120,14 @@ namespace XCraft {
             for (int i = 0; i < keys.Length; ++i) {
                 string key = keys[i];
 
-                e = e.children[key];
+                
                 if (e == null) {
                     return;
                 } else if (i+1 == keys.Length) {
                     e.children[key] = add;
                     add.Connect(e);
-
+                } else {
+                    e = e.children[key];
                 }
             }
         }
@@ -137,12 +138,13 @@ namespace XCraft {
             for (int i = 0; i < keys.Length; ++i) {
                 string key = keys[i];
 
-                e = e.children[key];
                 if (e == null) {
                     return null;
                 } else if (i+1 == keys.Length) {
                     GUIE el = e.children[key];
                     return el;
+                } else {
+                    e = e.children[key];
                 }
             }
             return null;
@@ -154,12 +156,12 @@ namespace XCraft {
             for (int i = 0; i < keys.Length; ++i) {
                 string key = keys[i];
 
-                e = e.children[key];
-
                 if (e == null) {
                     return false;
                 } else if (i+1 == keys.Length) {
                     return true;
+                } else {
+                    e = e.children[key];
                 }
             }
             return (e != null);

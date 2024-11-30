@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace XCraft {
     public class EditorS {
-        
+
     };
     public class Editor {
         public Game1 g;
@@ -24,14 +24,14 @@ namespace XCraft {
         public A a;
         public GUI gui;
         public string gui_main_l;
-        public EditorS settings
+        public EditorS settings;
         public Editor(Game1 g, D d, A a, GUI gui, string gui_main_l, EditorS settings) {
             this.g = g;
             this.d = d;
             this.a = a;
             this.gui = gui;
             this.gui_main_l = gui_main_l;
-            this.setting = setting;
+            this.settings = settings;
         }
 
         public void Tick() {

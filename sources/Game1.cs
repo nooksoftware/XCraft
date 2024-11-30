@@ -33,12 +33,8 @@ namespace XCraft {
             Content.RootDirectory = "Content";
 
             this.d = new D(this);
-            d.n = new N();
-
+            this.d.n = new N();
             this.a = new A(this, d);
-
-            EditorS editor_settings = new EditorS();
-            this.editor = new Editor(this, d, a, gui, "editor", editor_settings);
             this.uts = new UTs();
 
             IsMouseVisible = true;
@@ -56,6 +52,9 @@ namespace XCraft {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             LoadDefTextures();
+            EditorS editor_settings = new EditorS();
+            this.d.gui = new GUI(this, d, a);
+            this.editor = new Editor(this, d, a, d.gui, "editor", editor_settings);
 
             SetWindowSize(D.def_wW2, D.def_wH2);
             D.wW = D.def_wW2;

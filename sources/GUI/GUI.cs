@@ -19,7 +19,7 @@ namespace XCraft {
         public GUIE main;
         public Texture2D guiUniv2DT;
 
-        
+        public string current_menu = "mainmenu";
 
 
         public Game1 g;
@@ -40,10 +40,22 @@ namespace XCraft {
             this.a = a;
             guiUniv2DT = d.Tex("guiuniv");
             main = new GUIE(this, d, GUIT.GUIELEMENT);
+
+            LoadDefaultGUI();
+        }
+        protected void LoadDefaultGUI() {
+            main.Add("editor", new GUIE(this, d, GUIT.GUIELEMENT));
+            main.Add("mainmenu", new GUIE(this, d, GUIT.GUIELEMENT));
+            main.Add("gamemenu", new GUIE(this, d, GUIT.GUIELEMENT));
+
+            
         }
 
+
         public void Draw(SpriteBatch spriteBatch) {
-            main.Draw(spriteBatch);
+            if (main.Exists(current_menu)) {
+                main.Get(current_menu).Draw(spriteBatch);
+            };
         }
     };
 }
