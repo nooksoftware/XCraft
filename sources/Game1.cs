@@ -18,6 +18,7 @@ namespace XCraft {
         public D d;
         public A a;
         private GraphicsDeviceManager _graphics;
+        public UTs uts;
 
         private SpriteBatch _spriteBatch;
 
@@ -34,6 +35,8 @@ namespace XCraft {
             d.n = new N();
 
             this.a = new A(this, d);
+
+            this.uts = new UTs();
 
             IsMouseVisible = true;
 
@@ -117,10 +120,32 @@ namespace XCraft {
                 else {d.n.zYAcc += 15.0f;}
             }
         }
+        public bool ut_success = false;
+        public bool ut_start = true;
+        public void InitializeAllUnitTests() {
+
+        }
+        public void RunAllUnitTests() {
+            ut_start = false;
+
+            uts.Run();
+
+            ut_success = true;
+        }
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            if(ut_start) {
+                InitializeAllUnitTests();
+                RunAllUnitTests();
+            }
+            if (!ut_start && ut_success) {
+
+            } else {
+                return;
+            }
 
             KeyboardMouseInput();
             WASDArrowsNav();
