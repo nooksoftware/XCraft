@@ -19,6 +19,7 @@ namespace XCraft {
         public A a;
         private GraphicsDeviceManager _graphics;
         public UTs uts;
+        public Editor editor;
 
         private SpriteBatch _spriteBatch;
 
@@ -36,6 +37,8 @@ namespace XCraft {
 
             this.a = new A(this, d);
 
+            EditorS editor_settings = new EditorS();
+            this.editor = new Editor(this, d, a, gui, "editor", editor_settings);
             this.uts = new UTs();
 
             IsMouseVisible = true;
