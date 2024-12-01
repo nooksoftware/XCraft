@@ -78,10 +78,19 @@ namespace XCraft {
             main.Add("mainmenu", new GUIE(this, d, a, GUIT.GUIELEMENT));
             main.Add("gamemenu", new GUIE(this, d, a, GUIT.GUIELEMENT));
 
-            main.Add("editor/mappanel", new PanelGUIE(this, d, a, 20, 500, 500, 240));
-            main.Add("editor/mappanel/generate", new ButtonGUIE(this, d, a, f, "Generate Map", 20, 20, 250, 35));
-            main.Add("editor/mappanel/textinputfield", new TextInputFieldGUIE(this, d, a, f, "TextInputField", 20, 100, 350, 150));
+            main.Add("editor/mappanel", new PanelGUIE(this, d, a, 20, 20, 500, 500));
+            main.Add("editor/mappanel/mapsizex", new TextInputFieldGUIE(this, d, a, f, "512", 20, 20, 200, 48));
+            main.Add("editor/mappanel/mapsizey", new TextInputFieldGUIE(this, d, a, f, "256", 240, 20, 200, 48));
+            main.Add("editor/mappanel/groundh", new TextInputFieldGUIE(this, d, a, f, "64", 20, 80, 140, 48));
+            main.Add("editor/mappanel/terrainh", new TextInputFieldGUIE(this, d, a, f, "32", 180, 80, 140, 48));
 
+            main.Get2<TextInputFieldGUIE>("editor/mappanel/mapsizex").numericOnly = true;
+            main.Get2<TextInputFieldGUIE>("editor/mappanel/mapsizey").numericOnly = true;
+            main.Get2<TextInputFieldGUIE>("editor/mappanel/groundh").numericOnly = true;
+            main.Get2<TextInputFieldGUIE>("editor/mappanel/terrainh").numericOnly = true;
+
+            main.Add("editor/mappanel/generate", new ButtonGUIE(this, d, a, f, "Generate Map", 190, 445, 250, 35));
+            //main.Add("editor/mappanel/textinputfield", new TextInputFieldGUIE(this, d, a, f, "TextInputField", 20, 100, 350, 150));
         }
 
 

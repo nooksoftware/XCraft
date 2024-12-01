@@ -18,6 +18,7 @@ namespace XCraft {
         public TextInputFieldGUIA(GUIE parent, GUI gui, D d, A a) : base(parent, gui, d, a) {}
 
         public override void Activity() {
+            base.Activity();
             TextInputFieldGUIE cparent = parent as TextInputFieldGUIE;
             if (cparent == null) {
                 return;
@@ -398,6 +399,7 @@ namespace XCraft {
         public SpriteFont font;
         public bool selected = false;
         public bool clicked = false;
+        public bool numericOnly = false;
 
         public TextInputFieldGUIE(GUI gui, D d, A a, SpriteFont font, string def_text = "", int lX = 0, int lY = 0, int lW = -1, int lH = -1) 
         : base(gui, d, a, GUIT.TEXT_INPUT_FIELD, lX, lY, lW, lH) {
