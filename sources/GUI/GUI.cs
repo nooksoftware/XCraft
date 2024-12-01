@@ -102,7 +102,7 @@ namespace XCraft {
 
             //Button
                 //Univ
-                //Icon
+                //Icon 
             //Checkbox
             //Radiobox
             //Dropdown
@@ -118,7 +118,8 @@ namespace XCraft {
             //ColorPicker
             //DatePicker
             //TimePicker
-            //Panel
+            //Panel 🖋
+                // 🖋 Standard
                 //Scrollable
             
             //Layouts
