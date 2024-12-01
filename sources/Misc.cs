@@ -39,31 +39,31 @@ namespace XCraft {
             this.ox = ox;
             this.oy = oy;
         }
-        virtual void rX() {
+        public virtual int rX() {
             return (parentTi != null) ? x-ox : (x-ox + parentTi.rX());
         }
-        virtual void rY() {
+        public virtual int rY() {
             return (parentTi != null) ? x-oy : (x-oy + parentTi.rY());
         }
-        virtual void rX(Ti rel) {
+        public virtual int rX(Ti rel) {
             return (parentTi != null) ? x-ox + rel.rX() : (x-ox + parentTi.rX() + rel.rX());
         }
-        virtual void rY(Ti rel) {
+        public virtual int rY(Ti rel) {
             return (parentTi != null) ? x-oy + rel.rY() : (x-oy + parentTi.rY() + rel.rY());
         }
-        virtual void rW() {
+        public virtual int rW() {
             return w;
         }
-        virtual void rH() {
+        public virtual int rH() {
             return h;
         }
-        virtual void rOX() {
+        public virtual int rOX() {
             return ox;
         }
-        virtual void rOY() {
+        public virtual int rOY() {
             return oy;
         }
-        public void Move(Vi m) {
+        public void Move(V2i m) {
             this.x += m.x;
             this.y += m.y;
         }
@@ -71,7 +71,7 @@ namespace XCraft {
             this.x = this.x + x;
             this.y = this.x + y;
         }
-        public void MoveO(Vi o) {
+        public void MoveO(V2i o) {
             this.ox = this.ox + o.x;
             this.oy = this.oy + o.y;
         }
@@ -79,73 +79,73 @@ namespace XCraft {
             this.ox = this.ox + x;
             this.oy = this.oy + y;
         }
-        public int rTopLeftX() {
-
-        }
-        public int rTopLeftY() {
-            
-        }
-        public int rTopRightX() {
-            
-        }
-        public int rTopRightY() {
-            
-        }
-        public int rBottomLeftX() {
-            
-        }
-        public int rBottomLeftY() {
-            
-        }
-        public int rBottomRightX() {
-            
-        }
-        public int rBottomRightY() {
-            
-        }
-        public int rCenX() {
-
-        }
-        public int rCenY() {
-
-        }
-        public double rAngleOriRad(Ri b) {
-            return System.Math.Atan2(b.rOY() - rOY(), b.rOX() - rOY());
-        }
-        public double rAngleOriDeg(Ri b) {
-            return (AngleOriRad(b) * (180 / System.Math.PI));
-        }
-
-        public double rAngleTopLeftRad(Ri b) {
-            return System.Math.Atan2(b.rTopLeftX() - rTopLeftX(), b.rTopLeftY() - rTopLeftY());
-        }
-        public double rAngleTopLeftDeg(Ri b) {
-            return (rAngleTopLeftRad(b) * (180 / System.Math.PI));
-        }
-        public double rAngleTopRightRad(Ri b) {
-            return System.Math.Atan2(b.rTopRightX() - rTopRightX(), b.rTopRightY() - rTopRightY());
-        }
-        public double rAngleTopRightDeg(Ri b) {
-            return (rAngleTopRightRad(b) * (180 / System.Math.PI));
-        }
-        public double rAngleBottomLeftRad(Ri b) {
-            return System.Math.Atan2(b.rBottomLeftX() - rBottomLeftX(), b.rBottomLeftY() - rBottomLeftY());
-        }
-        public double rAngleBottomRightDeg(Ri b) {
-            return (rAngleBottomLeftRad(b) * (180 / System.Math.PI));
-        }
-        public double rAngleBottomRightRad(Ri b) {
-            return System.Math.Atan2(b.rBottomRightX() - rBottomRightX(), b.rBottomRightY() - rBottomRightY());
-        }
-        public double rAngleBottomRightDeg(Ri b) {
-            return (rAngleBottomRightRad(b) * (180 / System.Math.PI));
-        }
-        public double rAngleCeRad(Ri b) {
-            return System.Math.Atan2(b.rCeX() - rCeX(), b.rCeY() - rCeY());
-        }
-        public double rAngleCenDeg(Ri b) {
-            return (rAngleCeRad(b) * (180 / System.Math.PI));
-        }
+//        public int rTopLeftX() {
+//
+//        }
+//        public int rTopLeftY() {
+//            
+//        }
+//        public int rTopRightX() {
+//            
+//        }
+//        public int rTopRightY() {
+//            
+//        }
+//        public int rBottomLeftX() {
+//            
+//        }
+//        public int rBottomLeftY() {
+//            
+//        }
+//        public int rBottomRightX() {
+//            
+//        }
+//        public int rBottomRightY() {
+//            
+//        }
+//        public int rCenX() {
+//
+//        }
+//        public int rCenY() {
+//
+//        }
+//        public double rAngleOriRad(Ri b) {
+//            return System.Math.Atan2(b.rOY() - rOY(), b.rOX() - rOY());
+//        }
+//        public double rAngleOriDeg(Ri b) {
+//            return (AngleOriRad(b) * (180 / System.Math.PI));
+//        }
+//
+//        public double rAngleTopLeftRad(Ri b) {
+//            return System.Math.Atan2(b.rTopLeftX() - rTopLeftX(), b.rTopLeftY() - rTopLeftY());
+//        }
+//        public double rAngleTopLeftDeg(Ri b) {
+//            return (rAngleTopLeftRad(b) * (180 / System.Math.PI));
+//        }
+//        public double rAngleTopRightRad(Ri b) {
+//            return System.Math.Atan2(b.rTopRightX() - rTopRightX(), b.rTopRightY() - rTopRightY());
+//        }
+//        public double rAngleTopRightDeg(Ri b) {
+//            return (rAngleTopRightRad(b) * (180 / System.Math.PI));
+//        }
+//        public double rAngleBottomLeftRad(Ri b) {
+//            return System.Math.Atan2(b.rBottomLeftX() - rBottomLeftX(), b.rBottomLeftY() - rBottomLeftY());
+//        }
+//        public double rAngleBottomLeftDeg(Ri b) {
+//            return (rAngleBottomLeftRad(b) * (180 / System.Math.PI));
+//        }
+//        public double rAngleBottomRightRad(Ri b) {
+//            return System.Math.Atan2(b.rBottomRightX() - rBottomRightX(), b.rBottomRightY() - rBottomRightY());
+//        }
+//        public double rAngleBottomRightDeg(Ri b) {
+//            return (rAngleBottomRightRad(b) * (180 / System.Math.PI));
+//        }
+//        public double rAngleCenRad(Ri b) {
+//            return System.Math.Atan2(b.rCenX() - rCenX(), b.rCenY() - rCenY());
+//        }
+//        public double rAngleCenDeg(Ri b) {
+//            return (rAngleCeRad(b) * (180 / System.Math.PI));
+//        }
 
     };
     public class Tf {
@@ -248,7 +248,9 @@ namespace XCraft {
         Dictionary<int, V2i> points;
         
         
-        public V2iPaths();
+        public V2iPaths() {
+            points = new Dictionary<int, V2i>();
+        }
 
 
     };
@@ -259,6 +261,7 @@ namespace XCraft {
         int outline = 0;
     };
     public class UnivG {
+        /*
         public static bool spriteBatchBegin(SpriteBatch sprB) {
             
         }
@@ -272,42 +275,44 @@ namespace XCraft {
         public static void DrawRect(SpriteBatch sprB, PrimGraphicS s, float x, float y, float w, float h) {}
         public static void DrawCircle(SpriteBatch sprB, PrimGraphicS s, int cx, int cy, int angleSize) {}
 
-        public static void DrawL(SpriteBatch sprB, PrimGraphicS s, Ti ti);
-        public static void DrawRect(SpriteBatch sprB, PrimGraphicS s, Ti ti);
-        public static void DrawL(SpriteBatch sprB, PrimGraphicS s, Ti ti);
-        public static void DrawRect(SpriteBatch sprB, PrimGraphicS s, Ti ti);
-        public static void DrawCircle(SpriteBatch sprB, PrimGraphicS s, Ti ti);
+        public static void DrawL(SpriteBatch sprB, PrimGraphicS s, Ti ti) {}
+        public static void DrawRect(SpriteBatch sprB, PrimGraphicS s, Ti ti) {}
+        public static void DrawL(SpriteBatch sprB, PrimGraphicS s, Ti ti) {}
+        public static void DrawRect(SpriteBatch sprB, PrimGraphicS s, Ti ti) {}
+        public static void DrawCircle(SpriteBatch sprB, PrimGraphicS s, Ti ti) {}
 
-        public static void DrawL(SpriteBatch sprB, PrimGraphicS s, Tf tf);
-        public static void DrawRect(SpriteBatch sprB, PrimGraphicS s, Tf tf);
-        public static void DrawL(SpriteBatch sprB, PrimGraphicS s, Tf tf);
-        public static void DrawRect(SpriteBatch sprB, PrimGraphicS s, Tf tf);
-        public static void DrawCircle(SpriteBatch sprB, PrimGraphicS s, Tf tf);
+        public static void DrawL(SpriteBatch sprB, PrimGraphicS s, Tf tf) {}
+        public static void DrawRect(SpriteBatch sprB, PrimGraphicS s, Tf tf) {}
+        public static void DrawL(SpriteBatch sprB, PrimGraphicS s, Tf tf) {}
+        public static void DrawRect(SpriteBatch sprB, PrimGraphicS s, Tf tf) {}
+        public static void DrawCircle(SpriteBatch sprB, PrimGraphicS s, Tf tf) {}
 
-        public static void DrawArrow(SpriteBatch sprB, PrimGraphicS s, int x, int y, int x2, int y2);
-        public static void DrawArrow(SpriteBatch sprB, PrimGraphicS s, float x, float y, float x2, float y2);
-        public static void DrawArrow(SpriteBatch sprB, PrimGraphicS s, V2i a, V2i b);
-        public static void DrawArrow(SpriteBatch sprB, PrimGraphicS s, V2f a, V2f b);
+        public static void DrawArrow(SpriteBatch sprB, PrimGraphicS s, int x, int y, int x2, int y2) {}
+        public static void DrawArrow(SpriteBatch sprB, PrimGraphicS s, float x, float y, float x2, float y2) {}
+        public static void DrawArrow(SpriteBatch sprB, PrimGraphicS s, V2i a, V2i b) {}
+        public static void DrawArrow(SpriteBatch sprB, PrimGraphicS s, V2f a, V2f b) {}
 
-        public static void DrawTex2D(SpriteBatch sprB, Texture2D t, Ti ti, Color color = Color.White);
-        public static void DrawTex2D(SpriteBatch sprB, Texture2D t, Tf tf, Color color = Color.White);
-        public static void DrawTex2D(SpriteBatch sprB, Texture2D t, Ti d, Ti o, Color color = Color.White);
-        public static void DrawTex2D(SpriteBatch sprB, Texture2D t, Tf d, Tf o, Color color = Color.White);
-        public static void DrawTex2D(SpriteBatch sprB, Texture2D t, Tf d, Tf o, Shader s, Color color = Color.White);
+        public static void DrawTex2D(SpriteBatch sprB, Texture2D t, Ti ti, Color color) {}
+        public static void DrawTex2D(SpriteBatch sprB, Texture2D t, Tf tf, Color color) {}
+        public static void DrawTex2D(SpriteBatch sprB, Texture2D t, Ti d, Ti o, Color color) {}
+        public static void DrawTex2D(SpriteBatch sprB, Texture2D t, Tf d, Tf o, Color color) {}
+        public static void DrawTex2D(SpriteBatch sprB, Texture2D t, Tf d, Tf o, Shader s, Color color) {}
     
-        public static void DrawText(Spritebatch sprB, SpriteFont f, V2i p, Color color = Color.White);
-        public static void DrawText(Spritebatch sprB, SpriteFont f, V2f p, Color color = Color.White);
-        public static void DrawText(Spritebatch sprB, SpriteFont f, V2i p, Shader s, Color color = Color.White);
-        public static void DrawText(Spritebatch sprB, SpriteFont f, V2f p, Shader s, Color color = Color.White);
-        public static void DrawText(Spritebatch sprB, SpriteFont f, Ti ti, Color color = Color.White);
-        public static void DrawText(Spritebatch sprB, SpriteFont f, Tf tf, Color color = Color.White);
-        public static void DrawText(Spritebatch sprB, SpriteFont f, Ti ti, Shader s, Color color = Color.White);
-        public static void DrawText(Spritebatch sprB, SpriteFont f, Tf tf, Shader s, Color color = Color.White);
+        public static void DrawText(Spritebatch sprB, SpriteFont f, V2i p, Color color) {}
+        public static void DrawText(Spritebatch sprB, SpriteFont f, V2f p, Color color) {}
+        public static void DrawText(Spritebatch sprB, SpriteFont f, V2i p, Shader s, Color color) {}
+        public static void DrawText(Spritebatch sprB, SpriteFont f, V2f p, Shader s, Color color) {}
+        public static void DrawText(Spritebatch sprB, SpriteFont f, Ti ti, Color color) {}
+        public static void DrawText(Spritebatch sprB, SpriteFont f, Tf tf, Color color) {}
+        public static void DrawText(Spritebatch sprB, SpriteFont f, Ti ti, Shader s, Color color) {}
+        public static void DrawText(Spritebatch sprB, SpriteFont f, Tf tf, Shader s, Color color) {}
+        */
     };
     public class MathPhysics {
         public MathPhysics() {
 
         }
+        /*
         public static double AngleRad(int x, int y, int x2, int y2) {}
         public static double AngleDeg(int x, int y, int x2, int y2) {}
         public static double AngleRad(float x, float y, float x2, float y2) {}
@@ -318,19 +323,18 @@ namespace XCraft {
         public static V2f LinePtoP(float x, float y, float x2, float y2) {}
         public static V2i[] APathfind(V2iPaths paths) {}
         public static SBoundsi Bounds(Ti a, Ti b) {}
-        public static SBoundsf Bounds(Ti a2, Ti b2) {}
-        public static void PhysicsTransform(Tf a, Ti[] objs, Tf[] objs2, )
+        public static SBoundsf Bounds(Tf a2, Tf b2) {}
 
         //water
 
 
-        public static float[,] GenTerrainNoise(int w, int h, string alg) { //regex
+        public static float[,] GenTerrainNoise(int w, int h) { //regex
 
         } 
-        public static int[,] FloatToIntNoise(float[,] n, int w, int h, Pair<float, int> ind) {
+        public static int[,] FloatToIntNoise(float[,] n, int w, int h, KeyValuePair<float, int> ind) {
 
         }
-
+        */
     };
 
 //    public static bool RectContains(Rectangle r, int x, int y) {

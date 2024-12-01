@@ -13,6 +13,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 //using FastNoiseLite;
 
+
+using MVector2 = Microsoft.Xna.Framework.Vector2;
 namespace XCraft {
     public class A {
         public Game1 g;
@@ -202,5 +204,108 @@ namespace XCraft {
         public bool OneReleasedLShift() {return (d.ks.IsKeyUp(Keys.LeftAlt) && d.p_ks.IsKeyDown(Keys.LeftAlt));}
         public bool OneReleasedRShift() {return (d.ks.IsKeyUp(Keys.RightAlt) && d.p_ks.IsKeyDown(Keys.RightAlt));}
         public bool OneReleasedBackspace() {return (d.ks.IsKeyUp(Keys.Back) && d.p_ks.IsKeyDown(Keys.Back));}
+    
+        public Texture2D pixel;
+
+        public void DrawRectangleOutline1px(SpriteBatch spriteBatch, int x, int y, int w, int h, Color outline_color) {
+            spriteBatch.Draw(pixel, new Rectangle(x, y, w, 1), outline_color); // Top
+            spriteBatch.Draw(pixel, new Rectangle(x, y + h - 1, w, 1), outline_color); // Bottom
+            spriteBatch.Draw(pixel, new Rectangle(x, y, 1, h), outline_color); // Left
+            spriteBatch.Draw(pixel, new Rectangle(x + w - 1, y, 1, h), outline_color); // Right
+        }
+        public void DrawLineAtoB(SpriteBatch spriteBatch, float x, float y, float x2, float y2, Color line_color) {
+            float d = MVector2.Distance(new MVector2(x, y), new MVector2(x2, y2));
+            float ang = (float)Math.Atan2(y2 - y, x2 - x);
+            spriteBatch.Draw(pixel, new MVector2(x,y), null, line_color, ang, MVector2.Zero, new MVector2(d, 1.0f), SpriteEffects.None, 0);
+        }
+        public void DrawRectangleFilledBG(SpriteBatch spriteBatch, int x, int y, int w, int h, Color bg_color) {
+            spriteBatch.Draw(pixel, new Rectangle(x,y,w,h), bg_color);
+        }
+        public void DrawRectagleOutlineAndFilledBG(SpriteBatch spriteBatch, int x, int y, int w, int h, Color bg_color, Color outline_color) {
+            DrawRectangleOutline1px(spriteBatch, x, y, w, h, outline_color);
+            DrawRectangleFilledBG(spriteBatch, x, y, w, h, bg_color);
+        }
+        public void DrawCircleOutline1px(SpriteBatch spriteBatch, int x, int y, int radius, Color outline_color, int seg = 24) {
+            float inc = MathHelper.TwoPi / seg;
+            MVector2 center = new MVector2(x,y);
+            MVector2 prev = center + radius * new MVector2((float)Math.Cos(0), (float)Math.Sin(0));
+
+            for (int i = 1; i <= seg; i++)
+            {
+                float angle = i * inc;
+                MVector2 next = center + radius * new MVector2((float)Math.Cos(angle), (float)Math.Sin(angle));
+                DrawLineAtoB(spriteBatch, prev.X, prev.Y, next.X, next.Y, outline_color);
+                prev = next;
+            }
+        }
+        public void DrawCircleFilledBG(SpriteBatch spriteBatch, int xp, int yp, float radius, Color bg_color) {
+            MVector2 center = new MVector2(xp, yp);
+            for (int y = -(int)radius; y <= radius; y++)
+            {
+                for (int x = -(int)radius; x <= radius; x++)
+                {
+                    if (x * x + y * y <= radius * radius)
+                    {
+                        spriteBatch.Draw(pixel, center + new MVector2(x, y), bg_color);
+                    }
+                }
+            }
+        }
+        public void DrawCircleFilledBGandOutline1px(SpriteBatch spriteBatch, int x, int y, int anglesize, Color bg_color, Color outline_color) {
+            DrawCircleFilledBG(spriteBatch, x, y, anglesize, bg_color);
+            DrawCircleOutline1px(spriteBatch, x, y, anglesize, outline_color);
+        }
+        public int spriteBatchS = 2; // 0 - begin, 1 - end, 2 - not
+        public bool IsSpriteBatchBegin() {
+            return spriteBatchS == 0;
+        }
+        public bool IsSpriteBatchEnd() {
+            return spriteBatchS == 1;
+        }
+        public void SpriteBatchBegin(SpriteBatch spriteBatch) {
+            if (spriteBatchS == 1) {
+                spriteBatch.Begin();
+            } else if (spriteBatchS == 2) {
+                spriteBatch.Begin();
+            } else {
+                string state = "";
+                if (spriteBatchS == 2) {
+                    state = "none";
+                } else if (spriteBatchS == 1) {
+                    state = "End()";
+                } else if (spriteBatchS == 0) {
+                    state = "Begin()";
+                } 
+                throw new Exception("Inappropriate SpriteBatchBegin(), spriteBatchS is at " + state);
+            }
+        }
+        public void SpriteBatchEnd(SpriteBatch spriteBatch) {
+            if (spriteBatchS == 0) {
+                spriteBatch.End();
+            } else {
+                string state = "";
+                if (spriteBatchS == 2) {
+                    state = "none";
+                } else if (spriteBatchS == 1) {
+                    state = "End()";
+                } else if (spriteBatchS == 0) {
+                    state = "Begin()";
+                } 
+                throw new Exception("Inappropriate SpriteBatchBegin(), spriteBatchS is at " + state);
+            }
+        }
+        public void DrawTex2DMotionBlur(Texture2D t, int x, int y, SpriteBatch spriteBatch) {
+            Effect motionblur = d.Eff("MotionBlur");
+        
+            motionblur.Parameters["motionDirection"].SetValue(new MVector2(1,1));
+            motionblur.Parameters["blurStrength"].SetValue(10.0f);
+
+            if (IsSpriteBatchBegin()) {
+                SpriteBatchEnd(spriteBatch);
+            }
+            spriteBatch.Begin(effect: motionblur);
+            spriteBatch.Draw(t, new MVector2(x,y), Color.White);
+            spriteBatch.End();
+        }
     };
 }

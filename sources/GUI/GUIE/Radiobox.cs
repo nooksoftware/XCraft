@@ -16,14 +16,15 @@ using System.Threading.Tasks;
 
 
 namespace XCraft {
-    public class CheckboxGUIA : GUIA {
-        public CheckboxGUIA(GUIE parent, GUI gui, D d, A a) : base(parent,gui,d,a) {
+    /*
+    public class RadioboxGUIA : GUIA {
+        public RadioboxGUIA(GUIE parent, GUI gui, D d, A a) : base(parent,gui,d,a) {
 
         }
-        public override Activity() {
+        public override void Activity() {
             base.Activity();
 
-            CheckboxGUIE cparent = parent as CheckboxGUIE;
+            RadioboxGUIE cparent = parent as RadioboxGUIE;
             if (cparent == null) {
                 return;
             }
@@ -39,13 +40,13 @@ namespace XCraft {
             }
         }
     };
-    public class CheckboxGUIR : GUIR {
+    public class RadioboxGUIR : GUIR {
         public readonly Ri b_n = new Ri(0,0,0,0);
         public readonly Ri b_h = new Ri(0,0,0,0);
         public readonly Ri b_c = new Ri(0,0,0,0);
         public readonly Ri b_t = new Ri(0,0,0,0);
 
-        public CheckboxGUIR(GUIE parent, GUI gui, D d, A a) : base(parent,gui,d,a) {
+        public RadioboxGUIR(GUIE parent, GUI gui, D d, A a) : base(parent,gui,d,a) {
 
         }
         public override void Render(SpriteBatch spriteBatch) {
@@ -101,26 +102,27 @@ namespace XCraft {
             gui.DrawGUIUniversalTexture(spriteBatch, parent, b_t, new Ri(rX, rY, b_t.w, b_t.h), Color.White);
         }
     };
-    public class CheckboxGUIE : GUIE {
+    public class RadioboxGUIE : GUIE {
         public SpriteFont font;
         public string text;
-        public CheckboxGUIE(GUI gui, D d, A a, SpriteFont font, string text, int lX = 0, int lY = 0, int lW = -1, int lH = -1) : base(parent,gui,d,a) {
+        public RadioboxGUIE(GUI gui, D d, A a, SpriteFont font, string text, int lX = 0, int lY = 0, int lW = -1, int lH = -1) : base(parent,gui,d,a) {
             this.font = font;
             this.text = text;
-            guir = new CheckboxGUIR(this, gui, d, a);
-            guia = new CheckboxGUIA(this, gui, d, a);   
+            guir = new RadioboxGUIR(this, gui, d, a);
+            guia = new RadioboxGUIA(this, gui, d, a);   
             isUniv = true;
         }
         public bool ticked = false;
         public bool clicked = false;
         protected override void cWidth(int p = 37) {
-            return base.cWidth(p);
+            base.cWidth(p);
         }
         protected override void cHeight(int p = 37) {
-            return base.cHeight(p);
+            base.cHeight(p);
         }
-        public bool IsSet() {
+        public bool IsTicked() {
             return ticked;
         }
     };
+    */
 }

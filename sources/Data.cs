@@ -26,6 +26,7 @@ namespace XCraft {
         public Dictionary<_BT, Ri> btTpBounds;
         public Dictionary<string, Texture2D> textures;
         public Dictionary<string, SpriteFont> fonts;
+        public Dictionary<string, Effect> effects;
 
         public MouseState ms;
         public MouseState p_ms;
@@ -42,9 +43,19 @@ namespace XCraft {
             this.btTpBounds = new Dictionary<_BT, Ri>();
             this.textures = new Dictionary<string, Texture2D>();
             this.fonts = new Dictionary<string, SpriteFont>();
+            this.effects = new Dictionary<string, Effect>();
             LoadDefTpPos();
             LoadRects();
         }
+
+        public void Eff(string id, Effect f) {
+            effects.Add(id, f);
+        }
+        public Effect Eff(string id) {
+            Effect f;
+            effects.TryGetValue(id, out f);
+            return f;
+        }        
         public void Fon(string id, SpriteFont f) {
             fonts.Add(id, f);
         }

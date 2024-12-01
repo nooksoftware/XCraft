@@ -14,11 +14,12 @@ using System.Threading.Tasks;
 //using FastNoiseLite;
 
 namespace XCraft {
+    /*
     public class CheckboxGUIA : GUIA {
         public CheckboxGUIA(GUIE parent, GUI gui, D d, A a) : base(parent,gui,d,a) {
 
         }
-        public override Activity() {
+        public override void Activity() {
             base.Activity();
 
             CheckboxGUIE cparent = parent as CheckboxGUIE;
@@ -116,8 +117,9 @@ namespace XCraft {
         protected override void cHeight(int p = 37) {
             return base.cHeight(p);
         }
-        public bool IsSet() {
+        public bool IsTicked() {
             return ticked;
         }
     };
+    */
 }
