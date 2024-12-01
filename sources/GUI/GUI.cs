@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 namespace XCraft {
     public class GUI {
         public GUIE main;
+        public GUI gt;
         public Texture2D guiUniv2DT;
 
         public string current_menu = "editor";
@@ -70,6 +71,7 @@ namespace XCraft {
             main = new GUIE(this, d, a, GUIT.GUIELEMENT);
 
             LoadDefaultGUI();
+            LoadDefaultGTGUI();
         }
         protected void LoadDefaultGUI() {
             SpriteFont f = d.Fon("DejaVuSans");
@@ -92,12 +94,51 @@ namespace XCraft {
             main.Add("editor/mappanel/generate", new ButtonGUIE(this, d, a, f, "Generate Map", 190, 445, 250, 35));
             //main.Add("editor/mappanel/textinputfield", new TextInputFieldGUIE(this, d, a, f, "TextInputField", 20, 100, 350, 150));
         }
+        protected void LoadDefaultGTGUI() {
+            SpriteFont f = d.Fon("DejaVuSans");
+
+            main.Add("gt", new GUIE(this, d, a, GUI.GUIELEMENT));
+            gt = main.Get("gt");
+
+            //Button
+                //Univ
+                //Icon
+            //Checkbox
+            //Radiobox
+            //Dropdown
+            //Slider
+            //Progressbar
+            //TextInputField
+            //TextAreaField
+            //PasswordTextInputField
+            //Tooltip
+            //Searchbar
+            //Popup
+                //MenuPopup
+            //ColorPicker
+            //DatePicker
+            //TimePicker
+            //Panel
+                //Scrollable
+            
+            //Layouts
+        }
 
 
         public void Draw(SpriteBatch spriteBatch) {
             if (main.Exists(current_menu)) {
                 main.Get(current_menu).Draw(spriteBatch);
             };
+        }
+        public void DrawGT(SpriteBatch spriteBatch) {
+            if (main.Exists(current_menu)) {
+                main.Get(current_menu).Get("gt").Draw(spriteBatch);
+            }
+        }
+        public void ActivityGT() {
+            if (main.Exists(current_menu)) {
+                main.Get(current_menu).Get("gt").Activity();
+            }
         }
         public void Activity() {
             if (main.Exists(current_menu)) {
