@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace XCraft {
     public class GUI {
         public GUIE main;
-        public GUI gt;
+        public GUIE gt;
         public Texture2D guiUniv2DT;
 
         public string current_menu = "editor";
@@ -97,8 +97,8 @@ namespace XCraft {
         protected void LoadDefaultGTGUI() {
             SpriteFont f = d.Fon("DejaVuSans");
 
-            main.Add("gt", new GUIE(this, d, a, GUI.GUIELEMENT));
-            gt = main.Get("gt");
+            main.Add(current_menu + "/gt", new GUIE(this, d, a, GUIT.GUIELEMENT));
+            gt = main.Get(current_menu + "/gt");
 
             //Button
                 //Univ
@@ -123,6 +123,13 @@ namespace XCraft {
                 //Scrollable
             
             //Layouts
+
+            gt.Add("panel", new PanelGUIE(this, d, a, 10, 10, d.wW/2-10, d.wH/2-10));
+
+            gt.Add("panel/panelSlider", new SliderGUIE(this, d, a, 20, 20, 250, 70));
+
+            //gt.Add("panel", new PanelGUIE(this, d, a, 10, 10, d.wW/2-10, d.wH/2-10));
+
         }
 
 

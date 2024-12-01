@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 
 
 namespace XCraft {
-
     public class GUIE {
         public Dictionary<string, GUIE> children;
         public GUI gui;
@@ -256,6 +255,11 @@ namespace XCraft {
             this.d = d;
             this.a = a;
         }
+        public bool MouseOnArea(int areaX, int areaY, int areaW, int areaH) {
+            int mX = d.ms.X;
+            int mY = d.ms.Y;
+            return ((mX > areaX && mX < areaX + areaW) && (mY > areaY && mY < areaX + areaH));
+        }
         public bool MouseOnArea() {
             int rX = parent.rX();
             int rY = parent.rY();
@@ -275,6 +279,21 @@ namespace XCraft {
         }
         public bool LMBHold() {
             return a.LMBHold();
+        }
+        public void StandardClickStateDetermineForClickable(int areaX, int areaY, int areaW, int areaH) {
+            if (parent.click_state == 2 && LMBHold()) {
+                parent.click_state = 2;
+                return;
+            }
+            if (MouseOnArea(areaX, areaY, areaW, areaH)) {
+                if (Clicked()) {
+                    parent.click_state = 2;
+                } else {
+                    parent.click_state = 1;
+                }
+            } else {
+                parent.click_state = 0;
+            }
         }
         public void StandardClickStateDetermineForClickable() {
             if (parent.click_state == 2 && LMBHold()) {

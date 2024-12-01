@@ -17,6 +17,19 @@ namespace XCraft {
     public class PanelGUIA : GUIA {
         public PanelGUIA(GUIE parent, GUI gui, D d, A a) : base(parent, gui, d, a) {}
 
+        public override void Activity() {
+            PanelGUIE cparent = parent as PanelGUIE;
+            if (cparent.navigable && cparent.navA != null && cparent.navSlider != null) {
+                ActivitySlider();
+            }
+        }
+        public void ActivitySlider() {
+            PanelGUIE cparent = parent as PanelGUIE;
+            cparent.navSlider.Activity();
+
+
+        }
+
     }
     public class PanelGUIR : GUIR {
         public readonly Ri b_n1 = new Ri(90, 0, 3, 3);
@@ -51,6 +64,8 @@ namespace XCraft {
         protected int pW = 0;
         protected int pH = 0;
 
+
+
         public PanelGUIR(GUIE parent, GUI gui, D d, A a) : base(parent, gui, d, a) {
             PanelGUIE cparent = parent as PanelGUIE;
             if (cparent != null) {
@@ -59,12 +74,21 @@ namespace XCraft {
             }
         }
         public override void Render(SpriteBatch spriteBatch) {
+            PanelGUIE cparent = parent as PanelGUIE;
             if (parent.isUniv) {
                 if(clickState == 0) {RenderN(spriteBatch);}
                 else if (clickState == 1) {RenderH(spriteBatch);}
                 else if (clickState == 2) {RenderC(spriteBatch);}
                 //base.Render(spriteBatch);
+
+                if (cparent.navigable && cparent.navA != null && cparent.navSlider != null) {
+                    RenderSlider(spriteBatch);
+                }
             }
+        }
+        public void RenderSlider(SpriteBatch spriteBatch) {
+            PanelGUIE cparent = parent as PanelGUIE;
+            cparent.navSlider.Draw(spriteBatch);
         }
         public void RenderN(SpriteBatch spriteBatch) {
             RenderP(spriteBatch, b_n1, 0, 0);
@@ -107,11 +131,28 @@ namespace XCraft {
         }
     }
     public class PanelGUIE : GUIE {
-        public PanelGUIE(GUI gui, D d, A a, int lX = 0, int lY = 0, int lW = -1, int lH = -1) 
+        public Ti navA = null;
+        public bool navigable = false;
+        public SliderGUIE navSlider = null;
+
+        public PanelGUIE(GUI gui, D d, A a, int lX = 0, int lY = 0, int lW = -1, int lH = -1, 
+                         bool? navigable = null, Ti? navigableArea = null, SliderGUIE? navSlider = null) 
         : base(gui, d, a, GUIT.PANEL, lX, lY, lW, lH) {
             guir = new PanelGUIR(this, gui, d, a);
             guia = new PanelGUIA(this, gui, d, a);
             isUniv = true;
+
+
+            this.navA = navigableArea ?? null;
+            this.navigable = navigable ?? false;
+            
+            if (this.navA != null && this.navigable == true) {
+                this.navSlider = navSlider ?? null;
+
+                if (this.navSlider != null) {
+                    this.navSlider.Connect(this);
+                }
+            }
         }
         protected override void cWidth(int p = 57) {
             base.cWidth(p);
