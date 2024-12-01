@@ -68,6 +68,9 @@ namespace XCraft {
 
             D.gui = new GUI(this, d, a);
         }
+        protected void LoadDefEffects() {
+            //d.Eff("MotionBlur", Content.Load<Effect>("MotionBlur"));
+        }
         protected void LoadDefFonts() {
             d.Fon("DejaVuSans", Content.Load<SpriteFont>("DejaVuSans"));
         }
@@ -165,9 +168,51 @@ namespace XCraft {
 
             base.Update(gameTime);
         }
+        protected void DrawSimpleShapesTest(GameTime gametime) {
+            SpriteBatch s = _spriteBatch;
+
+            a.pixel = new Texture2D(GraphicsDevice, 1, 1);
+            a.pixel.SetData(new[] {Color.White});
+
+            s.Begin();
+
+            a.DrawRectangleOutline1px(s, 10, 10, 40, 10, Color.White);
+            a.DrawRectangleOutline1px(s, 10, 22, 40, 5, Color.Yellow);
+
+            a.DrawLineAtoB(s, 80, 20, 160, 40, Color.White);
+            a.DrawLineAtoB(s, 160, 40, 80, 20, Color.White);
+            a.DrawLineAtoB(s, 80, 20, 160, 20, Color.Yellow);
+
+            a.DrawRectangleFilledBG(s, 10, 80, 50, 10, Color.White);
+            a.DrawRectangleFilledBG(s, 10, 85, 40, 20, Color.White);
+
+            a.DrawRectagleOutlineAndFilledBG(s, 10, 120, 90, 40, Color.White, Color.Black);
+            a.DrawRectagleOutlineAndFilledBG(s, 10, 180, 80, 30, Color.Black, Color.White);
+
+            a.DrawCircleOutline1px(s, 200, 30, 40, Color.White);
+            a.DrawCircleOutline1px(s, 210, 30, 40, Color.Yellow);
+
+            a.DrawCircleFilledBG(s, 200, 100, 30, Color.White);
+
+            a.DrawCircleFilledBGandOutline1px(s, 300, 20, 50, Color.White, Color.Black);
+
+            //DrawRectangleOutline1px(s, x, y, w, h, outline_color)
+            //DrawLineAtoB(s, x, y, x2, yw, line_color)
+            //DrawRectangleFilledBG(s, x, y, w, h, bg_color)
+            //DrawRectagleOutlineAndFilledBG(s, x, y, w, h, bg_color, outline_color)
+            //DrawCircleOutline1px(s, x, y, anglesize, outline_color)
+            //DrawCircleFilledBG(s, x, y, anglesize, bg_color)
+            //DrawCircleFilledBGandOutline1px(s, x, y, anglesize, bg_color, outline_color)
+
+            s.End();
+
+            //DrawTex2DMotionBlur(d.Tex("tp"), 400, 400, s);
+        }
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            
 
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
@@ -179,6 +224,8 @@ namespace XCraft {
             D.gui.Draw(_spriteBatch);
             D.gui.Activity();
             _spriteBatch.End();
+            
+            //DrawSimpleShapesTest(gameTime);
             base.Draw(gameTime);
         }
     };
