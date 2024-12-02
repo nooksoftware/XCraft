@@ -22,7 +22,6 @@ namespace XCraft {
 
         public string current_menu = "editor";
 
-
         public Game1 g;
         public A a;
         public D d;
@@ -127,12 +126,12 @@ namespace XCraft {
             gt.Add("panel", new PanelGUIE(this, d, a, 10, 10, d.wW/2-10, d.wH/2-10));
 
             gt.Add("panel/panelSlider", new SliderGUIE(this, d, a, 20, 20, 250, 70));
+            gt.Add("panel/vertPanelSlider", new SliderGUIE(this, d, a, 20, 80, 70, 250, false));
+
+            gt.Add("panel/button", new ButtonGUIE(this, d, a, f, "Button", 120, 40, 180, 75));
 
             //gt.Add("panel", new PanelGUIE(this, d, a, 10, 10, d.wW/2-10, d.wH/2-10));
-
         }
-
-
         public void Draw(SpriteBatch spriteBatch) {
             if (main.Exists(current_menu)) {
                 main.Get(current_menu).Draw(spriteBatch);
