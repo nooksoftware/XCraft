@@ -104,6 +104,7 @@ namespace XCraft {
             this.text = text;
             guir = new ButtonGUIR(this, gui, d, a);
             guia = new ButtonGUIA(this, gui, d, a);
+            cHeight();
             isUniv = true;
         }
         public bool clicked = false;

@@ -25,6 +25,20 @@ namespace XCraft {
         public bool fcent = false;
 
         public Ti() {}
+        public Ti(int x, int y, int w, int h) {
+            this.x = x;
+            this.y = y;
+            this.w = w;
+            this.h = h;
+        }
+        public Ti(int x, int y, int w, int h, int ox, int oy) {
+            this.x = x;
+            this.y = y;
+            this.w = w;
+            this.h = h;
+            this.ox = ox;
+            this.oy = oy;
+        }
 
         public void SetParentTi(Ti parentTi) {
             this.parentTi = parentTi;

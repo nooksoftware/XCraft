@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 
 
 namespace XCraft {
-
     public class GUIE {
         public Dictionary<string, GUIE> children;
         public GUI gui;
@@ -36,30 +35,58 @@ namespace XCraft {
         public Dictionary<int, Ri> clickStateGUIUnivB;
         public Dictionary<int, Color> clickStateGUIUnivC;
 
+        public Ti navArea; 
+        public bool hasNavArea = false;
+
+        public void AddNavArea(Ti navArea) {
+            this.navArea = navArea;
+            hasNavArea = true;
+        }
+
         public int lX = 0;
         public int lY = 0;
         public int lW = -1;
         public int lH = -1;
         public int lOx = 0;
         public int lOy = 0;
+        public string id = "";
+        public void SetID(string id ) {
+            this.id = id;
+        }
+
+        public string GetFullPath() {
+            string path = id;
+            GUIE el = parent;
+            while (el != null) {
+                path += "/" + el.id;
+
+                el = el.parent;
+            }
+            return path;
+        }
 
         public void CenterOxy() {
             lOx = lW /2;
             lOy = lH /2;
         }
-
+        public int navX() {
+            return rX() - navArea.x;
+        }
+        public int navY() {
+            return rY() - navArea.y;
+        }
         public int rX() {
             if (parent != null) {
-                return lX-lOx + parent.rX();
+                return lX-lOx - (hasNavArea ? navArea.x : 0) + (parent.hasNavArea ? parent.navX() : parent.rX());
             } else {
-                return lX-lOx;
+                return lX-lOx - (hasNavArea ? navArea.x : 0);
             }
         }
         public int rY() {
             if (parent != null) {
-                return lY-lOy + parent.rY();
+                return lY-lOy - (hasNavArea ? navArea.y : 0) + (parent.hasNavArea ? parent.navY() : parent.rY());
             } else {
-                return lY-lOy;
+                return lY-lOy - (hasNavArea ? navArea.y : 0);
             }
         }
         public int rW() {
@@ -135,6 +162,7 @@ namespace XCraft {
                 } else if (i+1 == keys.Length) {
                     e.children[key] = add;
                     add.Connect(e);
+                    add.SetID(key);
                 } else {
                     e = e.children[key];
                 }
@@ -207,7 +235,23 @@ namespace XCraft {
         BUTTON,
         SLIDER,
         PANEL,
-        TEXT_INPUT_FIELD
+        TEXT_INPUT_FIELD,
+        PROGRESSBAR,
+        CHECKBOX,
+        RADIOBOX,
+        DROPDOWN,
+        TEXT_AREA_FIELD,
+        NUMBERFIELD,
+        PASSWORD_TEXT_INPUT_FIELD,
+        TOOLTIP,
+        SEARCHBAR,
+        POPUP,
+        MENUPOPUP,
+        COLORPICKER,
+        DATEPICKER,
+        TIMEPICKER,
+        SCROLLABLE,
+        LAYOUTS
     };
     public class GUIR {
         public GUIE parent; public GUI gui; public D d; public A a;
@@ -256,6 +300,11 @@ namespace XCraft {
             this.d = d;
             this.a = a;
         }
+        public bool MouseOnArea(int areaX, int areaY, int areaW, int areaH) {
+            int mX = d.ms.X;
+            int mY = d.ms.Y;
+            return ((mX > areaX && mX < areaX + areaW) && (mY > areaY && mY < areaY + areaH));
+        }
         public bool MouseOnArea() {
             int rX = parent.rX();
             int rY = parent.rY();
@@ -266,7 +315,7 @@ namespace XCraft {
             return ((mX > rX && mX < rX + rW) && (mY > rY && mY < rY + rH));
         }
         public bool Clicked() {
-            if (a.OneClickedLMB() && frames_nextclick == 0) {
+            if (a.OneClickedLMB()/* && frames_nextclick == 0*/) {
                 System.Console.WriteLine("Clicked");
                 frames_nextclick = frames_nextclick_set;
                 return true;
@@ -275,6 +324,36 @@ namespace XCraft {
         }
         public bool LMBHold() {
             return a.LMBHold();
+        }
+        public void ProvidedClickStateDetermineForClickable(ref int clickS, int areaX, int areaY, int areaW, int areaH) {
+            if (clickS == 2 && LMBHold()) {
+                clickS = 2;
+                return;
+            }
+            if (MouseOnArea(areaX, areaY, areaW, areaH)) {
+                if (Clicked()) {
+                    clickS = 2;
+                } else {
+                    clickS = 1;
+                }
+            } else {
+                clickS = 0;
+            }
+        }
+        public void StandardClickStateDetermineForClickable(int areaX, int areaY, int areaW, int areaH) {
+            if (parent.click_state == 2 && LMBHold()) {
+                parent.click_state = 2;
+                return;
+            }
+            if (MouseOnArea(areaX, areaY, areaW, areaH)) {
+                if (Clicked()) {
+                    parent.click_state = 2;
+                } else {
+                    parent.click_state = 1;
+                }
+            } else {
+                parent.click_state = 0;
+            }
         }
         public void StandardClickStateDetermineForClickable() {
             if (parent.click_state == 2 && LMBHold()) {
@@ -293,6 +372,9 @@ namespace XCraft {
         }
         public bool ClickedOnArea() {
             return (Clicked() && MouseOnArea());
+        }
+        public bool ClickedOnArea(int x, int y, int w, int h) {
+            return (Clicked() && MouseOnArea(x,y,w,h));
         }
         public virtual void Activity() {
             if (frames_nextclick > 0) {frames_nextclick--;}
