@@ -102,7 +102,7 @@ namespace XCraft {
             //Button [p]
                 //Univ [p]
                 //Icon 
-            //Checkbox
+            //Checkbox [y]
             //Radiobox
             //Dropdown
             //Slider [horizontal [p], vertical [b]]
@@ -133,6 +133,14 @@ namespace XCraft {
             gt.Add("panel/progressbar", new ProgressbarGUIE(this, d, a, 120, 90, 180, 75, 100, 20));
 
             gt.Add("panel/checkbox", new CheckboxGUIE(this, d, a, f, "Checkbox", 120, 140, 180, 75));
+
+            RadioboxGroup radioboxgroup = new RadioboxGroup();
+            gt.Add("panel/radiobox1", new RadioboxGUIE(this, d, a, f, "Radiobox A", 380, 20, 180, 22, false, true, radioboxgroup));
+            gt.Add("panel/radiobox2", new RadioboxGUIE(this, d, a, f, "Radiobox B", 380, 50, 180, 22, false, true, radioboxgroup));
+            gt.Add("panel/radiobox3", new RadioboxGUIE(this, d, a, f, "Radiobox C", 380, 80, 180, 22, false, true, radioboxgroup));
+            gt.Add("panel/radiobox4", new RadioboxGUIE(this, d, a, f, "Radiobox D", 380, 110, 180, 22, false, true, radioboxgroup));
+            gt.Add("panel/radiobox5", new RadioboxGUIE(this, d, a, f, "Radiobox E", 380, 140, 180, 22, true, true, radioboxgroup));
+
 
 
             //gt.Add("panel", new PanelGUIE(this, d, a, 10, 10, d.wW/2-10, d.wH/2-10));

@@ -41,6 +41,21 @@ namespace XCraft {
         public int lH = -1;
         public int lOx = 0;
         public int lOy = 0;
+        public string id = "";
+        public void SetID(string id ) {
+            this.id = id;
+        }
+
+        public string GetFullPath() {
+            string path = id;
+            GUIE el = parent;
+            while (el != null) {
+                path += "/" + el.id;
+
+                el = el.parent;
+            }
+            return path;
+        }
 
         public void CenterOxy() {
             lOx = lW /2;
@@ -134,6 +149,7 @@ namespace XCraft {
                 } else if (i+1 == keys.Length) {
                     e.children[key] = add;
                     add.Connect(e);
+                    add.SetID(key);
                 } else {
                     e = e.children[key];
                 }
