@@ -13,7 +13,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 //using FastNoiseLite;
 
-
 namespace XCraft {
         public class G {
         FastNoiseLite lite;

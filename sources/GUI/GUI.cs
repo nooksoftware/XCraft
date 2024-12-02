@@ -99,15 +99,15 @@ namespace XCraft {
             main.Add(current_menu + "/gt", new GUIE(this, d, a, GUIT.GUIELEMENT));
             gt = main.Get(current_menu + "/gt");
 
-            //Button
-                //Univ
+            //Button [p]
+                //Univ [p]
                 //Icon 
             //Checkbox
             //Radiobox
             //Dropdown
-            //Slider
-            //Progressbar
-            //TextInputField
+            //Slider [horizontal [p], vertical [b]]
+            //Progressbar [y]
+            //TextInputField [p]
             //TextAreaField
             //PasswordTextInputField
             //Tooltip
@@ -117,8 +117,8 @@ namespace XCraft {
             //ColorPicker
             //DatePicker
             //TimePicker
-            //Panel 🖋
-                // 🖋 Standard
+            //Panel 🖋 
+                // 🖋 Standard [mostly]
                 //Scrollable
             
             //Layouts
