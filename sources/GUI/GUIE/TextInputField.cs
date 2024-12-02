@@ -31,48 +31,29 @@ namespace XCraft {
                 cparent.clicked = false;
             }
 
-            if (cparent.selected) {
+            //if (cparent.selected) {
                 TextInput();
-            }
+            //}
         }
         protected void TextInput() {
             TextInputFieldGUIE cparent = parent as TextInputFieldGUIE;
             if (cparent == null) {
                 return;
             }
-            if (a.OnePressedQ()) {cparent.text += 'q';}
-            if (a.OnePressedE()) {cparent.text += 'e';}
-            if (a.OnePressedR()) {cparent.text += 'r';}
-            if (a.OnePressedT()) {cparent.text += 't';}
-            if (a.OnePressedY()) {cparent.text += 'y';}
-            if (a.OnePressedU()) {cparent.text += 'u';}
-            if (a.OnePressedI()) {cparent.text += 'i';}
-            if (a.OnePressedO()) {cparent.text += 'o';}
-            if (a.OnePressedP()) {cparent.text += 'p';}
-            if (a.OnePressedF()) {cparent.text += 'f';}
-            if (a.OnePressedG()) {cparent.text += 'g';}
-            if (a.OnePressedH()) {cparent.text += 'h';}
-            if (a.OnePressedJ()) {cparent.text += 'j';}
-            if (a.OnePressedK()) {cparent.text += 'k';}
-            if (a.OnePressedL()) {cparent.text += 'l';}
-            if (a.OnePressedZ()) {cparent.text += 'z';}
-            if (a.OnePressedX()) {cparent.text += 'x';}
-            if (a.OnePressedC()) {cparent.text += 'c';}
-            if (a.OnePressedV()) {cparent.text += 'v';}
-            if (a.OnePressedB()) {cparent.text += 'b';}
-            if (a.OnePressedN()) {cparent.text += 'n';}
-            if (a.OnePressedM()) {cparent.text += 'm';}
-            if (a.OnePressed0()) {cparent.text += '0';}
-            if (a.OnePressed1()) {cparent.text += '1';}
-            if (a.OnePressed2()) {cparent.text += '2';}
-            if (a.OnePressed3()) {cparent.text += '3';}
-            if (a.OnePressed4()) {cparent.text += '4';}
-            if (a.OnePressed5()) {cparent.text += '5';}
-            if (a.OnePressed6()) {cparent.text += '6';}
-            if (a.OnePressed7()) {cparent.text += '7';}
-            if (a.OnePressed8()) {cparent.text += '8';}
-            if (a.OnePressed9()) {cparent.text += '9';}
-            if (a.OnePressedBackspace()) { cparent.text = cparent.text.Substring(0, cparent.text.Length - 1); }
+            Keys[] pressedKeys = d.ks.GetPressedKeys();
+
+            foreach (Keys key in pressedKeys) {
+                if (key == Keys.Back && cparent.text.Length > 0) {
+                    cparent.text.Remove(cparent.text.Length - 1, 1);
+                } else if (key == Keys.Enter) {
+                    cparent.text += '\n';
+                } else {
+                    string str = a.ConvertKeyToStr(key);
+                    if (!string.IsNullOrEmpty(str)) {
+                        cparent.text += str;
+                    }
+                }
+            }
         }
     }
     public class TextInputFieldGUIR : GUIR {

@@ -228,6 +228,7 @@ namespace XCraft {
         RADIOBOX,
         DROPDOWN,
         TEXT_AREA_FIELD,
+        NUMBERFIELD,
         PASSWORD_TEXT_INPUT_FIELD,
         TOOLTIP,
         SEARCHBAR,
@@ -310,6 +311,21 @@ namespace XCraft {
         }
         public bool LMBHold() {
             return a.LMBHold();
+        }
+        public void ProvidedClickStateDetermineForClickable(ref int clickS, int areaX, int areaY, int areaW, int areaH) {
+            if (clickS == 2 && LMBHold()) {
+                clickS = 2;
+                return;
+            }
+            if (MouseOnArea(areaX, areaY, areaW, areaH)) {
+                if (Clicked()) {
+                    clickS = 2;
+                } else {
+                    clickS = 1;
+                }
+            } else {
+                clickS = 0;
+            }
         }
         public void StandardClickStateDetermineForClickable(int areaX, int areaY, int areaW, int areaH) {
             if (parent.click_state == 2 && LMBHold()) {

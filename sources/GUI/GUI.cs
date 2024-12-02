@@ -123,7 +123,7 @@ namespace XCraft {
             
             //Layouts
 
-            gt.Add("panel", new PanelGUIE(this, d, a, 10, 10, d.wW/2-10, d.wH/2-10));
+            gt.Add("panel", new PanelGUIE(this, d, a, 10, 10, (int)(d.wW*0.75), d.wH-10));
 
             gt.Add("panel/panelSlider", new SliderGUIE(this, d, a, 20, 20, 250, 70));
             gt.Add("panel/vertPanelSlider", new SliderGUIE(this, d, a, 20, 80, 70, 250, false));
@@ -141,7 +141,11 @@ namespace XCraft {
             gt.Add("panel/radiobox4", new RadioboxGUIE(this, d, a, f, "Radiobox D", 380, 110, 180, 22, false, true, radioboxgroup));
             gt.Add("panel/radiobox5", new RadioboxGUIE(this, d, a, f, "Radiobox E", 380, 140, 180, 22, true, true, radioboxgroup));
 
-            gt.Add("panel/textinputfield", new TextInputFieldGUIE(this, d, a, f, "Text Input Field", 20, 450, 220, 100));
+            gt.Add("panel/numberfield1", new NumberFieldGUIE(this, d, a, f, 0, 0, 255, 20, 600, 130, 22));
+            gt.Add("panel/numberfield2", new NumberFieldGUIE(this, d, a, f, 12, 3, 1024, 20, 640, 230, 22));
+
+
+            //gt.Add("panel/textinputfield", new TextInputFieldGUIE(this, d, a, f, "Text Input Field", 20, 450, 220, 100));
 
 
             //gt.Add("panel", new PanelGUIE(this, d, a, 10, 10, d.wW/2-10, d.wH/2-10));

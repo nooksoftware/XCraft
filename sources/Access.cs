@@ -205,6 +205,18 @@ namespace XCraft {
         public bool OneReleasedRShift() {return (d.ks.IsKeyUp(Keys.RightAlt) && d.p_ks.IsKeyDown(Keys.RightAlt));}
         public bool OneReleasedBackspace() {return (d.ks.IsKeyUp(Keys.Back) && d.p_ks.IsKeyDown(Keys.Back));}
     
+        public string ConvertKeyToStr(Keys key) {
+            if (key >= Keys.A && key <= Keys.Z) {
+                return d.ks.IsKeyDown(Keys.LeftShift) || d.ks.IsKeyDown(Keys.RightShift)
+                    ? key.ToString()
+                    : key.ToString().ToLower();
+            }
+            if (key >= Keys.D0 && key <= Keys.D9) {
+                return (key - Keys.D0).ToString();
+            }
+            return string.Empty;
+        }
+
         public Texture2D pixel;
 
         public void DrawRectangleOutline1px(SpriteBatch spriteBatch, int x, int y, int w, int h, Color outline_color) {
