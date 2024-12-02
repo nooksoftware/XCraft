@@ -123,7 +123,11 @@ namespace XCraft {
             
             //Layouts
 
-            gt.Add("panel", new PanelGUIE(this, d, a, 10, 10, (int)(d.wW*0.75), d.wH-10));
+            gt.Add("panel", new PanelGUIE(this, d, a, 10, 10, (int)(d.wW*0.75), d.wH-10
+                ,true, new Ti(0,0,(int)(d.wW*0.75), d.wH-10+1000), 
+                    new SliderGUIE(this, d, a, 600, 20, 70, 500, false)
+                )
+            );
 
             gt.Add("panel/panelSlider", new SliderGUIE(this, d, a, 20, 20, 250, 70));
             gt.Add("panel/vertPanelSlider", new SliderGUIE(this, d, a, 20, 80, 70, 250, false));

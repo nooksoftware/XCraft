@@ -363,6 +363,33 @@ namespace XCraft {
             maxOffY = lH - (cguir.b_vbn1.h + cguir.b_vbn3.h);
 
         }
+        public int minValue() {
+            if (horizontal) {
+                return 0;
+            } else {
+                return 0;
+            }
+        }
+        public int maxValue() {
+            if (horizontal) {
+                return maxOffX;
+            } else {
+                return maxOffY;
+            }
+        }
+        public int Value() {
+            if (horizontal) {
+                return offX;
+            } else {
+                return offY;
+            }
+        }
+        public double ValueF() {
+            return (double)maxValue() / (double)Value();
+        }
+        public double ValuePercF() {
+            return (100.0*ValueF());
+        }
         protected override void cWidth(int p = 43) {
             base.cWidth(p);
         }

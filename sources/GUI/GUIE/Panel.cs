@@ -19,7 +19,7 @@ namespace XCraft {
 
         public override void Activity() {
             PanelGUIE cparent = parent as PanelGUIE;
-            if (cparent.navigable && cparent.navA != null && cparent.navSlider != null) {
+            if (cparent.navigable && cparent.navArea != null && cparent.navSlider != null) {
                 ActivitySlider();
             }
         }
@@ -27,7 +27,9 @@ namespace XCraft {
             PanelGUIE cparent = parent as PanelGUIE;
             cparent.navSlider.Activity();
 
+            double scrollRatioY = cparent.navSlider.ValueF();
 
+            cparent.navArea.y = (int)((cparent.navArea.h - cparent.rH()) * scrollRatioY);
         }
 
     }
@@ -81,7 +83,7 @@ namespace XCraft {
                 else if (clickState == 2) {RenderC(spriteBatch);}
                 //base.Render(spriteBatch);
 
-                if (cparent.navigable && cparent.navA != null && cparent.navSlider != null) {
+                if (cparent.navigable && cparent.navArea != null && cparent.navSlider != null) {
                     RenderSlider(spriteBatch);
                 }
             }
@@ -91,6 +93,69 @@ namespace XCraft {
             cparent.navSlider.Draw(spriteBatch);
         }
         public void RenderN(SpriteBatch spriteBatch) {
+            int rX = parent.rX();
+            int rY = parent.rY();
+            int rW = parent.rW();
+            int rH = parent.rH();
+
+            PanelGUIE cparent = parent as PanelGUIE;
+            if (cparent.navigable) {
+                rX -= cparent.navArea.x;
+                rY -= cparent.navArea.y;
+            }
+            int midareaX = rW - b_c1.w - b_c3.w;
+            int midareaY = rH - b_c1.h - b_c6.h;
+
+            int el1X = rX, el1Y = rY, el1W = b_c1.w, el1H = b_c1.h;
+            int el2X = rX+el1W, el2Y = rY, el2W = midareaX, el2H = b_c2.h;
+            int el3X = rX+el1W+midareaX, el3Y = rY, el3W = b_c3.w, el3H = b_c3.h;
+            int el4X = rX, el4Y = rY+el1H, el4W = b_c4.w, el4H = midareaY;
+            int elGradX = rX+el4W, elGradY = rY+el1H, elGradW = midareaX, elGradH = midareaY;
+            int el5X = rX+el4W+midareaX, el5Y = rY+el1H, el5W = b_c5.w, el5H = midareaY;
+            int el6X = rX, el6Y = rY+el1H+midareaY, el6W = b_c6.w, el6H = b_c6.h;
+            int el7X = rX+el6W, el7Y = rY+el1H+midareaY, el7W = midareaX, el7H = b_c7.h;
+            int el8X = rX+el6W+midareaX, el8Y = rY+el1H+midareaY, el8W = b_c8.w, el8H = b_c8.h;
+        
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c1,   new Ri(el1X, el1Y, el1W, el1H), Color.White);
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c2,   new Ri(el2X, el2Y, el2W, el2H), Color.White);
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c3,   new Ri(el3X, el3Y, el3W, el3H), Color.White);
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c4,   new Ri(el4X, el4Y, el4W, el4H), Color.White);
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c5,   new Ri(el5X, el5Y, el5W, el5H), Color.White);
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c6,   new Ri(el6X, el6Y, el6W, el6H), Color.White);
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c7,   new Ri(el7X, el7Y, el7W, el7H), Color.White);
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c8,   new Ri(el8X, el8Y, el8W, el8H), Color.White);
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_grad, new Ri(elGradX, elGradY, elGradW, elGradH), Color.White);
+        }
+        public void RenderH(SpriteBatch spriteBatch) {
+
+        }
+        public void RenderC(SpriteBatch spriteBatch) {
+            int rX = parent.rX();
+            int rY = parent.rY();
+            int rW = parent.rW();
+            int rH = parent.rH();
+
+            PanelGUIE cparent = parent as PanelGUIE;
+            if (cparent.navigable) {
+                rX -= cparent.navArea.x;
+                rY -= cparent.navArea.y;
+            }
+            int midareaX = rW - b_c1.w - b_c3.w;
+            int midareaY = rH - b_c1.h - b_c6.h;
+
+
+
+            // gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c1,   new Ri(el1X, el1Y, el1W, el1H), Color.White);
+            // gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c2,   new Ri(el2X, el2Y, el2W, el2H), Color.White);
+            // gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c3,   new Ri(el3X, el3Y, el3W, el3H), Color.White);
+            // gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c4,   new Ri(el4X, el4Y, el4W, el4H), Color.White);
+            // gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c5,   new Ri(el5X, el5Y, el5W, el5H), Color.White);
+            // gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c6,   new Ri(el6X, el6Y, el6W, el6H), Color.White);
+            // gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c7,   new Ri(el7X, el7Y, el7W, el7H), Color.White);
+            // gui.DrawGUIUniversalTexture(spriteBatch, parent, b_c8,   new Ri(el8X, el8Y, el8W, el8H), Color.White);
+            // gui.DrawGUIUniversalTexture(spriteBatch, parent, b_grad, new Ri(el9X, el9Y, el9W, el9H), Color.White);
+        }
+        /*public void RenderN(SpriteBatch spriteBatch) {
             RenderP(spriteBatch, b_n1, 0, 0);
             RenderP(spriteBatch, b_n2, b_n1.w, 0);
             RenderP(spriteBatch, b_n3, b_n1.w+pW, 0);
@@ -128,7 +193,7 @@ namespace XCraft {
         }
         public void RenderG(SpriteBatch spriteBatch, Ri bounds, int mx, int my) {
             gui.DrawGUIUnivT(spriteBatch, parent, b_grad, new Ri(0,0,pW,pH), Color.White, mx, my);
-        }
+        }*/
     }
     public class PanelGUIE : GUIE {
         public Ti navA = null;
@@ -143,10 +208,11 @@ namespace XCraft {
             isUniv = true;
 
 
-            this.navA = navigableArea ?? null;
+            this.navArea = navigableArea ?? null;
             this.navigable = navigable ?? false;
+            this.hasNavArea = navigable ?? false;
             
-            if (this.navA != null && this.navigable == true) {
+            if (this.navArea != null && this.navigable == true) {
                 this.navSlider = navSlider ?? null;
 
                 if (this.navSlider != null) {

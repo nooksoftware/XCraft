@@ -35,6 +35,14 @@ namespace XCraft {
         public Dictionary<int, Ri> clickStateGUIUnivB;
         public Dictionary<int, Color> clickStateGUIUnivC;
 
+        public Ti navArea; 
+        public bool hasNavArea = false;
+
+        public void AddNavArea(Ti navArea) {
+            this.navArea = navArea;
+            hasNavArea = true;
+        }
+
         public int lX = 0;
         public int lY = 0;
         public int lW = -1;
@@ -61,19 +69,24 @@ namespace XCraft {
             lOx = lW /2;
             lOy = lH /2;
         }
-
+        public int navX() {
+            return rX() - navArea.x;
+        }
+        public int navY() {
+            return rY() - navArea.y;
+        }
         public int rX() {
             if (parent != null) {
-                return lX-lOx + parent.rX();
+                return lX-lOx - (hasNavArea ? navArea.x : 0) + (parent.hasNavArea ? parent.navX() : parent.rX());
             } else {
-                return lX-lOx;
+                return lX-lOx - (hasNavArea ? navArea.x : 0);
             }
         }
         public int rY() {
             if (parent != null) {
-                return lY-lOy + parent.rY();
+                return lY-lOy - (hasNavArea ? navArea.y : 0) + (parent.hasNavArea ? parent.navY() : parent.rY());
             } else {
-                return lY-lOy;
+                return lY-lOy - (hasNavArea ? navArea.y : 0);
             }
         }
         public int rW() {
