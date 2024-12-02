@@ -138,7 +138,7 @@ namespace XCraft {
         public string text = "";
         public SpriteFont f;
 
-        public CheckboxGUIE(GUI gui, D d, A a, SpriteFont f, string text, int lX = 0, int lY = 0, int lW = -2, int lH = -1, bool isTicked = false, bool showTransX = true) 
+        public CheckboxGUIE(GUI gui, D d, A a, SpriteFont f, string text, int lX = 0, int lY = 0, int lW = -1, int lH = -1, bool isTicked = false, bool showTransX = true) 
          : base(gui, d, a, GUIT.CHECKBOX, lX, lY, lW, lH)
         {   
             this.text = text;
