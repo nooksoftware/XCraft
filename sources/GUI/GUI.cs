@@ -132,6 +132,9 @@ namespace XCraft {
 
             gt.Add("panel/progressbar", new ProgressbarGUIE(this, d, a, 120, 90, 180, 75, 100, 20));
 
+            gt.Add("panel/checkbox", new CheckboxGUIE(this, d, a, f, "Checkbox", 120, 140, 180, 75));
+
+
             //gt.Add("panel", new PanelGUIE(this, d, a, 10, 10, d.wW/2-10, d.wH/2-10));
         }
         public void Draw(SpriteBatch spriteBatch) {

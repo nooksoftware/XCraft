@@ -21,13 +21,14 @@ namespace XCraft {
             base.Activity();
 
             CheckboxGUIE cparent = parent as CheckboxGUIE;
+            CheckboxGUIR cguir = cparent.guir as CheckboxGUIR;
             if (cparent == null) {
                 return;
             }
             int rX = cparent.rX();
             int rY = cparent.rY();
-            StandardClickStateDetermineForClickable(rX, rY, b_bn.w, b_bn.h);
-            if (ClickedOnArea()) {
+            StandardClickStateDetermineForClickable(rX, rY, cguir.b_bn.w, cguir.b_bn.h);
+            if (ClickedOnArea(rX, rY, cguir.b_bn.w, cguir.b_bn.h)) {
                 cparent.isTicked = true;
             } else {
                 
@@ -55,7 +56,39 @@ namespace XCraft {
                 else if (clickState == 2) {RenderC(spriteBatch);}
 
                 RenderText(spriteBatch);
+
+                if(cparent.isTicked) {
+                    RenderTick(spriteBatch);
+                } else if (cparent.showTransX) {
+                    RenderTransX(spriteBatch);
+                }
             }
+        }
+        public void RenderTick(SpriteBatch spriteBatch) {
+            CheckboxGUIE cparent = parent as CheckboxGUIE;
+            int rX = parent.rX(); 
+            int rY = parent.rY();
+            int rW = parent.rW();
+            int rH = parent.rH();
+
+            rX = rX - ((b_t.w - b_bn.w) / 2);
+            rY = rY - ((b_t.h - b_bn.h) / 2);
+
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_t, new Ri(rX, rY, b_t.w, b_t.h), Color.White);
+
+        }
+        public void RenderTransX(SpriteBatch spriteBatch) {
+            CheckboxGUIE cparent = parent as CheckboxGUIE;
+            int rX = parent.rX(); 
+            int rY = parent.rY();
+            int rW = parent.rW();
+            int rH = parent.rH();
+
+            rX = rX - ((b_x.w - b_bn.w) / 2);
+            rY = rY - ((b_x.h - b_bn.h) / 2);
+
+            gui.DrawGUIUniversalTexture(spriteBatch, parent, b_x, new Ri(rX, rY, b_x.w, b_x.h), Color.White);
+
         }
         public void RenderN(SpriteBatch spriteBatch) {
             CheckboxGUIE cparent = parent as CheckboxGUIE;
@@ -90,7 +123,7 @@ namespace XCraft {
             int rY = parent.rY();
             int rW = parent.rW();
             int rH = parent.rH();
-            Microsoft.Xna.Framework.Vector2 textSize = cparent.font.MeasureString(cparent.text);
+            Microsoft.Xna.Framework.Vector2 textSize = cparent.f.MeasureString(cparent.text);
 
             int textX = rX + b_bn.w + 2;
             int textY = rY + (int)((b_bn.h - textSize.Y) / 2);
@@ -103,7 +136,7 @@ namespace XCraft {
         public bool isTicked = false;
         public bool showTransX = true;
         public string text = "";
-        SpriteFont f;
+        public SpriteFont f;
 
         public CheckboxGUIE(GUI gui, D d, A a, SpriteFont f, string text, int lX = 0, int lY = 0, int lW = -2, int lH = -1, bool isTicked = false, bool showTransX = true) 
          : base(gui, d, a, GUIT.CHECKBOX, lX, lY, lW, lH)

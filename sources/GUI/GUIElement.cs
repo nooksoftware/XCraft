@@ -207,7 +207,21 @@ namespace XCraft {
         SLIDER,
         PANEL,
         TEXT_INPUT_FIELD,
-        PROGRESSBAR
+        PROGRESSBAR,
+        CHECKBOX,
+        RADIOBOX,
+        DROPDOWN,
+        TEXT_AREA_FIELD,
+        PASSWORD_TEXT_INPUT_FIELD,
+        TOOLTIP,
+        SEARCHBAR,
+        POPUP,
+        MENUPOPUP,
+        COLORPICKER,
+        DATEPICKER,
+        TIMEPICKER,
+        SCROLLABLE,
+        LAYOUTS
     };
     public class GUIR {
         public GUIE parent; public GUI gui; public D d; public A a;
@@ -259,7 +273,7 @@ namespace XCraft {
         public bool MouseOnArea(int areaX, int areaY, int areaW, int areaH) {
             int mX = d.ms.X;
             int mY = d.ms.Y;
-            return ((mX > areaX && mX < areaX + areaW) && (mY > areaY && mY < areaX + areaH));
+            return ((mX > areaX && mX < areaX + areaW) && (mY > areaY && mY < areaY + areaH));
         }
         public bool MouseOnArea() {
             int rX = parent.rX();
@@ -271,7 +285,7 @@ namespace XCraft {
             return ((mX > rX && mX < rX + rW) && (mY > rY && mY < rY + rH));
         }
         public bool Clicked() {
-            if (a.OneClickedLMB() && frames_nextclick == 0) {
+            if (a.OneClickedLMB()/* && frames_nextclick == 0*/) {
                 System.Console.WriteLine("Clicked");
                 frames_nextclick = frames_nextclick_set;
                 return true;
@@ -313,6 +327,9 @@ namespace XCraft {
         }
         public bool ClickedOnArea() {
             return (Clicked() && MouseOnArea());
+        }
+        public bool ClickedOnArea(int x, int y, int w, int h) {
+            return (Clicked() && MouseOnArea(x,y,w,h));
         }
         public virtual void Activity() {
             if (frames_nextclick > 0) {frames_nextclick--;}

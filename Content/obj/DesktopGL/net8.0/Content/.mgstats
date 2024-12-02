@@ -19,7 +19,7 @@ Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Siz
 "/home/dj/Dev/XCraft/Content/button_singleplayer_normal.png","/home/dj/Dev/XCraft/Content/bin/DesktopGL/Content/button_singleplayer_normal.xnb","TextureProcessor","Texture2DContent",8108,46549,0.0041743
 "/home/dj/Dev/XCraft/Content/DejaVuSans.spritefont","/home/dj/Dev/XCraft/Content/bin/DesktopGL/Content/DejaVuSans.xnb","FontDescriptionProcessor","SpriteFontContent",2013,37922,0.2809651
 "/home/dj/Dev/XCraft/Content/gui.png","/home/dj/Dev/XCraft/Content/bin/DesktopGL/Content/gui.xnb","TextureProcessor","Texture2DContent",4426,32809,0.0034168
-"/home/dj/Dev/XCraft/Content/guiuniv.png","/home/dj/Dev/XCraft/Content/bin/DesktopGL/Content/guiuniv.xnb","TextureProcessor","Texture2DContent",28844,148085,0.16278
+"/home/dj/Dev/XCraft/Content/guiuniv.png","/home/dj/Dev/XCraft/Content/bin/DesktopGL/Content/guiuniv.xnb","TextureProcessor","Texture2DContent",33252,148085,0.1836303
 "/home/dj/Dev/XCraft/Content/inventory_grid.png","/home/dj/Dev/XCraft/Content/bin/DesktopGL/Content/inventory_grid.xnb","TextureProcessor","Texture2DContent",7419,209493,0.013411
 "/home/dj/Dev/XCraft/Content/logo.png","/home/dj/Dev/XCraft/Content/bin/DesktopGL/Content/logo.xnb","TextureProcessor","Texture2DContent",85469,281517,0.0163342
 "/home/dj/Dev/XCraft/Content/pl.png","/home/dj/Dev/XCraft/Content/bin/DesktopGL/Content/pl.xnb","TextureProcessor","Texture2DContent",1487,4181,0.1607131
