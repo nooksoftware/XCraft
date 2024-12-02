@@ -206,7 +206,8 @@ namespace XCraft {
         BUTTON,
         SLIDER,
         PANEL,
-        TEXT_INPUT_FIELD
+        TEXT_INPUT_FIELD,
+        PROGRESSBAR
     };
     public class GUIR {
         public GUIE parent; public GUI gui; public D d; public A a;
