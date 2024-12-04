@@ -26,7 +26,7 @@ namespace XCraft {
 
         int mH3 = 3;
         int mH2 = 96;
-        int mH1 = 49;
+        int mH1 = 80;
 
         int iOp = 180; // 2200
         int gOp = 240; // 4500
@@ -49,12 +49,50 @@ namespace XCraft {
             else if (v > 1.0f) { v = 1.0f;}
             return v;
         }
+        public float[] GenerateWidthNoise() {
+            float[] terH = new float[w];
+            lite.SetFrequency(0.04f);
+            lite.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
+            for (int x = 0; x < w; x++) {
+                float n = NormalizeNoiseDef(lite.GetNoise(((float)x), 1.0f));
+
+                terH[x] = n;
+            }
+            return terH;
+        }
         public void Generate() {
             Verify();
             lite.SetSeed(random.Next(1000000));
-            GenerateBasicTerrain();
-            GenerateBasicOre();
+            //GenerateBasicTerrain();
+            //GenerateBasicOre();
+        
+            int begY1 = h - (mH3 + mH2 + mH1);
+            int begY2 = h - (mH3 + mH2);
+            int begY3 = h - (mH3);
+
+            float[] tHNoise = GenerateWidthNoise();
+
+            for (int x = 0; x < w; x++) {
+                for (int y = 0 ; y < h; y++) {  
+                    if (y >= 0 && y < begY1) {
+                        T(x,y, TT.AIR);
+                    } else if (y >= begY1 && y < begY2) {
+                        T(x,y, TT.DIRT);
+                    } else if (y >= begY2 && y < begY3) {
+                        T(x,y, TT.STONE);
+                    } else if (y >= begY3 && y < h) {
+                        T(x,y, TT.BEDROCK);
+                    }
+                }
+            }
+
+
+            w = 512;
+            h = 256;    
+
         }
+
+
         public void VerifyError(string message) {
             Console.WriteLine("Error while generating map " + message);
         }
@@ -114,6 +152,7 @@ namespace XCraft {
         public bool Random(int f) {
             return random.Next(f) == 0;
         }
+        //Deprec
         protected void GenerateBasicTerrain() {
             int bedrock_y1 = h-mH3;
             int bedrock_y2 = h;
@@ -184,6 +223,7 @@ namespace XCraft {
                 }
             }
         }
+        //Deprec
         protected void GenerateBasicOre() {
             int ground_y1 = h-mH2-mH3;
             int ground_y2 = h-mH3;
