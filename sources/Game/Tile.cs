@@ -45,8 +45,18 @@ namespace XCraft {
         public Rectangle de;
         public Rectangle o;
         public bool Draw(SpriteBatch spriteBatch) {
-            de = new Rectangle(x*32 - d.n.zX, y*32 - d.n.zY,32,32);
-            o = new Rectangle(tpX*32, tpY*32, 32, 32);
+
+            int nOx = d.n.nOx;
+            int nOy = d.n.nOy;
+
+            de = new Rectangle(
+                System.Convert.ToInt32((x*32 - d.n.zX)*(d.n.zZ)+ nOx), 
+                System.Convert.ToInt32((y*32 - d.n.zY)*(d.n.zZ)+ nOy),
+                System.Convert.ToInt32(32*d.n.zZ),System.Convert.ToInt32(32*d.n.zZ));
+            o = new Rectangle(
+                System.Convert.ToInt32(tpX*32), 
+                System.Convert.ToInt32(tpY*32), 
+                32, 32);
             if (de.X < -32 || de.Y < -32) {
                 return false;
             }

@@ -20,10 +20,13 @@ namespace XCraft {
         public int zY = 0;
         public float zXAcc = 0.0f;
         public float zYAcc = 0.0f;
-        public int zZ = 100; //50-200
+        public float zZ = 1.0f; //50-200
+        public float zZAcc = 0.0f;
         public int zZS = 1;
         public int nX = 0;
         public int nY = 0;
+        public int nOx = 1600/2;
+        public int nOy = 900/2;
 
         public N() {
             ns = new Dictionary<int, N>();

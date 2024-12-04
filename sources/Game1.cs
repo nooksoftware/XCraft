@@ -11,6 +11,7 @@ using System.Security.Cryptography;
 using System.ComponentModel.Design.Serialization;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using System.Net;
 //using FastNoiseLite;
 
 namespace XCraft {
@@ -111,10 +112,30 @@ namespace XCraft {
             d.ms = Mouse.GetState();
             d.p_ks = d.ks;
             d.ks = Keyboard.GetState();
-        }
-        protected void WASDArrowsNav() {
+    }
+        protected int previousMouseWheelValue = 0;
+        protected void WASDArrowsMouseNav() {
             bool s = a.LShiftHold();
 
+            previousMouseWheelValue = D.ms.ScrollWheelValue - previousMouseWheelValue;
+
+            if (previousMouseWheelValue > 0) // Scroll up
+                d.n.zZAcc += 0.06f;
+            else if (previousMouseWheelValue < 0) // Scroll down
+                d.n.zZAcc -= 0.06f;
+
+            D.n.zZ += d.n.zZAcc;
+            D.n.zZAcc *= 0.85f;
+            if (D.n.zZAcc < 0.01f && D.n.zZAcc > -0.01f) {
+                D.n.zZAcc = 0f;
+            }
+            if (D.n.zZ > 2.0f) {
+                D.n.zZ = 2.0f;
+            } else if (d.n.zZ < 0.5f) {
+                D.n.zZ = 0.5f;
+            }
+
+            previousMouseWheelValue = D.ms.ScrollWheelValue;
             if (a.AHold() || a.LeftHold()) {
                 if (!s) {d.n.zXAcc -= 5.0f;}
                 else {d.n.zXAcc -= 15.0f;}
@@ -162,7 +183,7 @@ namespace XCraft {
             }
 
             KeyboardMouseInput();
-            WASDArrowsNav();
+            WASDArrowsMouseNav();
             d.n.ApplyNavAcc();
             Draw(gameTime);
 
