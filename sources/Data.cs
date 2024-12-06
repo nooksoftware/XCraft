@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 
 namespace XCraft {
     public class D {
+        public VarShare varShare;
         public Game1 game;
         public M m;
         public N n;

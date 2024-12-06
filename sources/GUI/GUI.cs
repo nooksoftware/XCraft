@@ -20,7 +20,7 @@ namespace XCraft {
         public GUIE gt;
         public Texture2D guiUniv2DT;
 
-        public string current_menu = "editor";
+        public string current_menu = "gamemenu";
 
         public Game1 g;
         public A a;
@@ -75,22 +75,27 @@ namespace XCraft {
         protected void LoadDefaultGUI() {
             SpriteFont f = d.Fon("DejaVuSans");
 
+
+            
+
             main.Add("editor", new GUIE(this, d, a, GUIT.GUIELEMENT));
             main.Add("mainmenu", new GUIE(this, d, a, GUIT.GUIELEMENT));
             main.Add("gamemenu", new GUIE(this, d, a, GUIT.GUIELEMENT));
 
-            main.Add("editor/mappanel", new PanelGUIE(this, d, a, 20, 20, 500, 500));
-            main.Add("editor/mappanel/mapsizex", new TextInputFieldGUIE(this, d, a, f, "512", 20, 20, 200, 48));
-            main.Add("editor/mappanel/mapsizey", new TextInputFieldGUIE(this, d, a, f, "256", 240, 20, 200, 48));
-            main.Add("editor/mappanel/groundh", new TextInputFieldGUIE(this, d, a, f, "64", 20, 80, 140, 48));
-            main.Add("editor/mappanel/terrainh", new TextInputFieldGUIE(this, d, a, f, "32", 180, 80, 140, 48));
+            main.Add("gamemenu/vars", new VarOutlistE(this, d, a, f, 10, 10, 300, 500, d.varShare));
 
-            main.Get2<TextInputFieldGUIE>("editor/mappanel/mapsizex").numericOnly = true;
-            main.Get2<TextInputFieldGUIE>("editor/mappanel/mapsizey").numericOnly = true;
-            main.Get2<TextInputFieldGUIE>("editor/mappanel/groundh").numericOnly = true;
-            main.Get2<TextInputFieldGUIE>("editor/mappanel/terrainh").numericOnly = true;
+            //main.Add("editor/mappanel", new PanelGUIE(this, d, a, 20, 20, 500, 500));
+            //main.Add("editor/mappanel/mapsizex", new TextInputFieldGUIE(this, d, a, f, "512", 20, 20, 200, 48));
+            //main.Add("editor/mappanel/mapsizey", new TextInputFieldGUIE(this, d, a, f, "256", 240, 20, 200, 48));
+            //main.Add("editor/mappanel/groundh", new TextInputFieldGUIE(this, d, a, f, "64", 20, 80, 140, 48));
+            //main.Add("editor/mappanel/terrainh", new TextInputFieldGUIE(this, d, a, f, "32", 180, 80, 140, 48));
 
-            main.Add("editor/mappanel/generate", new ButtonGUIE(this, d, a, f, "Generate Map", 190, 445, 250, 35));
+            //main.Get2<TextInputFieldGUIE>("editor/mappanel/mapsizex").numericOnly = true;
+            //main.Get2<TextInputFieldGUIE>("editor/mappanel/mapsizey").numericOnly = true;
+            //main.Get2<TextInputFieldGUIE>("editor/mappanel/groundh").numericOnly = true;
+            //main.Get2<TextInputFieldGUIE>("editor/mappanel/terrainh").numericOnly = true;
+
+            //main.Add("editor/mappanel/generate", new ButtonGUIE(this, d, a, f, "Generate Map", 190, 445, 250, 35));
             //main.Add("editor/mappanel/textinputfield", new TextInputFieldGUIE(this, d, a, f, "TextInputField", 20, 100, 350, 150));
         }
         /// <summary>

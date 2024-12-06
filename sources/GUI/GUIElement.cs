@@ -253,7 +253,8 @@ namespace XCraft {
         SCROLLABLE,
         LAYOUTS,
         GRAPHICBUTTON,
-        TEXTAREAFIELD
+        TEXTAREAFIELD,
+        VAROUTLISTE
     };
     public class GUIR {
         public GUIE parent; public GUI gui; public D d; public A a;

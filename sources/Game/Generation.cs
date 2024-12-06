@@ -570,11 +570,74 @@ namespace XCraft {
                 GenerateCliffsBiomeTerrain(gA);
             }
         }
+        public int GetTerrainHeight(int x) {
+            int y = 0;
+            while (y < h) {
+                TT tt = GetTT(x,y);
+                if (tt == TT.DIRT || tt == TT.STONE || tt == TT.GRASS || tt == TT.COBBLESTONE) {
+                    return y;
+                }
+                
+                y++;
+            }
+            return -1;
+        }
         public void GenerateBaseTerrains() {
             GArea teamA = gAreas[0];
             GArea teamB = gAreas[1];
 
+            Ri a1 = teamA.gMapArea.mapArea;
+            Ri a2 = teamB.gMapArea.mapArea;
+
+            int a1TerrainH1 = GetTerrainHeight(a1.x-1);
+            int a1TerrainH2 = GetTerrainHeight(a1.x+a1.w+1);
+
+            int a2TerrainH1 = GetTerrainHeight(a2.x-1);
+            int a2TerrainH2 = GetTerrainHeight(a2.x+a2.w+1);
+
+            int averageTerrain1 = (a1TerrainH1+a1TerrainH2) / 2;
+            int averageTerrain2 = (a2TerrainH1+a2TerrainH2) / 2;
+
+            for (int x = a1.x; x < a1.x + a1.w; x++) {
+                for (int y = terrainY1; y < terrainY2; y++) {
+                    TT tt = GetTT(x,y);
+                    if (y < averageTerrain1) {
+                        SetT(x,y,TT.AIR);
+                    } else if (y == averageTerrain1) {
+                        SetT(x,y,TT.GRASS);
+                    } else if (y > averageTerrain1) {
+                        if (tt == TT.GRASS) {
+                            SetT(x,y,TT.DIRT);
+                        }
+                    }
+                }
+            }
             
+            for (int x = a2.x; x < a2.x + a2.w; x++) {
+                for (int y = 0; y < terrainY2; y++) {
+                    TT tt = GetTT(x,y);
+                    if (y < averageTerrain2) {
+                        SetT(x,y,TT.AIR);
+                    } else if (y == averageTerrain2) {
+                        SetT(x,y,TT.GRASS);
+                    } else if (y > averageTerrain2) {
+                        if (tt == TT.GRASS) {
+                            SetT(x,y,TT.DIRT);
+                        } else if (tt == TT.AIR) {
+                            TT tt2 = TT.COBBLESTONE;
+                            int r = random.Next(2);
+                            if (r == 0) {
+                                tt2 = TT.DIRT;
+                            } else if (r == 1) {
+                                tt2 = TT.STONE;
+                            } else if (r == 2) {
+                                tt2 = TT.COBBLESTONE;
+                            }
+                            SetT(x,y,tt2);
+                        }
+                    }
+                }
+            }
         }
         public void GenerateTerrain() {
             int beginI = biomeTerrainAreaIDStart;
@@ -600,21 +663,21 @@ namespace XCraft {
         }
         public void GenerateGround() {
 
-            float[,] mapNoise = GenerateNoise(w,h,0.1f,
+            float[,] mapNoise = GenerateNoise(w,h,0.08f,
                 FastNoiseLite.NoiseType.Perlin, FastNoiseLite.FractalType.FBm,
                 4, 2.0f, 0.5f, random.Next(10000000));
 
             int [,] terrainMap1 = generateIntNoiseIndex(mapNoise, w, h, new GFloatIIndex[]{
-                new GFloatIIndex(0.0f, 0.3f, 0),
-                new GFloatIIndex(0.0f, 0.6f, 1),
-                new GFloatIIndex(0.6f, 1.0f, 2)
+                new GFloatIIndex(0.0f, 0.35f, 0),
+                new GFloatIIndex(0.35f, 0.62f, 1),
+                new GFloatIIndex(0.62f, 1.0f, 2)
             });
 
             for (int x = 0; x < w; x++) {
                 for (int y = terrainY1; y < h; y++) {
                     int tiv = terrainMap1[x,y];
                     if (tiv == 2) {
-                        SetT(x,y,TT.STONE);
+                        SetT(x,y,TT.COBBLESTONE);
                     } else if (tiv == 1) {
                         SetT(x,y,TT.STONE);
                     } else if (tiv == 0) {

@@ -47,6 +47,13 @@ namespace XCraft {
             this.a = new A(this, d);
             this.uts = new UTs();
 
+            this.d.varShare = new VarShare();
+            VarShare varShare = d.varShare;
+
+            varShare.Add("mousepos", new Vec2iVarShare(0, 0));
+            varShare.Add("basePos1", new RiVarShare(0,0,0,0));
+            varShare.Add("basePosy", new RiVarShare(0,0,0,0));            
+
             IsMouseVisible = true;
 
             IsFixedTimeStep = true;
@@ -121,6 +128,11 @@ namespace XCraft {
             d.ms = Mouse.GetState();
             d.p_ks = d.ks;
             d.ks = Keyboard.GetState();
+
+            VarShare mousePosVS = this.d.varShare.Get("mousepos");
+            Vec2iVarShare CmousePosVS = mousePosVS as Vec2iVarShare;
+            CmousePosVS.value.x = d.ms.X;
+            CmousePosVS.value.y = d.ms.Y;
         }
         protected int previousMouseWheelValue = 0;
         int pressSDelay = 0;
@@ -266,11 +278,11 @@ namespace XCraft {
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
             // if (editor) {
-            editor.Tick();
+            //editor.Tick();
             // }
 
             D.m.Draw(_spriteBatch);
-            //D.gui.DrawGT(_spriteBatch);
+            D.gui.Draw(_spriteBatch);
             //D.gui.ActivityGT();
             _spriteBatch.End();
             
