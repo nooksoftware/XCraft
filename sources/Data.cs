@@ -33,6 +33,8 @@ namespace XCraft {
         public KeyboardState ks;
         public KeyboardState p_ks;
         
+        public bool spectator = true;
+
         public int mW = 512;
         public int mH = 256;
         public readonly float g = 9.0f;
@@ -122,6 +124,7 @@ namespace XCraft {
             LoadTPPos(TT.IRON_ORE, 0, 4);
             LoadTPPos(TT.GOLD_ORE, 1, 4);
             LoadTPPos(TT.DIA_ORE, 2, 4);
+            LoadTPPos(TT.COBBLESTONE, 3, 4);
         }
         protected void LoadTPPos(TT tt, int x, int y) {
             tpPos.Add(tt, new V2i(x,y));

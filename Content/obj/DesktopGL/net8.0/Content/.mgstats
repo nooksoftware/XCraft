@@ -24,5 +24,5 @@ Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Siz
 "/home/dj/Dev/XCraft/Content/logo.png","/home/dj/Dev/XCraft/Content/bin/DesktopGL/Content/logo.xnb","TextureProcessor","Texture2DContent",85469,281517,0.0163342
 "/home/dj/Dev/XCraft/Content/pl.png","/home/dj/Dev/XCraft/Content/bin/DesktopGL/Content/pl.xnb","TextureProcessor","Texture2DContent",1487,4181,0.1607131
 "/home/dj/Dev/XCraft/Content/st_el.png","/home/dj/Dev/XCraft/Content/bin/DesktopGL/Content/st_el.xnb","TextureProcessor","Texture2DContent",1213,4985,0.3420323
-"/home/dj/Dev/XCraft/Content/tp.png","/home/dj/Dev/XCraft/Content/bin/DesktopGL/Content/tp.xnb","TextureProcessor","Texture2DContent",93197,163925,0.1767799
+"/home/dj/Dev/XCraft/Content/tp.png","/home/dj/Dev/XCraft/Content/bin/DesktopGL/Content/tp.xnb","TextureProcessor","Texture2DContent",96636,163925,0.3664456
 "/home/dj/Dev/XCraft/Content/tpbt.png","/home/dj/Dev/XCraft/Content/bin/DesktopGL/Content/tpbt.xnb","TextureProcessor","Texture2DContent",4608,94757,0.0186431

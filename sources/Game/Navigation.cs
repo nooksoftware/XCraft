@@ -41,12 +41,12 @@ namespace XCraft {
         public void ApplyNavAcc() {
             this.zX += System.Convert.ToInt32(zXAcc);
             this.zY += System.Convert.ToInt32(zYAcc);
-            zXAcc *= 0.75f;
-            zYAcc *= 0.75f;
+            zXAcc *= 0.87f;
+            zYAcc *= 0.87f;
             if (zXAcc > -0.05f && zXAcc < 0.05f) {
                 zXAcc = 0.0f;
             }
-            if (zYAcc > -0.1f && zYAcc < 0.1f) {
+            if (zYAcc > -0.05f && zYAcc < 0.05f) {
                 zYAcc = 0.0f;
             }
         }

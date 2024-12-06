@@ -109,5 +109,6 @@ namespace XCraft {
         ORE1,
         ORE2,
         ORE3,
+        COBBLESTONE
     };
 }

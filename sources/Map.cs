@@ -26,6 +26,12 @@ namespace XCraft {
         public T[,] ts;
         public T[,] ts_visible;
 
+        public Dictionary<int, GArea> gAreas;
+
+        public Dictionary<int, E> entities;
+
+        public Player thisPlayer;
+
         public M(int w, int h, D d) {
             this.w = w;
             this.h = h;
@@ -33,9 +39,12 @@ namespace XCraft {
             this.tts = new TT[w,h];
             this.ts = new T[w,h];
             this.ts_visible = new T[w,h];
+            gAreas = new Dictionary<int, GArea>();
+            entities = new Dictionary<int, E>();
+            //thisPlayer = new PlayeR();
         }
         public void GenerateDefault() {
-            G g = new G(d, this, 512, 256, -1, -1, -1, -1, -1, -1, true);
+            G g = new G(d, this, 512, 256, 180, 240, 360, true);
         }
 
         public TT TT(int x, int y) {

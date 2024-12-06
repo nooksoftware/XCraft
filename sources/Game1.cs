@@ -27,8 +27,17 @@ namespace XCraft {
         public D D {
             get {return d;}
         }
-        public Game1()
+
+        protected bool noiseOutput = false;
+        public Game1(/*string[] args*/)
         {
+            /*
+            foreach(var arg in args) {
+                if (arg == "noise") {
+                    noiseOutput = true;
+                }
+            }*/
+
             _graphics = new GraphicsDeviceManager(this);
 
             Content.RootDirectory = "Content";
@@ -112,9 +121,27 @@ namespace XCraft {
             d.ms = Mouse.GetState();
             d.p_ks = d.ks;
             d.ks = Keyboard.GetState();
-    }
+        }
         protected int previousMouseWheelValue = 0;
+        int pressSDelay = 0;
+
         protected void WASDArrowsMouseNav() {
+            bool spectatorModeKeyPressed = false;
+
+            if (a.OnePressedP() && pressSDelay == 0) {
+                spectatorModeKeyPressed = true;
+                pressSDelay = 40;
+            }
+            if (pressSDelay > 0) {
+                pressSDelay = pressSDelay - 1;
+            } else {
+                pressSDelay = 0;
+            }
+
+            if (spectatorModeKeyPressed) {
+                d.spectator = !d.spectator;
+            }
+
             bool s = a.LShiftHold();
 
             previousMouseWheelValue = D.ms.ScrollWheelValue - previousMouseWheelValue;
@@ -136,21 +163,25 @@ namespace XCraft {
             }
 
             previousMouseWheelValue = D.ms.ScrollWheelValue;
-            if (a.AHold() || a.LeftHold()) {
-                if (!s) {d.n.zXAcc -= 5.0f;}
-                else {d.n.zXAcc -= 15.0f;}
-            }
-            if (a.DHold() || a.RightHold()) {
-                if (!s) {d.n.zXAcc += 5.0f;}
-                else {d.n.zXAcc += 15.0f;}
-            }
-            if (a.WHold() || a.UpHold()) {
-                if (!s) {d.n.zYAcc -= 5.0f;}
-                else {d.n.zYAcc -= 15.0f;}
-            }
-            if (a.SHold() || a.DownHold()) {
-                if (!s) {d.n.zYAcc += 5.0f;}
-                else {d.n.zYAcc += 15.0f;}
+            if (D.spectator) {
+                if (a.AHold() || a.LeftHold()) {
+                    if (!s) {d.n.zXAcc -= 2.5f;}
+                    else {d.n.zXAcc -= 6.0f;}
+                }
+                if (a.DHold() || a.RightHold()) {
+                    if (!s) {d.n.zXAcc += 2.5f;}
+                    else {d.n.zXAcc += 6.0f;}
+                }
+                if (a.WHold() || a.UpHold()) {
+                    if (!s) {d.n.zYAcc -= 2.5f;}
+                    else {d.n.zYAcc -= 6.0f;}
+                }
+                if (a.SHold() || a.DownHold()) {
+                    if (!s) {d.n.zYAcc += 5.0f;}
+                    else {d.n.zYAcc += 6.0f;}
+                }
+            } else {
+                
             }
         }
         public bool ut_success = false;

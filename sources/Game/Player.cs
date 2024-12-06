@@ -15,13 +15,13 @@ using System.Threading.Tasks;
 
 
 namespace XCraft {
-    public class PR : ER {
+    public class PlayerR : ER {
 
     };
-    public class PI : EI {
+    public class PlayerI : EI {
 
     };
-    public class P {
+    public class Player {
         
     };
 }
