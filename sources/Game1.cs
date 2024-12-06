@@ -239,8 +239,8 @@ namespace XCraft {
             // }
 
             D.m.Draw(_spriteBatch);
-            D.gui.DrawGT(_spriteBatch);
-            D.gui.ActivityGT();
+            //D.gui.DrawGT(_spriteBatch);
+            //D.gui.ActivityGT();
             _spriteBatch.End();
             
             //DrawSimpleShapesTest(gameTime);

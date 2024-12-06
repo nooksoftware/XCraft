@@ -60,6 +60,136 @@ namespace XCraft {
             }
             return terH;
         }
+        public int[] GenerateHeightForTerrain(float[] thNoise) {
+            //int[] determinedBiomes; applications
+            int[] heights = new int[w];
+
+            for (int x = 0 ; x < w; x++) {
+                heights[x] = System.Convert.ToInt32(thNoise[x] * mH1);
+
+                //Console.WriteLine("   " + heights[x]); //ok
+                if (heights[x] < 0) {
+                    heights[x] = 0;
+                } else if (heights[x] >= mH1) {
+                    heights[x] = mH1-1;
+                }
+            }
+            return heights;
+        }
+        public bool RandomPercentagic(int percentagic, int scope) {
+            return (random.Next(percentagic) < scope);
+        }
+        public void GenerateSimpleHillLandscape(int h, int[] thHeights, int beginY, int endY) {
+            for (int x = 0; x < w; x++) {
+                int hValue = thHeights[x];
+                for (int y = beginY; y < endY; y++) {
+                    if (y-beginY == hValue) {
+                        T(x,y,TT.GRASS);
+                    } else if (y-beginY < hValue) {
+                        T(x,y,TT.AIR);
+                    } else if (y-beginY > hValue && y-beginY < hValue+3) {
+                        T(x,y,TT.DIRT);
+                    } else if (y-beginY > hValue) {
+                        bool random3 = RandomPercentagic(endY - beginY, (y-beginY));
+                        if (random3) {
+                            T(x,y,TT.STONE);
+                        } else {
+                            T(x,y,TT.DIRT);
+                        }
+                    } else { //if y < hValue
+                        T(x,y,TT.AIR);
+                    }
+                }
+            }
+
+        }
+        public void GenerateSimpleUndergrounds(int beginY, int endY) {
+            V2i[,] cavesCenters = new V2i[10,7];
+            V2i[,] cavesSizes = new V2i[10,7];
+
+            int height = endY - beginY;
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 7; j++) {
+                    int locX = random.Next(w);
+                    int locY = random.Next(endY-beginY);
+                    int cavSizeX = random.Next(50);
+                    int cavSizeY = random.Next(20);
+
+                    locY = locY + 100;
+
+                    cavesCenters[i,j] = new V2i(locX, locY);
+                    cavesSizes[i,j] = new V2i(cavSizeX, cavSizeX);
+                }
+            }
+
+
+            TT[,] ores = new TT[w,h];
+            for (int x = 0; x < w; x++) {
+                for (int y = 0; y < h; y++) {
+                    ores[x,y] = TT.UNKNOWN;
+                }
+            }
+
+            for (int i = 0; i < 50; i++) {
+                for (int j = 0; j < 30; j++) {
+                    int oreX = random.Next(w);
+                    int oreY = random.Next(h);
+                    ores[oreX, oreY] = TT.IRON_ORE;
+                }
+            }
+            for (int i = 0; i < 50; i++) {
+                for (int j = 0; j < 30; j++) {
+                    int oreX = random.Next(w);
+                    int oreY = random.Next(h);
+                    ores[oreX, oreY] = TT.GOLD_ORE;
+                }
+            }
+            for (int i = 0; i < 20; i++) {
+                for (int j = 0; j < 8; j++) {
+                    int oreX = random.Next(w);
+                    int oreY = random.Next(h);
+                    ores[oreX, oreY] = TT.DIA_ORE;
+                }
+            }
+
+            for (int x = 0; x < w ; x++ ) {
+                for (int y = 0; y < height; y++) {
+                    T(x,y,TT.STONE);
+                    if (ores[x,y] != TT.UNKNOWN) {
+                        T(x,y, ores[x,y]);
+                    }
+                }
+            }
+
+            Ri[,] cavesBounds = new Ri[10,7];
+
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 7; j++) {
+                    int caveOY = cavesCenters[i,j].y;
+                    int caveOX = cavesCenters[i,j].x;
+                    int caveWidth = cavesSizes[i,j].x;
+                    int caveHeight = cavesSizes[i,j].y;
+
+
+                    cavesBounds[i,j] = new Ri(caveOX - caveWidth/2, caveOY - caveHeight / 2, caveWidth, caveHeight);
+                }
+            }
+
+            //for (int i = 0; i < 10; i++) {
+            //    for (int j = 0; j < 7; j++) {
+            //        Ri caveBounds = cavesBounds[i,j];
+//
+            //        for (int x = caveBounds.x; x < caveBounds.w + caveBounds.x; x++) {
+            //            for (int y = caveBounds.y; y < caveBounds.h + caveBounds.y; y++) { 
+            //                if (x > 0 && x < w && y > 0 && y < h) {
+            //                    T(x,y, TT.AIR);
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+        }
+
         public void Generate() {
             Verify();
             lite.SetSeed(random.Next(1000000));
@@ -71,13 +201,17 @@ namespace XCraft {
             int begY3 = h - (mH3);
 
             float[] tHNoise = GenerateWidthNoise();
+            int[] thHeights = GenerateHeightForTerrain(tHNoise);
+
+            GenerateSimpleHillLandscape(mH1, thHeights, begY1, begY2);
+            GenerateSimpleUndergrounds(begY2, begY3);
 
             for (int x = 0; x < w; x++) {
                 for (int y = 0 ; y < h; y++) {  
                     if (y >= 0 && y < begY1) {
                         T(x,y, TT.AIR);
                     } else if (y >= begY1 && y < begY2) {
-                        T(x,y, TT.DIRT);
+
                     } else if (y >= begY2 && y < begY3) {
                         T(x,y, TT.STONE);
                     } else if (y >= begY3 && y < h) {
