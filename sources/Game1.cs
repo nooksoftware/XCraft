@@ -49,10 +49,11 @@ namespace XCraft {
 
             this.d.varShare = new VarShare();
             VarShare varShare = d.varShare;
+            varShare.id = "Var Shares";
 
             varShare.Add("mousepos", new Vec2iVarShare(0, 0));
-            varShare.Add("basePos1", new RiVarShare(0,0,0,0));
-            varShare.Add("basePosy", new RiVarShare(0,0,0,0));            
+            //varShare.Add("basePos1", new RiVarShare(0,0,0,0));
+            //varShare.Add("basePosy", new RiVarShare(0,0,0,0));            
 
             IsMouseVisible = true;
 

@@ -44,12 +44,7 @@ namespace XCraft {
         public void SetID(string id) {
             this.id = id;
         }
-        public virtual string VarToString() {
-            return "";
-        }
-        public virtual string VarFullString() {
-            return id + " = " + VarToString();
-        }
+        public virtual string VarToString() {return "";}
         public void Add(string path, VarShare share) {
             string[] keys = path.Split('/');
 
@@ -135,6 +130,7 @@ namespace XCraft {
         public override string VarToString() {
             return ("(" + value.x.ToString() + ", " + value.y.ToString() + ")");
         }
+
     }
     public class Vec2fVarShare : VarShare {
         public V2f value;
@@ -212,11 +208,12 @@ namespace XCraft {
         }
         public void RenderVarOutlist(int x, int y, int level, VarShare varShare, SpriteBatch spriteBatch) {
             if (varShare != null) {
-                RenderText(x,y,varShare.VarFullString(), varShare.labelColor, spriteBatch);
+                string text = varShare.id + "=" + varShare.VarToString(); 
+                RenderText(x,y,text, varShare.labelColor, spriteBatch);
                 foreach (var share in varShare.shares) {
                     if (share.Value != null) {
-                        RenderVarOutlist(x+level*6,y,level+1, share.Value, spriteBatch);
-                        y += 16;
+                        RenderVarOutlist(x+level*12,y,level+1, share.Value, spriteBatch);
+                        y += 18;
                     }
                 }
             } else {
