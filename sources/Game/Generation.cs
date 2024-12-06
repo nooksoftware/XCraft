@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 //using FastNoiseLite;
 
+
+
 namespace XCraft {
         public class G {
         FastNoiseLite lite;
@@ -30,7 +32,7 @@ namespace XCraft {
         public int mH1 = 80;
 
         public int airY = 48;
-        public int terrainY = 64;
+        public int terrainY = 24;
         public int groundY = -1;
         public int bedrockY = 5;
 
@@ -102,32 +104,32 @@ namespace XCraft {
             float[] tHNoise = GenerateWidthNoise();
             int[] thHeights = GenerateHeightForTerrain(tHNoise);
 
-            for (int x = 0; x < w; x++) {
-                int hValue = thHeights[x];
-                for (int y = terrainY1; y < terrainY2; y++) {
-                    int absY = y - terrainY1;
-                    if (absY == hValue) {
-                        T(x,y,TT.GRASS);
-                    } else if (absY < hValue) {
-                        T(x,y,TT.AIR);
-                    } else if (absY > hValue && absY < hValue+3) {
-                        T(x,y,TT.DIRT);
-                    } else if (absY > hValue) {
+            // for (int x = 0; x < w; x++) {
+            //     int hValue = thHeights[x];
+            //     for (int y = terrainY1; y < terrainY2; y++) {
+            //         int absY = y - terrainY1;
+            //         if (absY == hValue) {
+            //             T(x,y,TT.GRASS);
+            //         } else if (absY < hValue) {
+            //             T(x,y,TT.AIR);
+            //         } else if (absY > hValue && absY < hValue+3) {
+            //             T(x,y,TT.DIRT);
+            //         } else if (absY > hValue) {
 
-                        bool random3 = RandomPercentagic(terrainY2 - terrainY1, (absY));
-                        bool random4 = RandomPercentagic(terrainY2 - terrainY1, (absY));
+            //             bool random3 = RandomPercentagic(terrainY2 - terrainY1, (absY));
+            //             bool random4 = RandomPercentagic(terrainY2 - terrainY1, (absY));
 
-                        if (random3 & random4) {
-                            T(x,y,TT.STONE);
-                        } else {
-                            T(x,y,TT.DIRT);
-                        }
+            //             if (random3 & random4) {
+            //                 T(x,y,TT.STONE);
+            //             } else {
+            //                 T(x,y,TT.DIRT);
+            //             }
 
-                    } else { //if y < hValue
-                        T(x,y,TT.AIR);
-                    }
-                }
-            }
+            //         } else { //if y < hValue
+            //             T(x,y,TT.AIR);
+            //         }
+            //     }
+            // }
 
         }
         public void GenerateSimpleUndergrounds(int beginY, int endY) {
@@ -286,13 +288,13 @@ namespace XCraft {
         public Ri[,] cavesBounds;
         public int cavesAmoX;
         public int cavesAmoY;
-        protected int caveMinW = 3;
-        protected int caveMinH = 2;
-        protected int caveMaxW = 21;
-        protected int caveMaxH = 15;
+        protected int caveMinW = 7;
+        protected int caveMinH = 4;
+        protected int caveMaxW = 32;
+        protected int caveMaxH = 19;
         public void GenerateCaves() {
-            cavesAmoX = w/6;
-            cavesAmoY = h/6;
+            cavesAmoX = w/52;
+            cavesAmoY = h/16;
 
             cavesBounds = new Ri[cavesAmoX, cavesAmoY];
 
@@ -306,7 +308,7 @@ namespace XCraft {
                     cavesBounds[i,j] = new Ri(caveX, caveY, caveW, caveH);
                 }
             }
-            lite.SetFrequency(0.05f);
+            lite.SetFrequency(0.18f);
             lite.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
 
             float[,] caveNoise = new float[w,h];
@@ -316,7 +318,7 @@ namespace XCraft {
                     //bool linearUndFreq = RandomPercentagic(7,6);
                     caveNoise[x,y] = NormalizeNoiseDef(lite.GetNoise(x, y));
 
-                    if (caveNoise[x,y] < 0.7f) {
+                    if (caveNoise[x,y] < 0.4f) {
                         caveAir[x,y] = true;
                     } else {
                         caveAir[x,y] = false;
@@ -327,10 +329,10 @@ namespace XCraft {
             for (int i = 0; i < cavesAmoX; i++) {
                 for (int j = 0; j < cavesAmoY; j++) {
                     Ri b = cavesBounds[i,j];
-                    for (int x = b.x; x < b.w; x++) {
-                        for (int y = b.y; y < b.h; y++) {
+                    for (int x = b.x; x < b.w+b.x; x++) {
+                        for (int y = b.y; y < b.h+b.y; y++) {
                             if (x > 0 && x < w && y > 0 && y < h) {
-                                if (caveAir[x,y]) {
+                                if (caveAir[x,y] && m.ts[x,y].tt != TT.AIR && m.ts[x,y].tt != TT.GRASS) {
                                     T(x,y,TT.AIR);
                                 }
                             } 
@@ -348,15 +350,129 @@ namespace XCraft {
         public void GenerateBasePlaceholdersAndStructuresAround() {
         
         }
+        public void PreAirFill() {
+            for (int x = 0; x < w; x++) {
+                for (int y = 0 ; y < h; y++) {  
+                    T(x,y,TT.AIR);
+                }
+            }
+        }
+        public void SetPreVariables() {
+            this.groundY = h - airY - terrainY - bedrockY;
+
+            airY1 = 0;
+            airY2 = airY-1;
+            terrainY1 = airY2+1;
+            terrainY2 = terrainY1 + terrainY - 1;
+            groundY1 = terrainY2+1;
+            groundY2 = groundY1 + groundY - 1;
+            bedrockY1 = groundY2 + 1;
+            bedrockY2 = h-1; 
+        }
+        public void GenerateSimpleHillLandscape2() {
+            float[] heightMap = new float[w];
+            lite.SetFrequency(0.04f);
+
+            for (int x = 0; x < w; x++) {
+                heightMap[x] = NormalizeNoiseDef(lite.GetNoise(x,1f));
+            }
+            int[] heightMap2 = new int[w];
+            int terrainHeight = terrainY2 - terrainY1;
+            for (int x = 0; x < w; x++) {
+                int v = System.Convert.ToInt32(heightMap[x] * terrainHeight);
+                if (v > terrainHeight) {
+                    v = terrainHeight;
+                } else if (v < 0) {
+                    v = 0;
+                }
+                heightMap2[x] = v;
+            }
+
+            for (int x = 0; x < w; x++) {
+                int mapH = heightMap2[x];
+                for (int y = terrainY1; y <= terrainY2; y++) {
+                    int relY = y-terrainY1;
+                    if (relY < mapH) {
+                        T(x,y,TT.AIR);
+                    } else if (relY == mapH) {
+                        T(x,y,TT.GRASS);
+                    } else if (relY > mapH) {
+                        T(x,y,TT.DIRT);
+                    }
+                }
+            }
+        }
+        public void GenerateGround2() {
+            float[,] noiseMap = new float[w,h];
+            bool[,] dirtMap = new bool[w,h];
+            lite.SetFrequency(0.13f);
+            lite.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
+            for (int x = 0; x < w; x++) {
+                for (int y = 0; y < h; y++) {
+                    float n = NormalizeNoiseDef(lite.GetNoise(x,y));
+                    noiseMap[x,y] = n;
+                    if (n < 0.5f * (1.0f - ((float)(y/h)*0.35f))) {
+                        dirtMap[x,y] = true;
+                    } else {
+                        dirtMap[x,y] = false;
+                    }
+                }
+            }
+            
+            
+
+            for (int x = 0; x < w; x++) {
+                for (int y = groundY1; y < groundY2; y++) {
+                    if (dirtMap[x,y]) {
+                        T(x,y,TT.DIRT);
+                    } else {
+                        T(x,y, TT.STONE);
+                    }
+                }
+            }
+
+            for (int x = 0; x < w; x++) {
+                for (int y = terrainY1; y < terrainY2; y++) {
+                    if (m.ts[x,y].tt == TT.DIRT) {
+                        if (dirtMap[x,y]) {
+                            T(x,y,TT.DIRT);
+                        } else {
+                            T(x,y, TT.STONE);
+                        }                        
+                    }
+                }
+            }
+
+        }
+        public void GenerateOre2() {
+            int absH = groundY2 - terrainY1;
+            for (int x = 0 ; x < w; x++) {
+                for (int y = terrainY1 ; y < groundY2; y++) {
+                    int absY = y-terrainY1;
+                    if (m.ts[x,y].tt == TT.STONE) {
+                        bool linearUndFreq = RandomPercentagic(absH, absY);
+                        if (linearUndFreq) {
+                            if (random.Next(iOp) <= 1) {
+                                T(x,y, TT.IRON_ORE);
+                            } else if (random.Next(gOp) <= 1) {
+                                T(x,y, TT.GOLD_ORE);
+                            } else if (random.Next(dOp) <= 1) {
+                                T(x,y, TT.DIA_ORE);
+                            }
+                        }
+                    }
+                }
+            }
+        }
         public void Generate() {
             Verify();
             lite.SetSeed(random.Next(1000000));
             //GenerateBasicTerrain();
             //GenerateBasicOre();
         
-            int begY1 = h - (mH3 + mH2 + mH1);
-            int begY2 = h - (mH3 + mH2);
-            int begY3 = h - (mH3);
+            // int begY1 = h - (mH3 + mH2 + mH1);
+            // int begY2 = h - (mH3 + mH2);
+            // int begY3 = h - (mH3);
 
             //int airY1 = 0;
             //int airY2 = 0;
@@ -369,19 +485,23 @@ namespace XCraft {
 
             //GenerateSimpleUndergrounds(begY2, begY3);
             
-            for (int x = 0; x < w; x++) {
-                for (int y = 0 ; y < h; y++) {  
-                    T(x,y,TT.AIR);
-                }
-            }
+            //Fill air
+            SetPreVariables();
+            PreAirFill();
 
-            GenerateSimpleHillLandscape();
-            GenerateGround();
-            GenerateOre();
-            GenerateCaves();
-            GenerateCavesPaths();
-            GenerateStructuresPlaceholders();
-            GenerateBasePlaceholdersAndStructuresAround();
+            GenerateSimpleHillLandscape2();
+            GenerateGround2();
+            GenerateOre2();
+            //GenerateCaves();
+            //GenerateCaves2();
+
+            //GenerateSimpleHillLandscape();
+            //GenerateGround();
+            //GenerateOre();
+            //GenerateCaves();
+            //GenerateCavesPaths();
+            //GenerateStructuresPlaceholders();
+            //GenerateBasePlaceholdersAndStructuresAround();
 
 
             
@@ -552,12 +672,12 @@ namespace XCraft {
             this.groundY = h - airY - terrainY - bedrockY;
 
             airY1 = 0;
-            airY2 = airY-1;
-            terrainY1 = airY2+1;
-            terrainY2 = terrainY1 + terrainY - 1;
-            groundY1 = terrainY2+1;
-            groundY2 = groundY1 + groundY - 1;
-            bedrockY1 = groundY2 + 1;
+            airY2 = airY;
+            terrainY1 = airY2;
+            terrainY2 = terrainY1 + terrainY;
+            groundY1 = terrainY2;
+            groundY2 = groundY1 + groundY;
+            bedrockY1 = groundY2;
             bedrockY2 = h-1; 
 
             if (m != null) {this.m = m;}
