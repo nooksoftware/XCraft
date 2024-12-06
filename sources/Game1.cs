@@ -232,9 +232,6 @@ namespace XCraft {
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            
-
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
             // if (editor) {

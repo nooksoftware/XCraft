@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 //using FastNoiseLite;
 
 namespace XCraft {
-
     public class ButtonGUIA : GUIA {
         public ButtonGUIA(GUIE parent, GUI gui, D d, A a) : base(parent, gui, d, a) {}
         public override void Activity() {

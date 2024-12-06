@@ -93,6 +93,10 @@ namespace XCraft {
             main.Add("editor/mappanel/generate", new ButtonGUIE(this, d, a, f, "Generate Map", 190, 445, 250, 35));
             //main.Add("editor/mappanel/textinputfield", new TextInputFieldGUIE(this, d, a, f, "TextInputField", 20, 100, 350, 150));
         }
+        /// <summary>
+        /// This function is to load the Acceptance test of all GUI Elements for the engine
+        /// Run it, if you want to test the GUI Elements, but don't forget to also run the ActivityGT and RenderGT functions.
+        /// </summary>
         protected void LoadDefaultGTGUI() {
             SpriteFont f = d.Fon("DejaVuSans");
 
@@ -121,32 +125,64 @@ namespace XCraft {
                 // 🖋 Standard [mostly]
                 //Scrollable
             
-            //Layouts
+            //As Acceptance Test
 
-            gt.Add("panel", new PanelGUIE(this, d, a, 10, 10, (int)(d.wW*0.75), d.wH-10
-                ,true, new Ti(0,0,(int)(d.wW*0.75), d.wH-10+1000), 
-                    new SliderGUIE(this, d, a, 600, 20, 70, 500, false)
+            gt.Add("panel", new PanelGUIE(this, d, a, 0, 0, d.wW, d.wH
+                ,true, new Ti(0,0,(int)(d.wW), d.wH+1000), 
+                    new SliderGUIE(this, d, a, d.wW-50, 20, -1, d.wH-40, false)
                 )
             );
 
-            gt.Add("panel/panelSlider", new SliderGUIE(this, d, a, 20, 20, 250, 70));
-            gt.Add("panel/vertPanelSlider", new SliderGUIE(this, d, a, 20, 80, 70, 250, false));
 
-            gt.Add("panel/button", new ButtonGUIE(this, d, a, f, "Button", 120, 40, 180, 75));
+            //gt.Add("panel/button", new ButtonGUIE(this, d, a, f, "Button", 120, 40, 180, 75));
+            //gt.Add("panel/graphicbutton", new 
+            //gt.Add("panel/checkbox", new 
+            //gt.Add("panel/radiobox", new 
+            //gt.Add("panel/radiobox2", new 
+            //gt.Add("panel/radiobox3", new 
+            //gt.Add("panel/dropdown", new 
+            //gt.Add("panel/slider", new 
+            //gt.Add("panel/progressbar", new 
+            //gt.Add("panel/textinputfield", new 
+            //gt.Add("panel/textareafield", new 
+            //gt.Add("panel/passwordtextinputfield", new 
+            //gt.Add("panel/tooltip", new 
+            //gt.Add("panel/searchbar", new 
+            //gt.Add("panel/popup", new 
+            //gt.Add("panel/menupopup", new 
+            //gt.Add("panel/colorpicker", new 
+            //gt.Add("panel/datepicker", new 
+            //gt.Add("panel/timepicker", new 
+            //gt.Add("panel/panel", new 
+            //gt.Add("panel/standard", new 
+            //gt.Add("panel/scrollable", new 
 
-            gt.Add("panel/progressbar", new ProgressbarGUIE(this, d, a, 120, 90, 180, 75, 100, 20));
+            //Layouts
 
-            gt.Add("panel/checkbox", new CheckboxGUIE(this, d, a, f, "Checkbox", 120, 140, 180, 75));
+            //gt.Add("panel", new PanelGUIE(this, d, a, 10, 10, (int)(d.wW*0.75), d.wH-10
+            //    ,true, new Ti(0,0,(int)(d.wW*0.75), d.wH-10+1000), 
+            //        new SliderGUIE(this, d, a, 600, 20, 70, 500, false)
+            //    )
+            //);
 
-            RadioboxGroup radioboxgroup = new RadioboxGroup();
-            gt.Add("panel/radiobox1", new RadioboxGUIE(this, d, a, f, "Radiobox A", 380, 20, 180, 22, false, true, radioboxgroup));
-            gt.Add("panel/radiobox2", new RadioboxGUIE(this, d, a, f, "Radiobox B", 380, 50, 180, 22, false, true, radioboxgroup));
-            gt.Add("panel/radiobox3", new RadioboxGUIE(this, d, a, f, "Radiobox C", 380, 80, 180, 22, false, true, radioboxgroup));
-            gt.Add("panel/radiobox4", new RadioboxGUIE(this, d, a, f, "Radiobox D", 380, 110, 180, 22, false, true, radioboxgroup));
-            gt.Add("panel/radiobox5", new RadioboxGUIE(this, d, a, f, "Radiobox E", 380, 140, 180, 22, true, true, radioboxgroup));
+            //gt.Add("panel/panelSlider", new SliderGUIE(this, d, a, 20, 20, 250, 70));
+            //gt.Add("panel/vertPanelSlider", new SliderGUIE(this, d, a, 20, 80, 70, 250, false));
 
-            gt.Add("panel/numberfield1", new NumberFieldGUIE(this, d, a, f, 0, 0, 255, 20, 600, 130, 22));
-            gt.Add("panel/numberfield2", new NumberFieldGUIE(this, d, a, f, 12, 3, 1024, 20, 640, 230, 22));
+            //gt.Add("panel/button", new ButtonGUIE(this, d, a, f, "Button", 120, 40, 180, 75));
+
+            //gt.Add("panel/progressbar", new ProgressbarGUIE(this, d, a, 120, 90, 180, 75, 100, 20));
+
+            //gt.Add("panel/checkbox", new CheckboxGUIE(this, d, a, f, "Checkbox", 120, 140, 180, 75));
+
+            //RadioboxGroup radioboxgroup = new RadioboxGroup();
+            //gt.Add("panel/radiobox1", new RadioboxGUIE(this, d, a, f, "Radiobox A", 380, 20, 180, 22, false, true, radioboxgroup));
+            //gt.Add("panel/radiobox2", new RadioboxGUIE(this, d, a, f, "Radiobox B", 380, 50, 180, 22, false, true, radioboxgroup));
+            //gt.Add("panel/radiobox3", new RadioboxGUIE(this, d, a, f, "Radiobox C", 380, 80, 180, 22, false, true, radioboxgroup));
+            //gt.Add("panel/radiobox4", new RadioboxGUIE(this, d, a, f, "Radiobox D", 380, 110, 180, 22, false, true, radioboxgroup));
+            //gt.Add("panel/radiobox5", new RadioboxGUIE(this, d, a, f, "Radiobox E", 380, 140, 180, 22, true, true, radioboxgroup));
+
+            //gt.Add("panel/numberfield1", new NumberFieldGUIE(this, d, a, f, 0, 0, 255, 20, 600, 130, 22));
+            //gt.Add("panel/numberfield2", new NumberFieldGUIE(this, d, a, f, 12, 3, 1024, 20, 640, 230, 22));
 
 
             //gt.Add("panel/textinputfield", new TextInputFieldGUIE(this, d, a, f, "Text Input Field", 20, 450, 220, 100));
@@ -154,6 +190,7 @@ namespace XCraft {
 
             //gt.Add("panel", new PanelGUIE(this, d, a, 10, 10, d.wW/2-10, d.wH/2-10));
         }
+        
         public void Draw(SpriteBatch spriteBatch) {
             if (main.Exists(current_menu)) {
                 main.Get(current_menu).Draw(spriteBatch);

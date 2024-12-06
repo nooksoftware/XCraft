@@ -251,7 +251,9 @@ namespace XCraft {
         DATEPICKER,
         TIMEPICKER,
         SCROLLABLE,
-        LAYOUTS
+        LAYOUTS,
+        GRAPHICBUTTON,
+        TEXTAREAFIELD
     };
     public class GUIR {
         public GUIE parent; public GUI gui; public D d; public A a;
