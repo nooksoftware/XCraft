@@ -15,66 +15,63 @@ using System.Threading.Tasks;
 
 
 namespace XCraft {
-    public class T {
-        public int x = 0;
-        public int y = 0;
-        public TT tt;
-        public Texture2D tp;
-        public int tpX = -1;
-        public int tpY = -1;
-        public D d;
-
-        public bool IsSolid() {
-            return (tt != TT.UNKNOWN || tt != TT.AIR || tt != TT.WATER);
-        }
-        public bool HasTP() {
-            return (tpX != -1) || (tpY != -1) || (tp == null);
-        }
-        public T(int x, int y, TT tt, Texture2D tp, D d) {
-            this.x = x;
-            this.y = y;
-            this.tt = tt;
-            this.tp = tp;
-            this.d = d;
-
-            if (d.tpPos.ContainsKey(tt)) {
-                this.tpX = d.tpPos[tt].x;
-                this.tpY = d.tpPos[tt].y;
-            }
-        }
-        public Rectangle de;
-        public Rectangle o;
-        public bool Draw(SpriteBatch spriteBatch) {
-
-            int nOx = d.n.nOx;
-            int nOy = d.n.nOy;
-
-            de = new Rectangle(
-                System.Convert.ToInt32((x*32 - d.n.zX)*(d.n.zZ)+ nOx), 
-                System.Convert.ToInt32((y*32 - d.n.zY)*(d.n.zZ)+ nOy),
-                System.Convert.ToInt32(32*d.n.zZ),System.Convert.ToInt32(32*d.n.zZ));
-            o = new Rectangle(
-                System.Convert.ToInt32(tpX*32), 
-                System.Convert.ToInt32(tpY*32), 
-                32, 32);
-            if (de.X < -32 || de.Y < -32) {
-                return false;
-            }
-            if (de.X > d.wW || de.Y > d.wH) {
-                return false;
-            }
-
-            if (tt == TT.AIR || tt == TT.UNKNOWN) {
-                return true;
-            }
-            if (tpX == -1 || tpY == -1) {
-                return false;
-            }
-            spriteBatch.Draw(tp, de, o, Color.White);
-            return true;
-        }
-    };
     public enum TT {
+        UNKNOWN = -1,
+        AIR = 0,
+        STONE = 1,
+        ROUGHSTONE,
+        BEDROCK,
+        COBBLESTONE,
+        CLEARSTONE,
+        SAND,
+        CLAY,
+        WATER,
+        IRON_ORE,
+        GOLD_ORE,
+        DIA_ORE,
+        ORE1,
+        ORE2,
+        ORE3,
+        DIRT,
+        GRASS,
+        WOOD1,
+        WOOD2,
+        LEAVES1,
+        LEAVES2,
+        PLANKS1,
+        PLANKS2,
+        PLANKS3,
+        BRICKS,
+        COBBLESTONE_BRICKS,
+        PLANKS1_B,
+        PLANKS2_B,
+        PLANKS3_B,
+        WOODEN_VERTICAL,
+        WOODEN_HORIZONTAL,
+        WOODEN_BOXAL,
+        STONE_VERTICAL,
+        STONE_HORIZONTAL,
+        STONE_BOXAL,
+        IRON_VERTICAL,
+        IRON_HORIZONTAL,
+        IRON_BOXAL,
+        WOODEN_DOOR_TOP,
+        STONE_DOOR_TOP,
+        IRON_DOOR_TOP,
+        WOODEN_DOOR,
+        STONE_DOOR,
+        IRON_DOOR,
+        WOODEN_DOOR_END,
+        STONE_DOOR_END,
+        IRON_DOOR_END,
+        SUPERDOOR_TOP,
+        SUPERDOOR,
+        SUPERDOOR_END,
+        SUPERDOOR2_TOP,
+        SUPERDOOR2,
+        SUPERDOOR2_END
+    };
+    /*public enum TT {
         UNKNOWN = -1,
         AIR = 0,
         DIRT,
@@ -110,5 +107,105 @@ namespace XCraft {
         ORE2,
         ORE3,
         COBBLESTONE
+    };*/
+    public class T {
+        public int tpPosX = -1;
+        public int tpPosY = -1;
+        public int x = 0;
+        public int y = 0;
+        public TT tt = TT.AIR;
+        public A a;
+        public T(int x, int y, TT tt, A a) {
+            this.x = x;
+            this.y = y;
+            this.tt = tt;
+            this.a = a;
+
+            bool s = a.tppos.TryGetValue(tt, out V2i tpos);
+            if (s) {
+                tpPosX = tpos.x;
+                tpPosY = tpos.y;
+            }
+        }
+
+        public int ScreenXPos() {
+            return
+                System.Convert.ToInt32
+                ((this.x*a.tileSize - a.n.zX) * (a.n.zZ) + (a.windowWidth/2));
+        }
+        public int ScreenYPos() {
+            return
+                System.Convert.ToInt32
+                ((this.y*a.tileSize - a.n.zY) * (a.n.zZ) + (a.windowHeight/2));
+        }
+        public int ScreenWidthHeightSize() {
+            return System.Convert.ToInt32(a.tileSize * a.n.zZ);
+        }
+        public Rectangle RenderOrigin() {
+            if (tt == TT.AIR || tt == TT.UNKNOWN) {
+                return new Rectangle(-1,-1,-1,-1);
+            }
+            return new Rectangle(
+                System.Convert.ToInt32(tpPosX * a.tileSize),
+                System.Convert.ToInt32(tpPosY * a.tileSize),
+                System.Convert.ToInt32(a.tileSize),
+                System.Convert.ToInt32(a.tileSize)
+            );
+
+        }
+        public Rectangle RenderDestination() {
+            return new Rectangle(
+                System.Convert.ToInt32
+                ((this.x*a.tileSize - a.n.zX)*a.n.zZ + (a.windowWidth/2)),
+                System.Convert.ToInt32
+                ((this.y*a.tileSize - a.n.zY)*a.n.zZ + (a.windowHeight/2)),
+                System.Convert.ToInt32(a.tileSize * a.n.zZ),
+                System.Convert.ToInt32(a.tileSize * a.n.zZ)
+            );
+        }
+
+        public void Tick(GameTime gameTime) {
+
+        }
+        public bool Render(SpriteBatch spriteBatch) {
+            if (tt == TT.AIR || tt == TT.UNKNOWN) {
+                return false;
+            }
+            if (tpPosX == -1 || tpPosY == -1) {
+                return false;
+            }
+            //Rectangle o = RenderOrigin();
+            //Rectangle d = RenderDestination();
+
+            Rectangle o = 
+
+            new Rectangle(
+                System.Convert.ToInt32(tpPosX * a.tileSize),
+                System.Convert.ToInt32(tpPosY * a.tileSize),
+                System.Convert.ToInt32(a.tileSize),
+                System.Convert.ToInt32(a.tileSize)
+            );
+
+            Rectangle d = 
+
+            new Rectangle(
+                System.Convert.ToInt32
+                ((this.x*a.tileSize - a.n.zX)*a.n.zZ + (a.windowWidth/2)),
+                System.Convert.ToInt32
+                ((this.y*a.tileSize - a.n.zY)*a.n.zZ + (a.windowHeight/2)),
+                System.Convert.ToInt32(a.tileSize * a.n.zZ),
+                System.Convert.ToInt32(a.tileSize * a.n.zZ)
+            );
+
+            
+
+            if (/*a.WithinScreenBounds(d, -24,-24,24,24)*/true) {
+
+                spriteBatch.Draw(a.tp, d, o, Color.White);
+                return true;
+            } else {
+                return false;
+            }
+        }
     };
 }

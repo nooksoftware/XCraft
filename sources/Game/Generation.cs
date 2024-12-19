@@ -11,192 +11,70 @@ using System.Security.Cryptography;
 using System.ComponentModel.Design.Serialization;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using System.Xml.Linq;
-using System.Runtime.CompilerServices;
+using System.Net;
 //using FastNoiseLite;
 
+using MVector2 = Microsoft.Xna.Framework.Vector2;
+using System.Net.Security;
+
 namespace XCraft {
-    public enum BiomeTerrainType {
-        NONE = -1,
-        HILLS = 0,
-        CLIFFS,
-        FOREST
-    };
-    public enum CaveType {
-        NONE = -1,
-        NORMAL_CAVE = 0,
-        WATER_CAVE
-    };
-    public enum BaseType {
-        NONE = -1,
-        MAIN_BASE = 0,
-        OUTPUST
-    };
-    public class GBase {
-        public int moduleA = 0;
-        public int moduleB = 0;
-        public bool isBaseNotOutpust = true;
-        int centerX = 0;
-        int centerY = 0;
-        public void Center(int centerX, int centerY) {
-            this.centerX = centerX;
-            this.centerY = centerY;
-        }
-    };
-    public class GBiomeTerrain {
-        public BiomeTerrainType type;
-        public GBiomeTerrain(BiomeTerrainType type) {
-            this.type = type;
-        }
-    };
-    public class GCliffsBiomeTerrain : GBiomeTerrain {
-        int treesFrequency = 8;
-        public GCliffsBiomeTerrain() : base(BiomeTerrainType.CLIFFS) {
-    
-        }
-    };
-    public class GForestBiomeTerrain : GBiomeTerrain {
-        int treesFrequency = 50;
-        public GForestBiomeTerrain() : base(BiomeTerrainType.FOREST) {
-    
-        }
-    };
-    public class GHillsBiomeTerrain : GBiomeTerrain {
-        int treesFrequency = 15;
-        public GHillsBiomeTerrain() : base(BiomeTerrainType.HILLS) {
-    
-        }
-    };
-    public class GMapArea {
-        public Ri mapArea = null;
-        public int[,] relPreciseAreaMatrix;
-        public GMapArea(GMapArea cpy) {
-            mapArea = new Ri(
-                cpy.mapArea.x,
-                cpy.mapArea.y,
-                cpy.mapArea.w,
-                cpy.mapArea.h
-            );
-            this.relPreciseAreaMatrix = cpy.relPreciseAreaMatrix;
-        }
-        public GMapArea(Ri mapArea) {
-            this.mapArea = mapArea;
-            int w = mapArea.w;
-            int h = mapArea.h;
-            this.relPreciseAreaMatrix = new int[w,h];
-        }
-        public GMapArea(Ri mapArea, int[,] prec) {
-            this.mapArea = mapArea;
-            int w = mapArea.w;
-            int h = mapArea.h;
-            this.relPreciseAreaMatrix = prec;
-        }
-    };
-    public class GArea {
-        public int id = 0;
-        public bool isBiomeTerrain = false;
-        public bool isCave = false;
-        public bool isBase = false;
-        public BiomeTerrainType biomeTerrainType = BiomeTerrainType.NONE;
-        public GBiomeTerrain gBiomeTerrain = null;
-        public CaveType caveType = CaveType.NONE;      
-        public BaseType baseType = BaseType.NONE; 
-        public GBase gBase = null; 
-
-        public int[] preciseArea;
-
-        public GMapArea gMapArea = null;
-        public void SetID(int id) {
-            this.id = id;
-        }
-        public GArea(GArea cpy, Ri mapArea) {
-            isBiomeTerrain = cpy.isBiomeTerrain;
-            isCave = cpy.isCave;
-            isBase = cpy.isBase;
-            biomeTerrainType = cpy.biomeTerrainType;
-            gBiomeTerrain = cpy.gBiomeTerrain;
-            caveType = cpy.caveType;
-            baseType = cpy.baseType;
-            gBase = cpy.gBase;
-            preciseArea = cpy.preciseArea;
-            gMapArea = new GMapArea(cpy.gMapArea);
-            gMapArea.mapArea = mapArea;
-        }
-        public GArea(BiomeTerrainType biomeTerrainType, GBiomeTerrain s, int x, int y, int w, int h) {
-            this.biomeTerrainType = biomeTerrainType;
-            this.gBiomeTerrain = s;
-            this.isBiomeTerrain = true;
-            this.gMapArea = new GMapArea(new Ri(x,y,w,h));
-        }
-        public GArea(CaveType caveType, int x, int y, int w, int h) {
-            this.caveType = caveType;
-            this.isCave = true;
-            this.gMapArea = new GMapArea(new Ri(x,y,w,h));
-        }
-        public GArea(BaseType baseType, GBase gBase, int x, int y, int w, int h) {
-            this.baseType = baseType;
-            this.gBase = gBase;
-            this.isBase = true;
-            this.gMapArea = new GMapArea(new Ri(x,y,w,h));
-        }
-
-    }
-    public class GFloatIIndex {
-        public float min = 0.0f;
-        public float max = 1.0f;
-        public int i = 0;
-        public GFloatIIndex(float min, float max, int i) {
-            this.min = min;
-            this.max = max;
-            this.i = i;
-        }
-    }
     public class G {
-        public FastNoiseLite lite;
-        public D d;
         public M m;
-        public Texture2D tp;
-        public int w = 512;
-        public int h= 256;
+        public A a;
+        public G(M m, A a) {
+            this.m = m;
+            this.a = a;
+            this.tp = a.Tex("tp");
 
-        public Dictionary<int, GArea> gAreas;
-        protected int biomesCount = 0;
+            lite = new FastNoiseLite();
+            random = new Random();
+        }
+        public void Generate() {
+            
+            float[,] noise1 = 
+            GenerateNoise(w,h-64,0.1f, FastNoiseLite.NoiseType.Cellular,
+            FastNoiseLite.FractalType.FBm, 2, 2.0f, 2.0f, random.Next(10000));
 
-        public readonly float groundProportion = 0.7f;
-        public readonly float terrainProportion = 0.06f;
+            float[,] noise2 = 
+            GeneratePerlinNoise(w,h-64,0.1f, random.Next(10000));
 
-        public int airY1 = 0;
-        public int airY2 = -1;
-        public int terrainY1 = 0;
-        public int terrainY2 = -1;
-        public int groundY1 = 0;
-        public int groundY2 = -1;
-        public int bedrockY1 = 0;
-        public int bedrockY2 = -1;
+            float[,] noise3 = MultiplyNoises(noise1, noise2);
+            for (int x = 0; x < w; x++) {
+                for (int y = 64; y < h; y++) {
+                    float v = noise3[x,y-64];
 
+                    if (v < 0.3f) {
+                        m.SetT(x,y,TT.CLEARSTONE);    
+                    } else if (v < 0.5f) {
+                        m.SetT(x,y,TT.STONE);    
+                    } else if (v < 0.65f) {
+                        m.SetT(x,y,TT.COBBLESTONE);    
+                    } else if (v < 0.75f) {
+                        m.SetT(x,y,TT.DIRT);    
+                    } else if (v < 0.85f) {
+                        m.SetT(x,y,TT.SAND);    
+                    } else if (v < 0.92f) {
+                        m.SetT(x,y,TT.CLAY);    
+                    } else if (v <= 1.0f) {
+                        m.SetT(x,y,TT.ROUGHSTONE);    
+                    }
+                    
+                }
+            }
 
-        public int groundH = -1;
-        public int terrainH = -1;
-        public int bedrockH = -1;
-        public int airH = -1;
-
-        public int iOp = 180; // 2200
-        public int gOp = 240; // 4500
-        public int dOp = 360; // 6000
-
-        public Random random;
-
-        public readonly int base1gAreaID = 0;
-        public readonly int base2gAreaID = 1;
-        public readonly int biomeTerrainAreaIDStart = 2; 
-
+            GenerateOre();
+            GenerateTerrain();
+            //GenerateStructures();
+            //GenerateTrees();
+            
+        }
         public void GenerateTree(int posx, int type = 0) {
             int size = 7 + random.Next(5);
 
             int posX = posx;
             int posY = 0;
-            for (int y = 0; y < terrainY2; y++) {
-                TT tt = GetTT(posx,y);
+            for (int y = 0; y < h; y++) {
+                TT tt = m.GetTT(posx,y);
                 if (tt == TT.AIR //|| 
                     //tt == TT.LEAVES1 || tt == TT.LEAVES2 || tt == TT.LEAVES3 ||
                     //tt == TT.WOOD1 || tt == TT.WOOD2 || tt == TT.WOOD3
@@ -204,7 +82,7 @@ namespace XCraft {
                     //continue search
 
                     posY = y;
-                } else if (tt == TT.GRASS || tt == TT.STONE || tt == TT.DIRT) {
+                } else if (tt != TT.AIR && (tt != TT.WOOD1 || tt != TT.WOOD2 || tt != TT.LEAVES1 || tt != TT.LEAVES2)) {
                     posY = y;
                     break;
                 }
@@ -217,13 +95,10 @@ namespace XCraft {
             if (type == 1) {
                 woodT = TT.WOOD2;
                 leavesT = TT.LEAVES2;
-            } else if (type == 2) {
-                woodT = TT.WOOD3;
-                leavesT = TT.LEAVES3;
-            }
+            } 
 
             for (int y = posY - size; y < posY; y++) {
-                SetT(posX,y, woodT);
+                m.SetT(posX,y, woodT);
             }
 
             int posY2 = posY-size;
@@ -256,40 +131,153 @@ namespace XCraft {
             for (int x = beginX; x < endX; x++) {
                 for (int y = beginY; y < endY; y++) {
                     bool l = RandomScopic(90,75);
-                    if (l && GetTT(x,y) == TT.AIR) {
-                        SetT(x,y,leavesT);
+                    if (l && m.GetTT(x,y) == TT.AIR) {
+                        m.SetT(x,y,leavesT);
                     }
                 }
             }
         }
-        public void GenerateTrees(int xPos, int w, float freq, int type1Freq, int type2Freq, int type3Freq) {
-            for (int x = xPos; x < xPos+w; x++) {
+        public void GenerateTrees() {
+            float frequency = 0.15f;
+            int i = 15;
+            for (int x = 0; x < w; x++) {
                 float d = (float)random.NextDouble();
-                if (d < freq) {
-                    int randomNumber = random.Next(type1Freq+type2Freq+type3Freq);
-                    int type = 0;
-                    type = (randomNumber < type1Freq && randomNumber >= 0 ? 0 : 0);
-                    type = (randomNumber < type1Freq + type2Freq && randomNumber > type1Freq ? 1 : type); 
-                    type = (randomNumber < type1Freq + type2Freq + type3Freq && randomNumber > type1Freq + type2Freq ? 2 : type); 
-                    GenerateTree(x, type);
+
+                if (d < frequency) {
+                    GenerateTree(x, random.Next(1));
+                }
+
+                if (i < 0) {
+                    i = 10 + random.Next(12);
+                    frequency = 0.03f + ((float)(random.NextDouble())*0.2f);
+                } else {
+                    i--;
                 }
             }
         }
+        public void GenerateTerrain() {
+            float [,] terrainHeightNoise = GeneratePerlinNoise(w,1,0.1f, random.Next(10000));
 
-        public G(D d, M m, int w, int h, int iOp, int gOp, int dOp, bool gen = false) {
-            this.d = d;
-            this.tp = d.Tex("tp");
-            lite = new FastNoiseLite();
+            int terrainHeight = 32;
+            int [,] heightNoise = new int[w,1];
 
-            gAreas = new Dictionary<int, GArea>();
+            for (int x = 0; x < w; x++) {
+                heightNoise[x,0] = System.Convert.ToInt32(terrainHeightNoise[x,0] * terrainHeight);
+            }
 
-            Set(m, w, h, iOp, gOp, dOp);
-
-            random = new Random();
-            if (gen) {
-                Generate();
+            for (int x = 0; x < w; x++) {
+                int height = heightNoise[x,0];
+                
+                for (int y = 0; y < 64; y++) {
+                    int invY = 64-y;
+                    if (invY < height) {
+                        m.SetT(x,y,TT.ROUGHSTONE);
+                    } else if (invY == height) {
+                        m.SetT(x,y,TT.GRASS);
+                    } else if (invY > height) {
+                        m.SetT(x,y,TT.AIR);
+                    }
+                }
             }
         }
+        protected void GenerateOre(TT tileType, int x, int y, int w, int h) {
+            for (int i = x; i < x+w; i++) {
+                for (int j = y; j < y+h; j++) {
+                    bool ore = RandomScopic(8, 5);
+                    
+                    if (ore) {
+                        if (i > 0 && i < this.w && j > 0 && j < this.h) {
+                            TT tt = m.GetTT(i,j);
+                            if (tt == TT.STONE || tt == TT.COBBLESTONE || tt == TT.CLEARSTONE || tt == TT.ROUGHSTONE) {
+                                m.SetT(i, j, tileType);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        protected void GenerateOre() {
+            int ironOresX = w/12;
+            int ironOresY = h/12;
+            int goldOresX = w/24;
+            int goldOresY = h/24;
+            int diaOresX = w/36;
+            int diaOresY = h/36;
+            int ore1X = w/24;
+            int ore1Y = h/24;
+            int ore2X = w/36;
+            int ore2Y = h/36;
+            int ore3X = w/48;
+            int ore3Y = h/48;
+
+            for (int i = 0; i < ironOresX; i++) {
+                for (int j = 0; j < ironOresY; j++) {
+                    int x = random.Next(w);
+                    int y = random.Next(h);
+
+                    GenerateOre(TT.IRON_ORE, x,y, 2+random.Next(4), 2+random.Next(1));
+                }
+            }
+            for (int i = 0; i < goldOresX; i++) {
+                for (int j = 0; j < goldOresY; j++) {
+                    int x = random.Next(w);
+                    int y = random.Next(h);
+
+                    GenerateOre(TT.GOLD_ORE, x,y, 2+random.Next(2), 2+random.Next(1));
+                }
+            }
+            for (int i = 0; i < diaOresX; i++) {
+                for (int j = 0; j < diaOresY; j++) {
+                    int x = random.Next(w);
+                    int y = random.Next(h);
+
+                    GenerateOre(TT.DIA_ORE, x,y, 2+random.Next(1), 2+random.Next(1));
+                }
+            }
+            for (int i = 0; i < ore1X; i++) {
+                for (int j = 0; j < ore1Y; j++) {
+                    int x = random.Next(w);
+                    int y = random.Next(h);
+
+                    GenerateOre(TT.ORE1, x,y, 2+random.Next(3), 2+random.Next(1));
+                }
+            }
+            for (int i = 0; i < ore2X; i++) {
+                for (int j = 0; j < ore2Y; j++) {
+                    int x = random.Next(w);
+                    int y = random.Next(h);
+
+                    GenerateOre(TT.ORE2, x,y, 2+random.Next(2), 2+random.Next(1));
+                }
+            }
+            for (int i = 0; i < ore3X; i++) {
+                for (int j = 0; j < ore3Y; j++) {
+                    int x = random.Next(w);
+                    int y = random.Next(h);
+
+                    GenerateOre(TT.ORE3, x,y, 1+random.Next(1), 1+random.Next(1));
+                }
+            }
+        }
+        public FastNoiseLite lite;
+        public Texture2D tp;
+        public int w = 512;
+        public int h= 256;
+        public Random random;
+
+
+        //////////////////////////////////////////////
+        /// Random & Math Functions
+        //////////////////////////////////////////////
+
+        public bool RandomScopic(int percentagic, int scope) {
+            return (random.Next(percentagic) < scope);
+        }
+        //////////////////////////////////////////////
+        /// Noise Generations
+        //////////////////////////////////////////////
+        protected bool resetLite = false;
+
         public float NoiseValue(float x, float y) {
             float v = (lite.GetNoise(x,y));
             v = (float)((v+1.0f) *0.5f);
@@ -297,470 +285,7 @@ namespace XCraft {
             else if (v > 1.0f) { v = 1.0f;}
             return v;
         }
-        public bool RandomScopic(int percentagic, int scope) {
-            return (random.Next(percentagic) < scope);
-        }
-        public void Set(M m, int w, int h, int iOp, int gOp, int dOp) {
 
-            if (m != null) {this.m = m;}
-            if (w != -1) {this.w = w;}
-            if (h != -1) {this.h = h;}
-            if (iOp != -1) {this.iOp = iOp;}
-            if (gOp != -1) {this.gOp = gOp;}
-            if (dOp != -1) {this.dOp = dOp;}
-
-            CalculateHeights();
-        }
-        protected void CalculateHeights() {
-
-            groundH = System.Convert.ToInt32(h*groundProportion);
-            terrainH = System.Convert.ToInt32(h*terrainProportion);
-            bedrockH = 5; //constant
-            airH = h - groundH - terrainH - bedrockH;
-
-            airY1 = 0;
-            airY2 = airH;
-            terrainY1 = airY2;
-            terrainY2 = terrainY1 + terrainH;
-            groundY1 = terrainY2;
-            groundY2 = groundY1 + groundH;
-            bedrockY1 = groundY2;
-            bedrockY2 = h;
-        }
-        public void SetT(int x, int y, TT tt) {
-            m.tts[x,y] = tt;
-            m.ts[x,y] = new T(x,y,tt,tp,d);
-        }
-        public T GetT(int x, int y) {
-            return m.ts[x,y];
-        }
-        public TT GetTT(int x, int y) {
-            return m.tts[x,y];
-        }
-        public void GenerateBaseAreas() {
-            //Base Generation
-
-            int base1X = 0, base1Y = 0, base1W = 0, base1H = 0;
-            int base2X = 0, base2Y = 0, base2W = 0, base2H = 0;
-
-            int windowWidth = w;
-            base1W = 18 + random.Next(12);
-            base2W = base1W;
-
-            base1X = 6 + random.Next(12);
-            base1H = base1W - 12;
-            base2H = base1H;
-
-            base1Y = 0;
-            base2Y = 0;
-
-            base2X = windowWidth - base1X - base2W;
-
-            GArea base1gArea = new GArea(BaseType.MAIN_BASE, new GBase(), base1X, base1Y, base1W, base1H);
-            GArea base2gArea = new GArea(BaseType.MAIN_BASE, new GBase(), base2X, base2Y, base2W, base2H);
-
-            gAreas.Add(base1gAreaID, base1gArea);
-            gAreas.Add(base2gAreaID, base2gArea); 
-        }
-        protected BiomeTerrainType RandomBiomeTerrainType() {
-            return (BiomeTerrainType)(random.Next(2));
-        }
-        protected GBiomeTerrain AllocateDefaultGBiomeTerrain(BiomeTerrainType biomeType) {
-            if (biomeType == BiomeTerrainType.HILLS) {
-                return new GHillsBiomeTerrain();
-            } else if (biomeType == BiomeTerrainType.CLIFFS) {
-                return new GCliffsBiomeTerrain();
-            } else if (biomeType == BiomeTerrainType.FOREST) {
-                return new GForestBiomeTerrain();
-            }
-            return new GHillsBiomeTerrain();
-        }
-        public void GenerateBiomeAreas() {
-            int beginI = biomeTerrainAreaIDStart;
-            int mapMiddleW = w/2;
-            int modulo = mapMiddleW % 2;
-            mapMiddleW += modulo;
-            
-            int biomeI = 0;
-            int biomeW = 24+random.Next(48);
-            int beginBiomeX = 0;
-            int endBiomeX = biomeW;
-            BiomeTerrainType biomeType = RandomBiomeTerrainType();
-            GBiomeTerrain gBiomeTerrain = AllocateDefaultGBiomeTerrain(biomeType);
-            gAreas.Add(beginI + biomeI, new GArea(biomeType, gBiomeTerrain, beginBiomeX, 0, biomeW, terrainH));
-            gAreas.TryGetValue(beginI + biomeI, out GArea gArea);
-            biomesCount++;
-
-            for (int x = 0; x < mapMiddleW; x++) {
-                if (x >= beginBiomeX && x < endBiomeX) {
-                    //define gArea constants for the biome
-                } else {
-                    biomeI++;
-                    beginBiomeX = beginBiomeX + biomeW;
-                    biomeW = 24 + random.Next(48);
-                    endBiomeX = beginBiomeX + biomeW;
-                    if (beginBiomeX + biomeW > mapMiddleW) {
-                        biomeW = mapMiddleW - beginBiomeX;
-                    }
-                    biomeType = RandomBiomeTerrainType();
-                    gBiomeTerrain = AllocateDefaultGBiomeTerrain(biomeType);
-                    gAreas.Add(beginI + biomeI, new GArea(biomeType, gBiomeTerrain, beginBiomeX, 0, biomeW, terrainH));
-                    gArea = gAreas[beginI + biomeI];
-                    biomesCount++;
-                }
-            }
-
-            MirrorBiomeAreas();
-        }
-        //fix
-        protected void MirrorBiomeAreas() {
-            int beginI = biomeTerrainAreaIDStart;
-            int endI = beginI + biomesCount;
-
-
-            for (int i = beginI ; i < endI; i++) {
-                int relI = i - beginI;
-                GArea gArea = gAreas[i];
-                //bool s = gAreas.TryGetValue(i, out GArea gArea);
-                if (gArea != null) {
-                    Ri mapArea = gArea.gMapArea.mapArea;
-
-                    int endX = w-mapArea.x;
-                    int beginX = endX - mapArea.w;
-                    int width = mapArea.w;
-                    int height = mapArea.h;
-
-                    Ri mirroredMapArea = new Ri(beginX, mapArea.y, width, height);
-
-                    GArea mirr = new GArea(gArea, mirroredMapArea);
-                    
-                    gAreas.Add(endI+relI, mirr);
-                    biomesCount++;
-                }
-            }
-        }
-        public void GenerateEssentialGAreas() {
-            GenerateBaseAreas();
-            GenerateBiomeAreas();
-        }
-        protected bool IsWithinGArea(GArea gArea, int x, int y = -1) {
-            Ri mapArea = gArea.gMapArea.mapArea;
-            if (y == -1) {
-                return (x > mapArea.x && x < mapArea.x + mapArea.w);
-            }
-            return (x > mapArea.x && x < mapArea.x + mapArea.w && y > mapArea.y && y < mapArea.y + mapArea.h);
-        }
-        public void GenerateHillsBiomeTerrain(GArea gA) {
-            GHillsBiomeTerrain gForestBiomeTerrain = gA.gBiomeTerrain as GHillsBiomeTerrain;
-
-            Ri mapArea = gA.gMapArea.mapArea;
-
-            float[,] heightMap = 
-                GeneratePerlinNoise(mapArea.w, 1, 0.03f, random.Next(100000));
-
-            int [,] heightMap2 = generateIntNoiseFromFloat(heightMap, mapArea.w, 1, terrainH);
-            
-            for (int x = mapArea.x; x < mapArea.x + mapArea.w; x++) {
-                int relX = x - mapArea.x;
-                int mapH = heightMap2[relX,0];
-                for (int y = terrainY1; y < terrainY2; y++) {
-                    int relY = y - terrainY1;
-                    
-                    if (relY < mapH) {
-                        SetT(x,y,TT.AIR);
-                    } else if (relY == mapH) {
-                        SetT(x,y,TT.GRASS);
-                    } else if (relY > mapH) {
-                        SetT(x,y,TT.DIRT);
-                    }
-                }
-            }
-
-            GenerateTrees(mapArea.x, mapArea.w, 0.2f, 7, 2, 1);
-        }
-        public void GenerateForestBiomeTerrain(GArea gA) {
-            GForestBiomeTerrain gForestBiomeTerrain = gA.gBiomeTerrain as GForestBiomeTerrain;
-
-
-            Ri mapArea = gA.gMapArea.mapArea;
-            for (int x = mapArea.x; x < mapArea.x + mapArea.w; x++) {
-                for (int y = terrainY1; y < terrainY2; y++) {
-                    int relY = y - terrainY1;
-                    
-                }
-            }
-
-            GenerateTrees(mapArea.x, mapArea.w, 0.4f, 7, 2, 1);
-        }
-        public void GenerateCliffsBiomeTerrain(GArea gA) {
-            GCliffsBiomeTerrain gForestBiomeTerrain = gA.gBiomeTerrain as GCliffsBiomeTerrain;
-
-            Ri mapArea = gA.gMapArea.mapArea;
-
-            float[,] cliffsNoise = 
-                GeneratePerlinNoise(mapArea.w, 1, 0.04f,/* 
-                FastNoiseLite.NoiseType.Perlin, FastNoiseLite.FractalType.,
-                4, 2.0f, 0.4f*/ random.Next(100000));
-
-            int [,] cliffsNoiseI = generateIntNoiseIndex(cliffsNoise,  mapArea.w, 1, 
-                new GFloatIIndex[]{
-                    new GFloatIIndex(0.0f, 0.6f, 0),
-                    new GFloatIIndex(0.6f, 1.0f, 1),
-                }
-            );
-
-            float[,] cobblestoneNoise = 
-                GeneratePerlinNoise(mapArea.w, mapArea.h, 0.08f,/* 
-                FastNoiseLite.NoiseType.Cellular, FastNoiseLite.FractalType.FBm,
-                4, 2.0f, 0.4f, */random.Next(100000));
-
-            int [,] cobbleStoneNoiseI = generateIntNoiseIndex(cobblestoneNoise, mapArea.w, mapArea.h, 
-                new GFloatIIndex[]{
-                    new GFloatIIndex(0.0f, 0.6f, 0),
-                    new GFloatIIndex(0.6f, 1.0f, 1),
-                }
-            );
-            
-            for (int x = 0; x < mapArea.w; x++){
-                int cliffI = cliffsNoiseI[x, 0];
-                if (cliffI == 1) {
-                    float v = cliffsNoise[x,0];
-                    v *= 1.5f;
-                    if (v > 1.0f) {
-                        v = 1.0f;
-                    } else if (v < 0.0f) {
-                        v = 0.0f;
-                    }
-                    cliffsNoise[x,0] = v;
-                }
-            }
-            int [,] cliffsNoiseI2 = generateIntNoiseFromFloat(cliffsNoise, mapArea.w, 1, terrainH);
-            for (int x = mapArea.x; x < mapArea.x + mapArea.w; x++) {
-                int relX = x - mapArea.x;
-
-                int cliffsH = cliffsNoiseI2[relX,0];
-
-                for (int y = terrainY1; y < terrainY2; y++) {
-                    int relY = y - terrainY1;
-
-                    if (relY > cliffsH) {
-                        if (cobbleStoneNoiseI[relX,relY] == 1) {
-                            SetT(x,y, TT.COBBLESTONE);
-                        } else {
-                            SetT(x,y, TT.STONE);
-                        }
-                    } else if (relY == cliffsH) {
-                        SetT(x,y, TT.GRASS);
-                    } else if (relY < cliffsH) {
-                        SetT(x,y, TT.AIR);
-                    }
-                }
-            }
-
-            GenerateTrees(mapArea.x, mapArea.w, 0.08f, 7, 2, 1);
-        }
-
-        public void GenerateBiomeTerrain(GArea gA) {
-            if (gA.biomeTerrainType == BiomeTerrainType.HILLS) {
-                GenerateHillsBiomeTerrain(gA);
-            } else if (gA.biomeTerrainType == BiomeTerrainType.FOREST) {
-                //GenerateHillsBiomeTerrain(gA);
-                GenerateForestBiomeTerrain(gA);
-            } else if (gA.biomeTerrainType == BiomeTerrainType.CLIFFS) {
-                GenerateCliffsBiomeTerrain(gA);
-            }
-        }
-        public int GetTerrainHeight(int x) {
-            int y = 0;
-            while (y < h) {
-                TT tt = GetTT(x,y);
-                if (tt == TT.DIRT || tt == TT.STONE || tt == TT.GRASS || tt == TT.COBBLESTONE) {
-                    return y;
-                }
-                
-                y++;
-            }
-            return -1;
-        }
-        public void GenerateBaseTerrains() {
-            GArea teamA = gAreas[0];
-            GArea teamB = gAreas[1];
-
-            Ri a1 = teamA.gMapArea.mapArea;
-            Ri a2 = teamB.gMapArea.mapArea;
-
-            int a1TerrainH1 = GetTerrainHeight(a1.x-1);
-            int a1TerrainH2 = GetTerrainHeight(a1.x+a1.w+1);
-
-            int a2TerrainH1 = GetTerrainHeight(a2.x-1);
-            int a2TerrainH2 = GetTerrainHeight(a2.x+a2.w+1);
-
-            int averageTerrain1 = (a1TerrainH1+a1TerrainH2) / 2;
-            int averageTerrain2 = (a2TerrainH1+a2TerrainH2) / 2;
-
-            for (int x = a1.x; x < a1.x + a1.w; x++) {
-                for (int y = terrainY1; y < terrainY2; y++) {
-                    TT tt = GetTT(x,y);
-                    if (y < averageTerrain1) {
-                        SetT(x,y,TT.AIR);
-                    } else if (y == averageTerrain1) {
-                        SetT(x,y,TT.GRASS);
-                    } else if (y > averageTerrain1) {
-                        if (tt == TT.GRASS) {
-                            SetT(x,y,TT.DIRT);
-                        }
-                    }
-                }
-            }
-            
-            for (int x = a2.x; x < a2.x + a2.w; x++) {
-                for (int y = 0; y < terrainY2; y++) {
-                    TT tt = GetTT(x,y);
-                    if (y < averageTerrain2) {
-                        SetT(x,y,TT.AIR);
-                    } else if (y == averageTerrain2) {
-                        SetT(x,y,TT.GRASS);
-                    } else if (y > averageTerrain2) {
-                        if (tt == TT.GRASS) {
-                            SetT(x,y,TT.DIRT);
-                        } else if (tt == TT.AIR) {
-                            TT tt2 = TT.COBBLESTONE;
-                            int r = random.Next(2);
-                            if (r == 0) {
-                                tt2 = TT.DIRT;
-                            } else if (r == 1) {
-                                tt2 = TT.STONE;
-                            } else if (r == 2) {
-                                tt2 = TT.COBBLESTONE;
-                            }
-                            SetT(x,y,tt2);
-                        }
-                    }
-                }
-            }
-        }
-        public void GenerateTerrain() {
-            int beginI = biomeTerrainAreaIDStart;
-            int biomeI = 0;
-            
-            for (int i = 0; i < biomesCount; i++) {
-                GArea gA = gAreas[beginI + biomeI];    
-                GenerateBiomeTerrain(gA);
-                biomeI++;
-            }
-            GenerateBaseTerrains();
-            /*for (int x = 0; x < w; x++) {
-                bool isThisBiome = IsWithinGArea(terrainBiomeGArea, x);
-                if (!isThisBiome) {
-                    biomeI++;
-                    terrainBiomeGArea = gAreas[beginI + biomeI];
-                }
-                
-                for (int y = terrainY1; y < terrainY2; y++) {
-
-                }
-            }*/
-        }
-        public void GenerateGround() {
-
-            float[,] mapNoise = GenerateNoise(w,h,0.08f,
-                FastNoiseLite.NoiseType.Perlin, FastNoiseLite.FractalType.FBm,
-                4, 2.0f, 0.5f, random.Next(10000000));
-
-            int [,] terrainMap1 = generateIntNoiseIndex(mapNoise, w, h, new GFloatIIndex[]{
-                new GFloatIIndex(0.0f, 0.35f, 0),
-                new GFloatIIndex(0.35f, 0.62f, 1),
-                new GFloatIIndex(0.62f, 1.0f, 2)
-            });
-
-            for (int x = 0; x < w; x++) {
-                for (int y = terrainY1; y < h; y++) {
-                    int tiv = terrainMap1[x,y];
-                    if (tiv == 2) {
-                        SetT(x,y,TT.COBBLESTONE);
-                    } else if (tiv == 1) {
-                        SetT(x,y,TT.STONE);
-                    } else if (tiv == 0) {
-                        SetT(x,y,TT.DIRT);
-                    }
-                }
-            }
-        }
-        public void GenerateBedrock() {
-            for (int x = 0; x < w; x++) {
-            for (int y = bedrockY1; y < bedrockY2; y++) {
-                SetT(x,y,TT.BEDROCK);
-            }   
-            }
-        }
-        public void Generate() {
-            biomesCount = 0;
-            //General Fill
-            float[,] mapNoise = GenerateNoise(w,h,0.1f,
-                FastNoiseLite.NoiseType.Perlin, FastNoiseLite.FractalType.FBm,
-                4, 2.0f, 0.5f, random.Next(10000000));
-
-            generateIntNoiseIndex(mapNoise, w, h, new GFloatIIndex[]{
-                new GFloatIIndex(0.0f, 0.6f, 0),
-                new GFloatIIndex(0.6f, 1.0f, 1)
-            });
-
-            GenerateFullAir();
-            GenerateEssentialGAreas();
-            GenerateGround();
-            GenerateTerrain();
-
-            PostProcessGAreas();
-        }
-        protected void PostProcessGAreas() {
-            foreach (var gAreaP in gAreas) {
-                int id = gAreaP.Key;
-                GArea gArea = gAreaP.Value;
-
-                m.gAreas.Add(id, gArea);
-            }
-        }
-        protected void GenerateFullAir() {
-            for (int x = 0; x < w; x++) {
-                for (int y = 0; y < h; y++) {
-                    SetT(x,y,TT.AIR);
-                }
-            }
-        }
-        public bool resetLite = false;
-        public int DetermineIndex(float noise, GFloatIIndex[] indexes) {
-            for (int i = 0; i < indexes.Length; i++) {
-                GFloatIIndex index = indexes[i];
-                if (noise > index.min && noise < index.max) {
-                    return index.i;
-                }
-            }
-            return -1;
-        }
-        public int[,] generateIntNoiseIndex(float [,] noise, int w, int h, GFloatIIndex[] indexes) {
-            int[,] _indexes = new int[w,h];
-            for (int x = 0; x < w; x++) {
-                for (int y = 0; y < h; y++) {
-                    float n = noise[x,y];
-                    _indexes[x,y] = DetermineIndex(n, indexes);
-                }
-            }
-            return _indexes;
-        }
-        
-        public int[,] generateIntNoiseFromFloat(float [,] noise, int w, int h, int scopeH) {
-            int[,] intNoise = new int[w,h];
-            for (int x = 0; x < w; x++) {
-                for (int y = 0; y < h; y++) {
-                    float v = noise[x,y];
-                    int i = System.Convert.ToInt32(v*scopeH);
-                    if (i < 0) { i = 0;}
-                    if (i > scopeH) { i = h;}
-                    intNoise[x,y] = i;
-                }
-            }
-            return intNoise;
-        }
         public float[,] GenerateNoise(int w, int h, float frequency, 
             FastNoiseLite.NoiseType noiseType, FastNoiseLite.FractalType fractalType,
             int fractalOctaves = 1, float fractalLacunarity = 1.0f, float fractalGain = 0.5f, int seed = -1
@@ -784,7 +309,7 @@ namespace XCraft {
 
             return noise;
         }
-        public float[,] GeneratePerlinNoise(int w, int h, float frequency, int seed = -1) {
+            public float[,] GeneratePerlinNoise(int w, int h, float frequency, int seed = -1) {
             if (resetLite) {
                 lite = new FastNoiseLite();
             }
@@ -802,5 +327,33 @@ namespace XCraft {
 
             return noise;
         }
+
+
+
+        public float[,] MultiplyNoises(float[,] a, float[,] b) {
+            int nW = a.GetLength(0);
+            int nH = a.GetLength(1);
+            float [,] n = new float[nW, nH];
+
+            float minV = n[0,0];
+            float maxV = n[0,0];
+            for (int x = 0; x < nW; x++) {
+                for (int y = 0; y < nH; y++) {
+                    float v = a[x,y] * b[x,y];
+                    if (v < minV) minV = v;
+                    if (v > maxV) maxV = v;
+                    n[x,y] = v;
+                }
+            }
+            float l = minV - minV;
+            for (int x = 0; x < nW; x++) {
+                for (int y = 0; y < nH; y++) {
+                    
+                    n[x,y] = (n[x,y] - minV) / (maxV - minV);
+                }
+            }
+            return n;
+        }
+
     };
 }

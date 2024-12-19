@@ -2,6 +2,19 @@
   "version": 3,
   "targets": {
     "net8.0": {
+      "Lidgren.Network/1.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/net451/Lidgren.Network.dll": {
+            "related": ".pdb"
+          }
+        },
+        "runtime": {
+          "lib/net451/Lidgren.Network.dll": {
+            "related": ".pdb"
+          }
+        }
+      },
       "LiteNetLib/1.2.0": {
         "type": "package",
         "compile": {
@@ -115,6 +128,19 @@
     }
   },
   "libraries": {
+    "Lidgren.Network/1.0.2": {
+      "sha512": "yXg3ccH3OYFGnsXxzcrUo2FXsXHaZzTUjRCg84NCPGnZyjw6MhwJFHe6MdEVIzejXsE86Kto/sgeV29HSRc8xQ==",
+      "type": "package",
+      "path": "lidgren.network/1.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net451/Lidgren.Network.dll",
+        "lib/net451/Lidgren.Network.pdb",
+        "lidgren.network.1.0.2.nupkg.sha512",
+        "lidgren.network.nuspec"
+      ]
+    },
     "LiteNetLib/1.2.0": {
       "sha512": "N4pJ6Drzdt7M7Ok//J1YB1t2jBNQikKud3OEgllUwK2qcu6elLyvb+vgOy4WJy9xbyobYg7oav1g5vuoaDHLuw==",
       "type": "package",
@@ -275,6 +301,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
+      "Lidgren.Network >= 1.0.2",
       "LiteNetLib >= 1.2.0",
       "MonoGame.Content.Builder.Task >= 3.8.2.1105",
       "MonoGame.Framework.DesktopGL >= 3.8.2.1105"
@@ -322,6 +349,10 @@
       "net8.0": {
         "targetAlias": "net8.0",
         "dependencies": {
+          "Lidgren.Network": {
+            "target": "Package",
+            "version": "[1.0.2, )"
+          },
           "LiteNetLib": {
             "target": "Package",
             "version": "[1.2.0, )"
@@ -354,5 +385,17 @@
         "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.404/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Lidgren.Network 1.0.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net8.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Lidgren.Network",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }

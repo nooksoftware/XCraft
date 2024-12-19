@@ -15,6 +15,11 @@ using System.Threading.Tasks;
 
 
 namespace XCraft {
+    public enum ET {
+        UNKNOWN = -1,
+        NONE = 0,
+        PLAYER = 1
+    };
     public class E {
         public float x = 0.0f;
         public float y = 0.0f;
@@ -24,20 +29,14 @@ namespace XCraft {
         public int h = 0;
         public float accX = 0.0f;
         public float accY = 0.0f;
-        public bool accXb = false;
-        public bool accYb = false;
+
+        public Texture2D entitiesTp;
 
         public ET et = ET.NONE;
-        //public Texture2D t;
-        public ER er;
-        public EI ei;
-        public D d;
+        public A a;
+        public bool isPhysicsEntity = true;
 
-        public bool gravity = true;
-        public bool solid = true;
-        public bool physics = true;
-
-        public E(int x, int y, ET et/*/ Texture2D t*/) {
+        public E(A a, int x, int y, ET et) {
             this.x = x;
             this.y = y;
             this.et = et;
@@ -45,59 +44,73 @@ namespace XCraft {
             this.oy = 0;
             this.w = 0;
             this.h = 0;
-        }
-        public void Draw(SpriteBatch spriteBatch) {
-            //scale (zoom)
-            Rectangle de = new Rectangle(
-                (int)(x-ox - d.n.zX), 
-                (int)(x-oy - d.n.zY), 
-                w, h);
-            Rectangle o = new Rectangle(0, 0, w, h);
-            //spriteBatch.Draw(t, d, o, Color.White);
-        }
-        public void Acc(float accX, float accY) {
-            this.accX = this.accX + accX;
-            this.accY = this.accY + accY;
-            if (this.accX < 0.035f && this.accX > -0.035f) {
-                this.accX = 0.0f;
-                this.accXb = false;
-            } else {
-                this.accXb = true;
-            }
-            if (this.accY < 0.035f && this.accY > -0.035f) {
-                this.accY = 0.0f;
-                this.accYb = false;
-            } else {
-                this.accYb = true;
-            }
-        }
-        protected void PhysicsTransform() {
-            if (gravity) {
-                Acc(0, d.g);
-            } 
-            if (solid && physics) {
-                /*
-                  E[] prox_entities = a.ProxEntities(x,y);
-                  T[] prox_tiles = a.ProxTiles(x,y);
 
-                  foreach (e : prox_entities as E) {
-                    PSolidhysics(this,e );
-                  }
-                  foreach (t : prox_entities as T) {
-                    SolidPhysics(this,t);
-                  }
-                */
+            this.a = a;
+            this.entitiesTp = this.a.Tex("entities");
+        }
+
+        public virtual int screenXPos() {
+            return System.Convert.ToInt32(
+                this.x - this.ox - a.n.RNavX());
+        }
+        public virtual int screenYPos() {
+            return System.Convert.ToInt32(
+                this.y - this.oy - a.n.RNavY());
+        }
+        public virtual int graphicSizeX() {
+            return 32;
+        }
+        public virtual int graphicSizeY() {
+            return 42;
+        }
+        public virtual int OriginX() {
+            return graphicSizeX() / 2;
+        }
+        public virtual int OriginY() {
+            return graphicSizeY() / 2;
+        }   
+        public virtual int OriginW() {
+            return 32;
+
+        }
+        public virtual int OriginH() {
+            return 42;
+
+        }
+
+        public virtual Rectangle DestinationRectangle() {
+            return new Rectangle(
+                screenXPos(),
+                screenYPos(),
+                graphicSizeX(),
+                graphicSizeY()
+            );
+        }
+        public virtual Rectangle OriginRectangle() {
+            return new Rectangle(
+                OriginX(),
+                OriginY(),
+                OriginW(),
+                OriginH()
+            );
+        }
+        public Color renderColor = new Color(255,255,255,255);
+        public virtual Color RenderColor() {
+            return renderColor;
+        }
+        public virtual void Draw(SpriteBatch spriteBatch) {
+            Rectangle d = DestinationRectangle();
+            Rectangle o = OriginRectangle();
+
+            spriteBatch.Draw(entitiesTp, d, o, RenderColor());
+        }
+        public virtual void Tick(SpriteBatch spriteBatch) {
+            if (isPhysicsEntity) {
+                PhysicsEntityTick(spriteBatch);
             }
         }
-    };
-    public enum ET {
-        NONE,
-        PLAYER
-    };
-    public class ER {
+        public virtual void PhysicsEntityTick(SpriteBatch spriteBatch) {
 
-    };
-    public class EI {
-
+        }
     };
 }
